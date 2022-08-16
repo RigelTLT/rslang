@@ -1,4 +1,4 @@
-// import './login.scss';
+import './login.scss';
 
 export class Login {
   templateLogin() {

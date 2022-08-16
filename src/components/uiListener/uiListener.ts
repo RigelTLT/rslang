@@ -1,5 +1,3 @@
-import '../login/login.scss';
-
 import { Login } from '../login/login';
 const login = new Login();
 
