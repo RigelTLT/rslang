@@ -1,8 +1,13 @@
 import { Iauth, Isignin } from '../interface/interface';
 import { signinApi, registrationApi } from '../api/authApi';
 
+function setLocalStorageAuth(id: string, token: string) {
+  localStorage.setItem('id', JSON.stringify(id));
+  localStorage.setItem('token', JSON.stringify(token));
+}
+
 export async function authorization() {
-  
+  //TODO замена элементов при авторизации
 }
 
 
@@ -11,10 +16,11 @@ export async function signToToken(params:Isignin) {
   let paramsAuth : Iauth;
   try{
     paramsAuth = await signinApi(params);
+    setLocalStorageAuth(paramsAuth.userId, paramsAuth.token);
+    authorization();
   } catch{
     console.log('Ошибка авторизации');
   }
-  //TODO вызов функции авторизации
 }
 
 export async function registration() {
