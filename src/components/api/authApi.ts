@@ -1,7 +1,7 @@
 import { baseUrl, path } from './basicApi';
-import { Isignin } from './../interface/interface';
+import { Isignin, Iregist } from './../interface/interface';
 
-export async function signin(body?: Isignin) {
+export async function signinApi(body?: Isignin) {
   let params = {
     email: '',
     password: ''
@@ -19,8 +19,27 @@ export async function signin(body?: Isignin) {
   const employee = await response.json();
   return employee;
 }
-export async function newTokenSignin(id:string){
+export async function newTokenSigninApi(id:string){
   const response = await fetch(`${baseUrl}${path.words}/${id}/${path.tokens}`);
   const data = await response.json();
   return data;
+}
+export async function registrationApi(body: Iregist) {
+  let params = {
+    name: '',
+    email: '',
+    password: ''
+  };
+  if(body){
+    params = body;
+  }
+  const response = await fetch(`${baseUrl}${path.users}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  });
+  const employee = await response.json();
+  return employee;
 }
