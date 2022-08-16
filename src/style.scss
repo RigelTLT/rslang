@@ -21,7 +21,7 @@ body {
   height: 100%;
   font-family: 'Lato', sans-serif;
   font-weight: 400;
-  color: var(--mainFontColor);
+  //   color: var(--mainFontColor);
 }
 
 .wrapper {
@@ -35,7 +35,7 @@ body {
 }
 
 .container {
-  max-width: 1350px;
+  max-width: 1260px;
   width: 100%;
   padding: 0 15px;
   margin: 0 auto;
@@ -66,4 +66,22 @@ a {
 
 ul {
   list-style-type: none;
+}
+
+// footer
+.main-footer {
+  padding: 10px 0;
+  background-color: #1e212c;
+  color: #fff;
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .developers {
+    text-align: center;
+    .developer:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
 }
