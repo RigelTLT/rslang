@@ -7,6 +7,8 @@ export const path = {
   aggregatedWords: 'aggregatedWords',
   statistics: 'statistics',
   settings: 'settings',
+  signin: 'signin',
+  tokens: 'tokens',
 };
 
 export async function getWords(query?: IapiRequestWords) {
