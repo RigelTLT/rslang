@@ -1,4 +1,4 @@
-import { Iauth, Isignin } from '../interface/interface';
+import { Iauth, Isignin, Iregist } from '../interface/interface';
 import { signinApi, registrationApi } from '../api/authApi';
 
 function setLocalStorageAuth(id: string, token: string) {
@@ -14,26 +14,37 @@ export async function authorization() {
 
 export async function signToToken(params:Isignin) {
   let paramsAuth : Iauth;
-  try{
     paramsAuth = await signinApi(params);
-    setLocalStorageAuth(paramsAuth.userId, paramsAuth.token);
-    authorization();
-  } catch{
-    console.log('Ошибка авторизации');
+    if(typeof paramsAuth === 'number'){
+      const textMenu = document.querySelector('.menu__text') as HTMLElement;
+      if(paramsAuth === 404){
+      textMenu.innerHTML = 'Такой почты не существует!';
+    }
+    if(paramsAuth === 403){
+      textMenu.innerHTML = 'Неправильный адрес электронной почты или пароль!';
+    }
+    textMenu.style.color = 'red';
+    textMenu.style.fontSize = 'x-large';
   }
+    else{
+      setLocalStorageAuth(paramsAuth.userId, paramsAuth.token);
+      authorization();
+    }
 }
 
-export async function registration() {
-  //TODO: Сменить запросы селекторов
-  const name = (document.querySelector('#login') as HTMLInputElement).innerHTML;
-  const email = (document.querySelector('#email') as HTMLInputElement).innerHTML;
-  const password = (document.querySelector('#password') as HTMLInputElement).innerHTML;
-  const params = {name: name, email: email, password: password};
-  const code = await registrationApi(params);
-  console.log(code);
-  if(code === '200'){
-    signToToken({email: email, password: password});
+export async function registration(params: Iregist) {
+  try {
+    const code = await registrationApi(params);
+    console.log(code);
+    signToToken({email: params.email, password: params.password});
+  }catch{
+    const textMenu = document.querySelector('.menu__text') as HTMLElement;
+    textMenu.innerHTML = 'Такая почта уже занята';
+    textMenu.style.color = 'red';
+    textMenu.style.fontSize = 'x-large';
   }
+  
+  
 }
 
 function getLocalStorageToken() {
