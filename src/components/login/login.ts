@@ -20,7 +20,7 @@ export class Login {
       </label>
       <button type="submit">Войти</button>
       <div class="signIn">
-        У вас уже есть аккаунт? <span>Войти</span>
+      У Вас нет аккаунта? <span>Зарегистрировать</span>
       </div>
     </form>
     `;
@@ -48,7 +48,7 @@ export class Login {
       </label>
       <button type="submit">Регистрация</button>
       <div class="registration">
-        У Вас нет аккаунта? <span>Зарегистрировать</span>
+      У вас уже есть аккаунт? <span>Войти</span>
       </div>
     </form>
     `;
