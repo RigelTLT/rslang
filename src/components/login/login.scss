@@ -1,0 +1,65 @@
+// .account {
+//   background-color: red;
+// }
+
+.login-popUp {
+  position: absolute;
+  transition: 0.3s;
+  transform: translateX(100%);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  background-color: rgb(85, 80, 85, 0.8);
+  z-index: 2;
+}
+
+.menu {
+  width: 400px;
+  min-height: 400px;
+  margin: auto;
+  background-color: #fff;
+  position: relative;
+  padding: 20px;
+
+  &__text {
+    margin-bottom: 20px;
+  }
+
+  .menu-heading {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .close {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    cursor: pointer;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    label {
+      width: 70%;
+      margin: 0 auto 20px;
+      input {
+        width: 100%;
+      }
+    }
+
+    button[type='submit'] {
+      margin: auto;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .registration,
+    .signIn {
+      span {
+        color: blue;
+        cursor: pointer;
+      }
+    }
+  }
+}
