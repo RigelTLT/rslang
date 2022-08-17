@@ -3,7 +3,7 @@ import { baseUrl } from './../api/basicApi';
 import { getWords, getWordId } from './../api/basicApi';
 import { IapiRequestWords } from './../interface/interface';
 
-export function getPageGroupTextbook() {
+function getPageGroupTextbook() {
   const params = new  URLSearchParams(document.location.search);
   const page =  params.get('page') as string;
   const group =  params.get('group') as string;
@@ -16,10 +16,13 @@ export function getPageGroupTextbook() {
   }
   createList(data);
 }
+if(window.location.pathname === '/ebook.html'){
 getPageGroupTextbook();
+}
 
-export async function createList(data: IapiRequestWords){
+async function createList(data: IapiRequestWords){
   const words = await getWords(data);
+  
   const main = document.querySelector('.main') as HTMLElement;
   const list = document.createElement('div');
   list.classList.add('list-textbook');
