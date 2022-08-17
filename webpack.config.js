@@ -24,7 +24,7 @@ module.exports = ({ development }) => ({
   output: {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
-    assetModuleFilename: 'assets/img/[hash][ext]',
+    assetModuleFilename:  '[path][hash][ext]',
   },
   module: {
     rules: [
@@ -54,7 +54,10 @@ module.exports = ({ development }) => ({
   plugins: [
     ...esLintPlugin(development),
     new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' }),
-    new HtmlWebpackPlugin({ template: './src/index.html' }),
+    new HtmlWebpackPlugin({ filename: 'index.html', template: './src/index.html' }),
+    new HtmlWebpackPlugin({ filename: 'ebook.html', template: './src/ebook.html' }),
+    new HtmlWebpackPlugin({ filename: 'statistic.html', template: './src/statistic.html' }),
+    new HtmlWebpackPlugin({ filename: 'games.html', template: './src/games.html' }),
     new CopyPlugin({
       patterns: [{
         from: 'public',
