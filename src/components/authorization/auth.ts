@@ -1,16 +1,29 @@
-import { Iauth, Isignin, Iregist } from '../interface/interface';
+import { Iauth, Isignin, Iregist, IidToken } from '../interface/interface';
 import { signinApi, registrationApi } from '../api/authApi';
 
-function setLocalStorageAuth(id: string, token: string) {
+function setLocalStorageAuth(id: string, token: string, name: string) {
   localStorage.setItem('id', JSON.stringify(id));
   localStorage.setItem('token', JSON.stringify(token));
+  localStorage.setItem('name', JSON.stringify(name));
 }
 
-export async function authorization() {
+export function authorization(params: IidToken) {
   //TODO замена элементов при авторизации
+  const accountLink = document.querySelector('.account__text') as HTMLElement;
+  const accountContainer = document.querySelector('.account') as HTMLElement;
+  if(accountContainer.classList.contains('account')){
+  accountContainer.classList.remove('account');
+  accountContainer.classList.add('account__out');
+}
+  accountLink.innerHTML = `${params.name}/Log Out`;
 }
 
-
+export function logOut(){
+  localStorage.removeItem('id');
+  localStorage.removeItem('token');
+  localStorage.removeItem('name');
+  location.reload();
+}
 
 export async function signToToken(params:Isignin) {
   let paramsAuth : Iauth;
@@ -27,30 +40,31 @@ export async function signToToken(params:Isignin) {
     textMenu.style.fontSize = 'x-large';
   }
     else{
-      setLocalStorageAuth(paramsAuth.userId, paramsAuth.token);
-      authorization();
+      setLocalStorageAuth(paramsAuth.userId, paramsAuth.token, paramsAuth.name);
+      const params = {id: paramsAuth.userId, token: paramsAuth.token, name: paramsAuth.name}
+      authorization(params);
     }
 }
 
 export async function registration(params: Iregist) {
   try {
     const code = await registrationApi(params);
-    console.log(code);
-    signToToken({email: params.email, password: params.password});
+    await signToToken({email: params.email, password: params.password});
+    location.reload();
   }catch{
     const textMenu = document.querySelector('.menu__text') as HTMLElement;
     textMenu.innerHTML = 'Такая почта уже занята';
     textMenu.style.color = 'red';
     textMenu.style.fontSize = 'x-large';
   }
-  
-  
 }
 
-function getLocalStorageToken() {
-  if (localStorage.getItem('tokens')) {
-    const tokens = JSON.parse(localStorage.getItem('tokens') as string) as Isignin;
-    signToToken(tokens);
+export function getLocalStorageToken() {
+  if (localStorage.getItem('token')) {
+    const tokens = JSON.parse(localStorage.getItem('token') as string) as string;
+    const id = JSON.parse(localStorage.getItem('id') as string) as string;
+    const name = JSON.parse(localStorage.getItem('name') as string) as string;
+    authorization({id: id, token: tokens, name: name});
   }
 }
 

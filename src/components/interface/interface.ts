@@ -11,6 +11,11 @@ export interface Iregist{
   email: string,
   password: string
 }
+export interface IidToken{
+  id: string,
+  token: string,
+  name: string
+}
 export interface Iauth{
   message:	string,
   token:	string,

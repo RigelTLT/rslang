@@ -1,9 +1,9 @@
 import { Login } from '../login/login';
-import { signToToken, registration } from '../authorization/auth';
+import { signToToken, registration, logOut } from '../authorization/auth';
 const login = new Login();
 
 export function ulListenner() {
-  document.body.addEventListener('click', function (event) {
+  document.body.addEventListener('click', async function (event) {
     const popUp = document.querySelector('.login-popUp') as HTMLDivElement;
     const menu = document.querySelector('.login-popUp .menu') as HTMLDivElement;
     const target = event.target as HTMLElement;
@@ -30,7 +30,8 @@ export function ulListenner() {
       if(EMAIL_REGEXP.test(email) && password.length>8){
       event.preventDefault();
       const dataLogin ={email:email, password: password};
-      signToToken(dataLogin);
+      await signToToken(dataLogin);
+      location.reload();
     }
   }
     if (target.closest('.registration__button')) {
@@ -42,6 +43,9 @@ export function ulListenner() {
       const dataLogin ={name: name, email: email, password: password};
       registration(dataLogin);
     }
+    }
+    if (target.closest('.account__out')) {
+      logOut();
     }
   });
 }
