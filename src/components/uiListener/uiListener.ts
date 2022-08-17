@@ -1,5 +1,6 @@
 import { Login } from '../login/login';
 import { signToToken, registration, logOut } from '../authorization/auth';
+import { sound } from './../textbook/textbook';
 const login = new Login();
 
 export function ulListenner() {
@@ -46,6 +47,21 @@ export function ulListenner() {
     }
     if (target.closest('.account__out')) {
       logOut();
+    }
+    if (target.closest('.word-audio')) {
+      const targetAudio = 'audio';
+      const id = target.dataset.id as string;
+      sound(id, targetAudio);
+    }
+    if (target.closest('.example-audio')) {
+      const targetAudio = 'audioExample';
+      const id = target.dataset.id as string
+      sound(id, targetAudio);
+    }
+    if (target.closest('.meaning-audio')) {
+      const targetAudio = 'audioMeaning';
+      const id = target.dataset.id as string;
+      sound(id, targetAudio);
     }
   });
 }
