@@ -20,6 +20,10 @@ module.exports = ({ development }) => ({
   devtool: development ? 'inline-source-map' : false,
   entry: {
     main: './src/index.ts',
+    textbook: './src/components/textbook/textbook.ts',
+    statistic: './src/components/statistic/statistic.ts',
+    audioCall: './src/components/audio-call/audio-call.ts',
+    sprint: './src/components/sprint/sprint.ts',
   },
   output: {
     filename: '[name].[contenthash].js',
@@ -55,9 +59,10 @@ module.exports = ({ development }) => ({
     ...esLintPlugin(development),
     new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' }),
     new HtmlWebpackPlugin({ filename: 'index.html', template: './src/index.html' }),
-    new HtmlWebpackPlugin({ filename: 'ebook.html', template: './src/ebook.html' }),
+    new HtmlWebpackPlugin({ filename: 'ebook.html', chunks: ['textbook', 'main'], template: './src/ebook.html' }),
     new HtmlWebpackPlugin({ filename: 'statistic.html', template: './src/statistic.html' }),
-    new HtmlWebpackPlugin({ filename: 'games.html', template: './src/games.html' }),
+    new HtmlWebpackPlugin({ filename: 'audio-call.html', template: './src/audio-call.html' }),
+    new HtmlWebpackPlugin({ filename: 'sprint.html', template: './src/sprint.html' }),
     new CopyPlugin({
       patterns: [{
         from: 'public',
