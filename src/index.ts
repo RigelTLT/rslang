@@ -3,8 +3,9 @@ import './style.scss';
 import { ulListenner } from './components/uiListener/uiListener';
 import { getLocalStorageToken, authorization } from './components/authorization/auth';
 const localStorage = new getLocalStorageToken;
-const params = {id:  localStorage.id, token:  localStorage.token, name:  localStorage.name}
-authorization(params);
+if(localStorage.id){
+const params = {id:  localStorage.id, token:  localStorage.token, name:  localStorage.name};
+authorization(params);}
 // const login = new Login();
 // login.loginBtn();
 ulListenner();
