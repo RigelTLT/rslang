@@ -1,0 +1,40 @@
+.btn {
+  display: inline-block;
+  font-weight: 700;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  transition: 0.3s;
+
+  &-orange {
+    border-color: var(--orange);
+    background-color: var(--orange);
+    &:hover {
+      background-color: var(--paleOrange);
+    }
+  }
+
+  &-hollow-orange {
+    border-color: var(--orange);
+    background-color: transparent;
+    &:hover {
+      background-color: var(--paleOrange);
+    }
+  }
+
+  &-large {
+    line-height: 52px;
+    padding: 0px 40px;
+    font-size: 16px;
+  }
+
+  &-normal {
+    padding: 0px 32px;
+    line-height: 44px;
+  }
+
+  &-small {
+    padding: 0px 24px;
+    line-height: 36px;
+  }
+}
