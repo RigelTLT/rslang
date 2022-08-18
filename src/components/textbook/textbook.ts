@@ -5,7 +5,11 @@ import { IapiRequestWords } from './../interface/interface';
 
 function paginationState(page : string, group : string){
   const textGroup = document.querySelector('.text-group') as HTMLElement;
-  textGroup.innerHTML = `Раздел ${group}`
+  if(page){
+  textGroup.innerHTML = `Раздел ${group}`;
+  }else{
+    textGroup.innerHTML = `Раздел 1`;
+  }
   const numberToPage = Number(page);
   const numberPage = document.querySelector('.number-page') as HTMLElement;
   if(page){
