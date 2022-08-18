@@ -1,0 +1,23 @@
+.benefits {
+  background-color: var(--gray200);
+
+  &__list {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__item {
+    img {
+      max-width: 280px;
+      width: 100%;
+    }
+    .content {
+      width: 100%;
+      padding: 10px;
+      h4 {
+        color: var(--gray800);
+        text-align: center;
+      }
+    }
+  }
+}

@@ -4,6 +4,8 @@
 @import './common-style/btns.scss';
 
 @import './section-style/introduction.scss';
+@import './section-style/benefits.scss';
+
 // common style
 html {
   box-sizing: border-box;
@@ -25,6 +27,7 @@ body {
   font-family: 'Lato', sans-serif;
   font-weight: 400;
   color: var(--mainFontColor);
+  background-color: #fff;
 }
 
 .wrapper {
@@ -36,6 +39,9 @@ body {
 }
 .main {
   flex-grow: 1;
+  & > section {
+    padding: 60px 0;
+  }
 }
 
 .container {

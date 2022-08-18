@@ -9,6 +9,7 @@
   &-orange {
     border-color: var(--orange);
     background-color: var(--orange);
+    color: #fff;
     &:hover {
       background-color: var(--paleOrange);
     }
@@ -20,6 +21,7 @@
   &-hollow-orange {
     border-color: var(--orange);
     background-color: transparent;
+    color: var(--orange);
     &:hover {
       background-color: var(--paleOrange);
     }
