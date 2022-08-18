@@ -3,5 +3,16 @@
   padding: 60px 0;
   &__content {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .promo {
+    h1 {
+      max-width: 490px;
+      width: 100%;
+      font-weight: 900;
+      font-size: 64px;
+      margin-bottom: 60px;
+    }
   }
 }
