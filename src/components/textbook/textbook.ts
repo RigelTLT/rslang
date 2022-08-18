@@ -43,6 +43,10 @@ function getPageGroupTextbook() {
   const page =  params.get('page') as string;
   const group =  params.get('group') as string;
   paginationState(page, group);
+  const audioCallLink = document.querySelector('.link__audio-call') as HTMLLinkElement;
+  const sprint = document.querySelector('.link__sprint') as HTMLLinkElement;
+  audioCallLink.href = `./audio-call.html?group=${group}&page=${page}`;
+  sprint.href = `./sprint.html?group=${group}&page=${page}`;
   let data: IapiRequestWords;
   if (page && group) {
     data = {page: `${Number(page)-1}`, group: `${Number(group)-1}`};
