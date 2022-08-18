@@ -12,9 +12,11 @@
     color: #fff;
     &:hover {
       background-color: var(--paleOrange);
+      color: #fff;
     }
     &:active {
       background-color: var(--orangeDisabled);
+      color: #fff;
     }
   }
 
@@ -24,9 +26,11 @@
     color: var(--orange);
     &:hover {
       background-color: var(--paleOrange);
+      color: #fff;
     }
     &:active {
       background-color: var(--orangeDisabled);
+      color: #fff;
     }
   }
 
