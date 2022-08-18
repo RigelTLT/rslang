@@ -14,5 +14,9 @@
       font-size: 64px;
       margin-bottom: 60px;
     }
+    &_btns {
+      display: flex;
+      gap: 20px;
+    }
   }
 }

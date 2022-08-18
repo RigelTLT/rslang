@@ -12,6 +12,9 @@
     &:hover {
       background-color: var(--paleOrange);
     }
+    &:active {
+      background-color: var(--orangeDisabled);
+    }
   }
 
   &-hollow-orange {
@@ -19,6 +22,9 @@
     background-color: transparent;
     &:hover {
       background-color: var(--paleOrange);
+    }
+    &:active {
+      background-color: var(--orangeDisabled);
     }
   }
 
