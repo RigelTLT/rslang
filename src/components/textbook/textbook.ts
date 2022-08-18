@@ -3,7 +3,9 @@ import { baseUrl } from './../api/basicApi';
 import { getWords, getWordId } from './../api/basicApi';
 import { IapiRequestWords } from './../interface/interface';
 
-function paginationState(page : string){
+function paginationState(page : string, group : string){
+  const textGroup = document.querySelector('.text-group') as HTMLElement;
+  textGroup.innerHTML = `Раздел ${group}`
   const numberToPage = Number(page);
   const numberPage = document.querySelector('.number-page') as HTMLElement;
   if(page){
@@ -40,7 +42,7 @@ function getPageGroupTextbook() {
   const params = new  URLSearchParams(document.location.search);
   const page =  params.get('page') as string;
   const group =  params.get('group') as string;
-  paginationState(page);
+  paginationState(page, group);
   let data: IapiRequestWords;
   if (page && group) {
     data = {page: `${Number(page)-1}`, group: `${Number(group)-1}`};
