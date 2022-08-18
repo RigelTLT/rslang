@@ -22,4 +22,8 @@ export interface Iauth{
   refreshToken:	string,
   userId:	string,
   name:	string
-  }
+}
+export interface IuserWords{
+  difficulty: string,
+  optional: {}
+}

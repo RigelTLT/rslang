@@ -1,22 +1,44 @@
 import './textbook.scss';
-import { baseUrl } from './../api/basicApi';
-import { getWords, getWordId } from './../api/basicApi';
+import { addWordsUserApi, getUserIdWords, UpdateWordsUserApi } from './../api/wordsApi';
+import { baseUrl, getWords, getWordId } from './../api/basicApi';
 import { IapiRequestWords } from './../interface/interface';
+import { getLocalStorageToken } from './../authorization/auth';
+
+export async function addCompoundWord(id: string, idWord: string){
+  const cheak = await getUserIdWords(id, idWord);
+  const body = { difficulty: 'hard',
+  optional: {} }
+  if(!cheak){
+  const addWords = await addWordsUserApi(id, idWord, body);
+}else{
+  const addWords = await UpdateWordsUserApi(id, idWord, body);
+}
+}
+export async function completeCompoundWord(id: string, idWord: string){
+  const cheak = await getUserIdWords(id, idWord);
+  const body = { difficulty: 'complete',
+  optional: {} }
+  if(!cheak){
+  const addWords = await addWordsUserApi(id, idWord, body);
+}else{
+  const addWords = await UpdateWordsUserApi(id, idWord, body);
+}
+}
 
 function paginationState(page : string, group : string){
   const textGroup = document.querySelector('.text-group') as HTMLElement;
   if(page){
-  textGroup.innerHTML = `Раздел ${group}`;
+  textGroup.innerText = `Раздел ${group}`;
   }else{
-    textGroup.innerHTML = `Раздел 1`;
+    textGroup.innerText = `Раздел 1`;
   }
   const numberToPage = Number(page);
   const numberPage = document.querySelector('.number-page') as HTMLElement;
   if(page){
-    numberPage.innerHTML = page;
+    numberPage.innerText = page;
   }
   else{
-    numberPage.innerHTML = '1';
+    numberPage.innerText = '1';
   }
   const backAll = document.querySelector('.back-all') as HTMLInputElement;
   const back = document.querySelector('.back') as HTMLInputElement;  
@@ -49,14 +71,17 @@ function getPageGroupTextbook() {
   paginationState(page, group);
   const audioCallLink = document.querySelector('.link__audio-call') as HTMLLinkElement;
   const sprint = document.querySelector('.link__sprint') as HTMLLinkElement;
-  audioCallLink.href = `./audio-call.html?group=${group}&page=${page}`;
-  sprint.href = `./sprint.html?group=${group}&page=${page}`;
+
   let data: IapiRequestWords;
   if (page && group) {
     data = {page: `${Number(page)-1}`, group: `${Number(group)-1}`};
+    audioCallLink.href = `./audio-call.html?group=${group}&page=${page}`;
+    sprint.href = `./sprint.html?group=${group}&page=${page}`;
   }
   else{
     data = {page: '0', group: '0'};
+    audioCallLink.href = `./audio-call.html?group=1&page=1`;
+    sprint.href = `./sprint.html?group=1&page=1`;
   }
   createList(data);
 }
@@ -66,7 +91,7 @@ getPageGroupTextbook();
 
 async function createList(data: IapiRequestWords){
   const words = await getWords(data);
-  
+  const localStorage = new getLocalStorageToken;
   const main = document.querySelector('.main') as HTMLElement;
   const list = document.createElement('div');
   list.classList.add('list-textbook');
@@ -74,6 +99,7 @@ async function createList(data: IapiRequestWords){
   for (let i = 0; i < words.length; i++) {
     const elem = document.createElement('div');
     elem.classList.add('list-textbook__elem');
+    elem.setAttribute('data-id', `${words[i].id}`);
     list.append(elem);
     const img = document.createElement('img');
     img.classList.add('list-textbook__elem__img');
@@ -87,11 +113,11 @@ async function createList(data: IapiRequestWords){
     wordsContainer.append(wordContainer);
     const word = document.createElement('div');
     word.classList.add('word-container__word');
-    word.innerHTML = `${words[i].word}`;
+    word.innerText = `${words[i].word}`;
     wordContainer.append(word);
     const transcription = document.createElement('div');
     transcription.classList.add('word-container__transcription');
-    transcription.innerHTML = `${words[i].transcription}`;
+    transcription.innerText = `${words[i].transcription}`;
     wordContainer.append(transcription);
     const svgElem = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
     imgAudio = document.createElementNS('http://www.w3.org/2000/svg', 'use');
@@ -102,30 +128,50 @@ async function createList(data: IapiRequestWords){
     wordContainer.append(svgElem);
     const wordTranslate = document.createElement('div');
     wordTranslate.classList.add('word-container__wordTranslate');
-    wordTranslate.innerHTML = `${words[i].wordTranslate}`;
+    wordTranslate.innerText = `${words[i].wordTranslate}`;
     wordContainer.append(wordTranslate);
     const example = document.createElement('div');
     example.classList.add('list-textbook__elem__example');
     wordsContainer.append(example);
     const textExample = document.createElement('div');
     textExample.classList.add('example__text');
-    textExample.innerHTML = `${words[i].textExample}`;
+    textExample.innerText = `${words[i].textExample}`;
     example.append(textExample);
     const textExampleTranslate = document.createElement('div');
     textExampleTranslate.classList.add('example__textTranslate');
-    textExampleTranslate.innerHTML = `${words[i].textExampleTranslate}`;
+    textExampleTranslate.innerText = `${words[i].textExampleTranslate}`;
     example.append(textExampleTranslate);
     const meaning = document.createElement('div');
     meaning.classList.add('list-textbook__elem__meaning');
     wordsContainer.append(meaning);
     const textMeaning = document.createElement('div');
     textMeaning.classList.add('meaning__text');
-    textMeaning.innerHTML = `${words[i].textMeaning}`;
+    textMeaning.innerText = `${words[i].textMeaning}`;
     meaning.append(textMeaning);
     const textMeaningTranslate = document.createElement('div');
     textMeaningTranslate.classList.add('meaning__textTranslate');
-    textMeaningTranslate.innerHTML = `${words[i].textMeaningTranslate}`;
+    textMeaningTranslate.innerText = `${words[i].textMeaningTranslate}`;
     meaning.append(textMeaningTranslate);
+    if(localStorage.id){
+      const buttonContainer = document.createElement('div');
+      buttonContainer.classList.add('list-textbook__cont-button');
+      elem.append(buttonContainer);
+      const buttonAdd = document.createElement('button');
+      buttonAdd.classList.add('cont-button');
+      buttonAdd.classList.add('cont-button__add');
+      buttonAdd.innerText = `Добавить в сложные слова`;
+      buttonContainer.append(buttonAdd);
+      const buttonRemove = document.createElement('button');
+      buttonRemove.classList.add('cont-button');
+      buttonRemove.classList.add('cont-button__remove');
+      buttonRemove.innerText = `Убрать из сложных слов`;
+      buttonContainer.append(buttonRemove);
+      const buttonComplete = document.createElement('button');
+      buttonComplete.classList.add('cont-button');
+      buttonComplete.classList.add('cont-button__complete');
+      buttonComplete.innerText = `Изученно`;
+      buttonContainer.append(buttonComplete);
+      }
   }
 }
 

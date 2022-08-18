@@ -1,6 +1,6 @@
 import { Login } from '../login/login';
-import { signToToken, registration, logOut } from '../authorization/auth';
-import { sound, changePage } from './../textbook/textbook';
+import { signToToken, registration, logOut, getLocalStorageToken  } from '../authorization/auth';
+import { sound, changePage, addCompoundWord, completeCompoundWord } from './../textbook/textbook';
 const login = new Login();
 
 export function ulListenner() {
@@ -67,6 +67,34 @@ export function ulListenner() {
     if (target.closest('.forward-all')) {
       const button = 'forward-all';
       changePage(button);
+    }
+    if (target.closest('.cont-button__add')) {
+      const card = (target.parentNode as HTMLElement).parentNode as HTMLElement;
+      const wordId = card.dataset.id as string;
+      if(!card.classList.contains('hard')){
+      card.classList.add('hard');
+      const localStorage = new getLocalStorageToken;
+      addCompoundWord(localStorage.id, wordId);
+    }
+    }
+    if (target.closest('.cont-button__remove')) {
+      const card = (target.parentNode as HTMLElement).parentNode as HTMLElement;
+      if(card.classList.contains('hard')){
+      card.classList.remove('hard');
+    }
+    }
+    if (target.closest('.cont-button__complete')) {
+      const card = (target.parentNode as HTMLElement).parentNode as HTMLElement;
+      const wordId = card.dataset.id as string;
+      if(!card.classList.contains('complete')){
+        card.classList.add('complete');
+        const localStorage = new getLocalStorageToken;
+        completeCompoundWord(localStorage.id, wordId);
+      }
+      const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
+      const buttonAdd = (target.parentNode as HTMLElement).childNodes[0] as HTMLInputElement;
+      buttonDelete.disabled = true;
+      buttonAdd.disabled = true;
     }
   });
 }
