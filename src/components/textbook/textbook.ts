@@ -9,7 +9,12 @@ function getPageGroupTextbook() {
   const numberToPage = Number(page);
   const group =  params.get('group') as string;
   const numberPage = document.querySelector('.number-page') as HTMLElement;
-  numberPage.innerHTML = page;
+  if(page){
+    numberPage.innerHTML = page;
+  }
+  else{
+    numberPage.innerHTML = '1';
+  }
   const backAll = document.querySelector('.back-all') as HTMLInputElement;
   const back = document.querySelector('.back') as HTMLInputElement;  
   const forward = document.querySelector('.forward') as HTMLInputElement;
