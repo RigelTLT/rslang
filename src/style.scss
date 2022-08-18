@@ -5,7 +5,7 @@
 
 @import './section-style/introduction.scss';
 @import './section-style/benefits.scss';
-@import './section-style/team.scss';
+@import './section-style/members.scss';
 
 // common style
 html {
@@ -66,7 +66,7 @@ img,
 svg {
   max-width: 100%;
   max-height: 100%;
-  display: inline-block;
+  display: block;
   object-fit: cover;
 }
 
