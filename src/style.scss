@@ -1,5 +1,6 @@
 @import './common-style/vars.scss';
 @import './common-style/font.scss';
+@import '~normalize.css';
 
 // common style
 html {
@@ -135,7 +136,7 @@ ul {
       margin-right: 10px;
     }
   }
-  .logo__shool{
+  .logo__shool {
     width: 120px;
   }
 }
