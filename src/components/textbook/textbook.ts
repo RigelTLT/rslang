@@ -133,11 +133,17 @@ async function createList(data: IapiRequestWords){
   }
 }
 
-export async function sound(id: string, targetAudio: string){
+export async function sound(id: string, targetAudio: string, classTarget: string){
   const query = await getWordId(id);
+  const picture = document.querySelector(`${classTarget}[data-id="${id}"]`) as HTMLElement;
+  const pictureAudio = picture.firstChild  as HTMLElement;
+  pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-play.svg#Capa_1');
   const audio = new Audio();
   audio.src = `${baseUrl}${query[targetAudio]}`;
   audio.autoplay = true;
+  audio.addEventListener('ended', function() {
+    pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
+ });
 }
 
 export function changePage(button: string){
