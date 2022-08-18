@@ -12,7 +12,7 @@ function getPageGroupTextbook() {
     data = {page: page, group: group};
   }
   else{
-    data = {page: '1', group: '1'};
+    data = {page: '0', group: '0'};
   }
   createList(data);
 }
