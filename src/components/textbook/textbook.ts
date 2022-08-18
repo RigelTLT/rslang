@@ -3,11 +3,8 @@ import { baseUrl } from './../api/basicApi';
 import { getWords, getWordId } from './../api/basicApi';
 import { IapiRequestWords } from './../interface/interface';
 
-function getPageGroupTextbook() {
-  const params = new  URLSearchParams(document.location.search);
-  const page =  params.get('page') as string;
+function paginationState(page : string){
   const numberToPage = Number(page);
-  const group =  params.get('group') as string;
   const numberPage = document.querySelector('.number-page') as HTMLElement;
   if(page){
     numberPage.innerHTML = page;
@@ -37,6 +34,13 @@ function getPageGroupTextbook() {
     forward.disabled = true;
     forwardAll.disabled = true;
   }
+}
+
+function getPageGroupTextbook() {
+  const params = new  URLSearchParams(document.location.search);
+  const page =  params.get('page') as string;
+  const group =  params.get('group') as string;
+  paginationState(page);
   let data: IapiRequestWords;
   if (page && group) {
     data = {page: `${Number(page)-1}`, group: `${Number(group)-1}`};
