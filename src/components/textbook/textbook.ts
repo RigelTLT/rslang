@@ -91,7 +91,7 @@ async function createList(data: IapiRequestWords){
     wordContainer.append(transcription);
     const svgElem = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
     imgAudio = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    svgElem.classList.add('word-audio');
+    svgElem.classList.add('audio');
     svgElem.setAttribute('data-id', `${words[i].id}`);
     imgAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
     svgElem.append(imgAudio);
@@ -103,13 +103,6 @@ async function createList(data: IapiRequestWords){
     const example = document.createElement('div');
     example.classList.add('list-textbook__elem__example');
     wordsContainer.append(example);
-    const svgExample = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-    imgAudioExample = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    svgExample.classList.add('example-audio');
-    svgExample.setAttribute('data-id', `${words[i].id}`);
-    imgAudioExample.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
-    svgExample.append(imgAudioExample);
-    example.append(svgExample);
     const textExample = document.createElement('div');
     textExample.classList.add('example__text');
     textExample.innerHTML = `${words[i].textExample}`;
@@ -121,13 +114,6 @@ async function createList(data: IapiRequestWords){
     const meaning = document.createElement('div');
     meaning.classList.add('list-textbook__elem__meaning');
     wordsContainer.append(meaning);
-    const svgMeaning = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-    imgAudioMeaning = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    svgMeaning.classList.add('meaning-audio');
-    svgMeaning.setAttribute('data-id', `${words[i].id}`);
-    imgAudioMeaning.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
-    svgMeaning.append(imgAudioMeaning);
-    meaning.append(svgMeaning);
     const textMeaning = document.createElement('div');
     textMeaning.classList.add('meaning__text');
     textMeaning.innerHTML = `${words[i].textMeaning}`;
@@ -139,17 +125,26 @@ async function createList(data: IapiRequestWords){
   }
 }
 
-export async function sound(id: string, targetAudio: string, classTarget: string){
+
+export async function sound(id: string){
   const query = await getWordId(id);
-  const picture = document.querySelector(`${classTarget}[data-id="${id}"]`) as HTMLElement;
+  const arrayAudio = ['audio', 'audioExample', 'audioMeaning']
+  const picture = document.querySelector(`svg[data-id="${id}"]`) as HTMLElement;
   const pictureAudio = picture.firstChild  as HTMLElement;
   pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-play.svg#Capa_1');
-  const audio = new Audio();
-  audio.src = `${baseUrl}${query[targetAudio]}`;
-  audio.autoplay = true;
-  audio.addEventListener('ended', function() {
-    pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
- });
+    const audio = new Audio();
+    audio.src = `${baseUrl}${query[arrayAudio[0]]}`;
+    audio.autoplay = true;
+    let i = 0;
+    audio.onended = function() {
+      i++;
+      if (i < arrayAudio.length){
+      audio.src = `${baseUrl}${query[arrayAudio[i]]}`;
+      audio.play();
+    }else{
+      pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
+    }
+  }
 }
 
 export function changePage(button: string){

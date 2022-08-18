@@ -32,25 +32,7 @@
 .list-textbook__elem__word-container > div{
   padding: 0 10px;
 }
-.list-textbook__elem__example,
-.list-textbook__elem__meaning{
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  grid-template-rows: repeat(2, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-  justify-items: start;
-  }
-  .example__text,
-  .meaning__text { grid-area: 1 / 2 / 2 / 3; }
-  .example-audio,
-  .meaning-audio {grid-area: 1 / 1 / 2 / 2; }
-  .example__textTranslate,
-  .meaning__textTranslate { grid-area: 2 / 1 / 3 / 3; }
-
-.word-audio,
-.example-audio,
-.meaning-audio{
+.audio{
   width: 24px;
   height: 24px;
 }

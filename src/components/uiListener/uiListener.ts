@@ -48,20 +48,9 @@ export function ulListenner() {
     if (target.closest('.account__out')) {
       logOut();
     }
-    if (target.closest('.word-audio')) {
-      const targetAudio = 'audio';
+    if (target.closest('.audio')) {
       const id = target.dataset.id as string;
-      sound(id, targetAudio, '.word-audio');
-    }
-    if (target.closest('.example-audio')) {
-      const targetAudio = 'audioExample';
-      const id = target.dataset.id as string
-      sound(id, targetAudio, '.example-audio');
-    }
-    if (target.closest('.meaning-audio')) {
-      const targetAudio = 'audioMeaning';
-      const id = target.dataset.id as string;
-      sound(id, targetAudio, '.meaning-audio');
+      sound(id);
     }
     if (target.closest('.back-all')) {
       const button = 'back-all';
