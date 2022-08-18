@@ -1,6 +1,6 @@
 import { Login } from '../login/login';
 import { signToToken, registration, logOut } from '../authorization/auth';
-import { sound } from './../textbook/textbook';
+import { sound, changePage } from './../textbook/textbook';
 const login = new Login();
 
 export function ulListenner() {
@@ -62,6 +62,22 @@ export function ulListenner() {
       const targetAudio = 'audioMeaning';
       const id = target.dataset.id as string;
       sound(id, targetAudio);
+    }
+    if (target.closest('.back-all')) {
+      const button = 'back-all';
+      changePage(button);
+    }
+    if (target.closest('.back')) {
+      const button = 'back';
+      changePage(button);
+    }
+    if (target.closest('.forward')) {
+      const button = 'forward';
+      changePage(button);
+    }
+    if (target.closest('.forward-all')) {
+      const button = 'forward-all';
+      changePage(button);
     }
   });
 }

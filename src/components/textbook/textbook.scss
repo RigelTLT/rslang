@@ -54,3 +54,39 @@
   width: 24px;
   height: 24px;
 }
+.control-panel{
+  padding: 20px 0;
+  display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+    .pagination-panel {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-content: center;
+      justify-content: space-evenly;
+    }
+    .dropdown {
+      border: black 2px solid;
+    background: darkseagreen;
+    font-size: x-large;
+    width: 8rem;
+    text-align: center;
+    border-radius: 20px;
+    }
+  .pagination{
+    width: 40px;
+      height: 40px;
+      margin: 0 5px;
+      font-size: x-large;
+      background: #efc1a1;
+      border-radius: 20px;
+  }
+  .pagination:disabled{
+    color: #626363;
+    border: 0;
+    background: #f2dccd;
+  }
+}

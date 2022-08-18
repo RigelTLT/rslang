@@ -6,10 +6,35 @@ import { IapiRequestWords } from './../interface/interface';
 function getPageGroupTextbook() {
   const params = new  URLSearchParams(document.location.search);
   const page =  params.get('page') as string;
+  const numberToPage = Number(page);
   const group =  params.get('group') as string;
+  const numberPage = document.querySelector('.number-page') as HTMLElement;
+  numberPage.innerHTML = page;
+  const backAll = document.querySelector('.back-all') as HTMLInputElement;
+  const back = document.querySelector('.back') as HTMLInputElement;  
+  const forward = document.querySelector('.forward') as HTMLInputElement;
+  const forwardAll = document.querySelector('.forward-all') as HTMLInputElement;
+  if(1 < numberToPage && numberToPage < 30){
+    backAll.disabled = false;
+    back.disabled = false;
+    forward.disabled = false;
+    forwardAll.disabled = false;
+  }
+  if(numberToPage <= 1){
+    backAll.disabled = true;
+    back.disabled = true;
+    forward.disabled = false;
+    forwardAll.disabled = false;
+  }
+  if(numberToPage >= 30){
+    backAll.disabled = false;
+    back.disabled = false;
+    forward.disabled = true;
+    forwardAll.disabled = true;
+  }
   let data: IapiRequestWords;
   if (page && group) {
-    data = {page: page, group: group};
+    data = {page: `${Number(page)-1}`, group: `${Number(group)-1}`};
   }
   else{
     data = {page: '0', group: '0'};
@@ -104,4 +129,43 @@ export async function sound(id: string, targetAudio: string){
   const audio = new Audio();
   audio.src = `${baseUrl}${query[targetAudio]}`;
   audio.autoplay = true;
+}
+
+export function changePage(button: string){
+  const params = new  URLSearchParams(document.location.search);
+  let page =  params.get('page') as string;
+  let group =  params.get('group') as string;
+  if (!page && !group) {
+    page = '1';
+    group = '1';
+  }
+  const numberToPage = Number(page);
+  let newPage: number;;
+  const url = `${document.location.origin}${document.location.pathname}`;
+  if(button ==='back-all'){
+    newPage = 1;
+    window.location.href = `${url}?group=${group}&page=${newPage}`;
+  }
+  if(button ==='back'){
+    if(numberToPage <= 1){
+    newPage = 1;
+    window.location.href = `${url}?group=${group}&page=${newPage}`;
+  }else{
+    newPage = numberToPage-1;
+    window.location.href = `${url}?group=${group}&page=${newPage}`;
+  }
+  }
+  if(button ==='forward'){
+    if(numberToPage >= 30){
+      newPage = 30;
+      window.location.href = `${url}?group=${group}&page=${newPage}`;
+    }else{
+      newPage = numberToPage+1;
+      window.location.href = `${url}?group=${group}&page=${newPage}`;
+    }
+  }
+  if(button ==='forward-all'){
+    newPage = 30;
+    window.location.href = `${url}?group=${group}&page=${newPage}`;
+  }
 }
