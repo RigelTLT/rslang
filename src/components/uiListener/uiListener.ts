@@ -1,6 +1,6 @@
 import { Login } from '../login/login';
 import { signToToken, registration, logOut, getLocalStorageToken  } from '../authorization/auth';
-import { sound, changePage, addCompoundWord, completeCompoundWord } from './../textbook/textbook';
+import { sound, changePage, addCompoundWord, completeCompoundWord, cheakPageToComplete } from './../textbook/textbook';
 import { deleteordsUserApi } from './../api/wordsApi';
 import { removeCompoundWord } from './../textbook/dictionary';
 
@@ -91,6 +91,11 @@ export function ulListenner() {
       const localStorage = new getLocalStorageToken;
       const wordId = card.dataset.id as string;
       deleteordsUserApi(localStorage.id, wordId, localStorage.token);
+      cheakPageToComplete();
+      const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
+      const buttonAdd = (target.parentNode as HTMLElement).childNodes[0] as HTMLInputElement;
+      buttonDelete.disabled = true;
+      buttonAdd.disabled = false;
     }
     }
     if (target.closest('.cont-button__remove-to-dictionary')) {

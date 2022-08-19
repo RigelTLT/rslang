@@ -4,6 +4,26 @@ import { baseUrl, getWords, getWordId } from './../api/basicApi';
 import { IapiRequestWords } from './../interface/interface';
 import { getLocalStorageToken } from './../authorization/auth';
 
+export function cheakPageToComplete(){
+  const words = document.querySelectorAll('.list-textbook__elem');
+  let index = 0;
+  for(let i= 0; i < words.length; i++) {
+    if(words[i].classList.contains('hard') || words[i].classList.contains('complete')){
+      index++;
+    }
+  }
+  const main = document.querySelector('.main') as HTMLElement;
+    const numberPage = document.querySelector('.number-page') as HTMLElement;
+  if(index == words.length){
+    main.classList.add('complete-page');
+    numberPage.classList.add('pagination-complete');
+  }else{
+    if(numberPage.classList.contains('pagination-complete') && main.classList.contains('complete-page')){
+    main.classList.remove('complete-page');
+    numberPage.classList.remove('pagination-complete');}
+  }
+}
+
 export async function addCompoundWord(id: string, idWord: string, token: string){
   const cheak = await getUserIdWords(id, idWord, token);
   const body = { difficulty: 'hard',
@@ -13,6 +33,7 @@ export async function addCompoundWord(id: string, idWord: string, token: string)
 }else{
   await UpdateWordsUserApi(id, idWord, token, body);
 }
+cheakPageToComplete();
 }
 export async function completeCompoundWord(id: string, idWord: string, token: string){
   const cheak = await getUserIdWords(id, idWord, token);
@@ -23,6 +44,7 @@ export async function completeCompoundWord(id: string, idWord: string, token: st
 }else{
   await UpdateWordsUserApi(id, idWord, token, body);
 }
+cheakPageToComplete();
 }
 
 function paginationState(page : string, group : string){
@@ -97,6 +119,8 @@ async function checkWordsUser(id: string, token: string){
     return null;
   }
 }
+
+
 
 async function createList(data: IapiRequestWords){
   const words = await getWords(data);
@@ -202,6 +226,7 @@ async function createList(data: IapiRequestWords){
       }
       }
   }
+  cheakPageToComplete();
 }
 
 
