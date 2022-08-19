@@ -127,6 +127,10 @@ ul {
   .account,
   .account__out {
     cursor: pointer;
+    display: flex;
+    img{
+      margin-right: 10px;
+    }
   }
 }
 
