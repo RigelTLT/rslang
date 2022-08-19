@@ -1,7 +1,7 @@
 import './textbook.scss';
-import { addWordsUserApi, getUserIdWords, UpdateWordsUserApi } from './../api/wordsApi';
+import { addWordsUserApi, getUserIdWords, UpdateWordsUserApi, getUserAllWords } from './../api/wordsApi';
 import { baseUrl, getWords, getWordId } from './../api/basicApi';
-import { IapiRequestWords, IuserWords } from './../interface/interface';
+import { IapiRequestWords } from './../interface/interface';
 import { getLocalStorageToken } from './../authorization/auth';
 
 export async function addCompoundWord(id: string, idWord: string, token: string){
@@ -89,9 +89,19 @@ if(window.location.pathname === '/ebook.html'){
 getPageGroupTextbook();
 }
 
+async function checkWordsUser(id: string, token: string){
+  if(id && token){
+    const checkWords = await getUserAllWords(id, token);
+    return checkWords;
+  }else{
+    return null;
+  }
+}
+
 async function createList(data: IapiRequestWords){
   const words = await getWords(data);
   const localStorage = new getLocalStorageToken;
+  const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
   const main = document.querySelector('.main') as HTMLElement;
   const list = document.createElement('div');
   list.classList.add('list-textbook');
@@ -101,6 +111,18 @@ async function createList(data: IapiRequestWords){
     elem.classList.add('list-textbook__elem');
     elem.setAttribute('data-id', `${words[i].id}`);
     list.append(elem);
+    if(checkWords){
+      for(let j = 0; j < checkWords.length; j++) {
+        if(checkWords[j].wordId === words[i].id){
+          if(checkWords[j].difficulty === 'hard'){
+            elem.classList.add('hard');
+          }
+          if(checkWords[j].difficulty === 'complete'){
+            elem.classList.add('complete');
+          }
+        }
+      }
+    }
     const img = document.createElement('img');
     img.classList.add('list-textbook__elem__img');
     img.src = `${baseUrl}${words[i].image}`;
