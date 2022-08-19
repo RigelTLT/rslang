@@ -74,7 +74,7 @@ export function ulListenner() {
       if(!card.classList.contains('hard')){
       card.classList.add('hard');
       const localStorage = new getLocalStorageToken;
-      addCompoundWord(localStorage.id, wordId);
+      addCompoundWord(localStorage.id, wordId, localStorage.token);
     }
     }
     if (target.closest('.cont-button__remove')) {
@@ -89,7 +89,7 @@ export function ulListenner() {
       if(!card.classList.contains('complete')){
         card.classList.add('complete');
         const localStorage = new getLocalStorageToken;
-        completeCompoundWord(localStorage.id, wordId);
+        completeCompoundWord(localStorage.id, wordId, localStorage.token);
       }
       const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
       const buttonAdd = (target.parentNode as HTMLElement).childNodes[0] as HTMLInputElement;

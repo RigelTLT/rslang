@@ -1,27 +1,27 @@
 import './textbook.scss';
 import { addWordsUserApi, getUserIdWords, UpdateWordsUserApi } from './../api/wordsApi';
 import { baseUrl, getWords, getWordId } from './../api/basicApi';
-import { IapiRequestWords } from './../interface/interface';
+import { IapiRequestWords, IuserWords } from './../interface/interface';
 import { getLocalStorageToken } from './../authorization/auth';
 
-export async function addCompoundWord(id: string, idWord: string){
-  const cheak = await getUserIdWords(id, idWord);
+export async function addCompoundWord(id: string, idWord: string, token: string){
+  const cheak = await getUserIdWords(id, idWord, token);
   const body = { difficulty: 'hard',
   optional: {} }
   if(!cheak){
-  const addWords = await addWordsUserApi(id, idWord, body);
+  await addWordsUserApi(id, idWord, token, body);
 }else{
-  const addWords = await UpdateWordsUserApi(id, idWord, body);
+  await UpdateWordsUserApi(id, idWord, token, body);
 }
 }
-export async function completeCompoundWord(id: string, idWord: string){
-  const cheak = await getUserIdWords(id, idWord);
+export async function completeCompoundWord(id: string, idWord: string, token: string){
+  const cheak = await getUserIdWords(id, idWord, token);
   const body = { difficulty: 'complete',
   optional: {} }
   if(!cheak){
-  const addWords = await addWordsUserApi(id, idWord, body);
+  await addWordsUserApi(id, idWord, token, body);
 }else{
-  const addWords = await UpdateWordsUserApi(id, idWord, body);
+  await UpdateWordsUserApi(id, idWord, token, body);
 }
 }
 
