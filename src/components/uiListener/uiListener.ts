@@ -1,6 +1,6 @@
 import { Login } from '../login/login';
 import { signToToken, registration, logOut, getLocalStorageToken  } from '../authorization/auth';
-import { sound, changePage, addCompoundWord, completeCompoundWord, cheakPageToComplete } from './../textbook/textbook';
+import { sound, changePage, addCompoundWord, studiedCompoundWord, cheakPageToComplete } from './../textbook/textbook';
 import { deleteordsUserApi } from './../api/wordsApi';
 import { removeCompoundWord } from './../textbook/dictionary';
 
@@ -104,13 +104,13 @@ export function ulListenner() {
       const wordId = card.dataset.id as string;
       removeCompoundWord(localStorage.id, wordId, localStorage.token);
     }
-    if (target.closest('.cont-button__complete')) {
+    if (target.closest('.cont-button__studied')) {
       const card = (target.parentNode as HTMLElement).parentNode as HTMLElement;
       const wordId = card.dataset.id as string;
-      if(!card.classList.contains('complete')){
-        card.classList.add('complete');
+      if(!card.classList.contains('studied')){
+        card.classList.add('studied');
         const localStorage = new getLocalStorageToken;
-        completeCompoundWord(localStorage.id, wordId, localStorage.token);
+        studiedCompoundWord(localStorage.id, wordId, localStorage.token);
       }
       const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
       const buttonAdd = (target.parentNode as HTMLElement).childNodes[0] as HTMLInputElement;

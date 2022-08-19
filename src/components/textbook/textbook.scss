@@ -55,7 +55,7 @@
     .hard{
       background: #b9c769 ;
     }
-    .complete{
+    .studied{
       background: #6cc769;
     }
     .list-textbook__elem:hover{
@@ -86,11 +86,11 @@
   gap: 0px 0px; 
   grid-template-areas: 
     "cont-button__add cont-button__remove"
-    "cont-button__complete cont-button__complete"; 
+    "cont-button__studied cont-button__studied"; 
 }
 .cont-button__add { grid-area: cont-button__add; }
 .cont-button__remove { grid-area: cont-button__remove; }
-.cont-button__complete { grid-area: cont-button__complete; }
+.cont-button__studied { grid-area: cont-button__studied; }
 .cont-button{
   width: 100%;
   height: 35px;
@@ -100,9 +100,9 @@
 .cont-button:hover{
   background: #b5cb37;
 }
-.complete-page{
+.studied-page{
   background: #96f291;
 }
-.pagination-complete{
+.pagination-studied{
   background: chartreuse !important;
 }

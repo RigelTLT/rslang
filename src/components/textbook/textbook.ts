@@ -8,19 +8,19 @@ export function cheakPageToComplete(){
   const words = document.querySelectorAll('.list-textbook__elem');
   let index = 0;
   for(let i= 0; i < words.length; i++) {
-    if(words[i].classList.contains('hard') || words[i].classList.contains('complete')){
+    if(words[i].classList.contains('hard') || words[i].classList.contains('studied')){
       index++;
     }
   }
   const main = document.querySelector('.main') as HTMLElement;
     const numberPage = document.querySelector('.number-page') as HTMLElement;
   if(index == words.length){
-    main.classList.add('complete-page');
-    numberPage.classList.add('pagination-complete');
+    main.classList.add('studied-page');
+    numberPage.classList.add('pagination-studied');
   }else{
-    if(numberPage.classList.contains('pagination-complete') && main.classList.contains('complete-page')){
-    main.classList.remove('complete-page');
-    numberPage.classList.remove('pagination-complete');}
+    if(numberPage.classList.contains('pagination-studied') && main.classList.contains('studied-page')){
+    main.classList.remove('studied-page');
+    numberPage.classList.remove('pagination-studied');}
   }
 }
 
@@ -35,7 +35,7 @@ export async function addCompoundWord(id: string, idWord: string, token: string)
 }
 cheakPageToComplete();
 }
-export async function completeCompoundWord(id: string, idWord: string, token: string){
+export async function studiedCompoundWord(id: string, idWord: string, token: string){
   const cheak = await getUserIdWords(id, idWord, token);
   const body = { difficulty: 'studied',
   optional: {} }
@@ -204,7 +204,7 @@ async function createList(data: IapiRequestWords){
       buttonContainer.append(buttonRemove);
       const buttonComplete = document.createElement('button');
       buttonComplete.classList.add('cont-button');
-      buttonComplete.classList.add('cont-button__complete');
+      buttonComplete.classList.add('cont-button__studied');
       buttonComplete.innerText = `Изученно`;
       buttonContainer.append(buttonComplete);
       if(checkWords){
@@ -216,7 +216,7 @@ async function createList(data: IapiRequestWords){
               buttonRemove.disabled = false;
             }
             if(checkWords[j].difficulty === 'studied'){
-              elem.classList.add('complete');
+              elem.classList.add('studied');
               buttonAdd.disabled = true;
               buttonRemove.disabled = true;
               buttonComplete.disabled = true;
