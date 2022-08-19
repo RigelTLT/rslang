@@ -66,10 +66,14 @@ export async function UpdateWordsUserApi(id: string, idWord: string, token: stri
 export async function deleteordsUserApi(id: string, idWord: string, token: string) {
   const response = await fetch(`${baseUrl}${path.users}/${id}/words/${idWord}`, {
     method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
   });
      if(response.ok){
-      const employee = await response.json();
-      return employee;
+      return response;
     }else{
       return null;
     }

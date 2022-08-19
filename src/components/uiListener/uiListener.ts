@@ -1,6 +1,10 @@
 import { Login } from '../login/login';
 import { signToToken, registration, logOut, getLocalStorageToken  } from '../authorization/auth';
 import { sound, changePage, addCompoundWord, completeCompoundWord } from './../textbook/textbook';
+import { deleteordsUserApi } from './../api/wordsApi';
+import { removeCompoundWord } from './../textbook/dictionary';
+
+
 const login = new Login();
 
 export function ulListenner() {
@@ -84,7 +88,16 @@ export function ulListenner() {
       const card = (target.parentNode as HTMLElement).parentNode as HTMLElement;
       if(card.classList.contains('hard')){
       card.classList.remove('hard');
+      const localStorage = new getLocalStorageToken;
+      const wordId = card.dataset.id as string;
+      deleteordsUserApi(localStorage.id, wordId, localStorage.token);
     }
+    }
+    if (target.closest('.cont-button__remove-to-dictionary')) {
+      const card = target.parentNode as HTMLElement;
+      const localStorage = new getLocalStorageToken;
+      const wordId = card.dataset.id as string;
+      removeCompoundWord(localStorage.id, wordId, localStorage.token);
     }
     if (target.closest('.cont-button__complete')) {
       const card = (target.parentNode as HTMLElement).parentNode as HTMLElement;

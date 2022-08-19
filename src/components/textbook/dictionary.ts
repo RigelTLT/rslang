@@ -1,6 +1,6 @@
 import './textbook.scss';
 import { baseUrl, getWordId } from './../api/basicApi';
-import { addWordsUserApi, getUserIdWords, UpdateWordsUserApi, getUserAllWords } from './../api/wordsApi';
+import { deleteordsUserApi, getUserAllWords } from './../api/wordsApi';
 import { IapiRequestUserWords } from './../interface/interface';
 import { getLocalStorageToken } from './../authorization/auth';
 
@@ -52,10 +52,15 @@ async function checkWordsUser(id: string, token: string){
   }
 }
 
+export async function removeCompoundWord(id: string, idWord: string, token: string){
+  await deleteordsUserApi(id, idWord, token);
+  const picture = document.querySelector(`div[data-id="${idWord}"]`) as HTMLElement;
+  picture.remove();
+}
+
 async function createList(data: IapiRequestUserWords){
   const localStorage = new getLocalStorageToken;
   const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
-  console.log(data.status);
   const main = document.querySelector('.main') as HTMLElement;
   const list = document.createElement('div');
   list.classList.add('list-textbook');
@@ -66,6 +71,7 @@ async function createList(data: IapiRequestUserWords){
     if(data.status === checkWords[i].difficulty && Number(data.group) === words.group){
     const elem = document.createElement('div');
     elem.classList.add('list-textbook__elem');
+    elem.setAttribute('data-id', `${words.id}`);
     list.append(elem);
     const img = document.createElement('img');
     img.classList.add('list-textbook__elem__img');
@@ -118,6 +124,13 @@ async function createList(data: IapiRequestUserWords){
     textMeaningTranslate.classList.add('meaning__textTranslate');
     textMeaningTranslate.innerHTML = `${words.textMeaningTranslate}`;
     meaning.append(textMeaningTranslate);
+    if(data.status === 'hard'){
+      const buttonRemove = document.createElement('button');
+      buttonRemove.classList.add('cont-button');
+      buttonRemove.classList.add('cont-button__remove-to-dictionary');
+      buttonRemove.innerText = `Убрать из сложных слов`;
+      elem.append(buttonRemove);
+    }
   }
   }
 }
