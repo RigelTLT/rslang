@@ -16,7 +16,7 @@ export async function addCompoundWord(id: string, idWord: string, token: string)
 }
 export async function completeCompoundWord(id: string, idWord: string, token: string){
   const cheak = await getUserIdWords(id, idWord, token);
-  const body = { difficulty: 'complete',
+  const body = { difficulty: 'studied',
   optional: {} }
   if(!cheak){
   await addWordsUserApi(id, idWord, token, body);
@@ -191,7 +191,7 @@ async function createList(data: IapiRequestWords){
               buttonAdd.disabled = true;
               buttonRemove.disabled = false;
             }
-            if(checkWords[j].difficulty === 'complete'){
+            if(checkWords[j].difficulty === 'studied'){
               elem.classList.add('complete');
               buttonAdd.disabled = true;
               buttonRemove.disabled = true;

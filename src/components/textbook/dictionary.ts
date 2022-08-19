@@ -1,83 +1,75 @@
 import './textbook.scss';
-import { baseUrl } from './../api/basicApi';
-import { getWords, getWordId } from './../api/basicApi';
-import { IapiRequestWords } from './../interface/interface';
+import { baseUrl, getWordId } from './../api/basicApi';
+import { addWordsUserApi, getUserIdWords, UpdateWordsUserApi, getUserAllWords } from './../api/wordsApi';
+import { IapiRequestUserWords } from './../interface/interface';
+import { getLocalStorageToken } from './../authorization/auth';
 
-function paginationState(page : string, group : string){
-  const textGroup = document.querySelector('.text-group') as HTMLElement;
-  if(page){
-  textGroup.innerHTML = `Раздел ${group}`;
-  }else{
-    textGroup.innerHTML = `Раздел 1`;
-  }
-  const numberToPage = Number(page);
-  const numberPage = document.querySelector('.number-page') as HTMLElement;
-  if(page){
-    numberPage.innerHTML = page;
+function paginationState(group : string, status: string){
+  const textGroup = document.querySelectorAll('.text-group');
+ 
+    if(status){
+      if(status === 'studied'){
+    textGroup[0].innerHTML = `Изученные слова`;
+    const linkСhapter = document.querySelectorAll('.link__chapter');
+    for(let i= 0; i < linkСhapter.length; i++){
+      (linkСhapter[i] as HTMLLinkElement).href += '&status=studied';
+    }}else{
+      textGroup[0].innerHTML = 'Сложные слова';
+    }
   }
   else{
-    numberPage.innerHTML = '1';
-  }
-  const backAll = document.querySelector('.back-all') as HTMLInputElement;
-  const back = document.querySelector('.back') as HTMLInputElement;  
-  const forward = document.querySelector('.forward') as HTMLInputElement;
-  const forwardAll = document.querySelector('.forward-all') as HTMLInputElement;
-  if(1 < numberToPage && numberToPage < 30){
-    backAll.disabled = false;
-    back.disabled = false;
-    forward.disabled = false;
-    forwardAll.disabled = false;
-  }
-  if(numberToPage <= 1){
-    backAll.disabled = true;
-    back.disabled = true;
-    forward.disabled = false;
-    forwardAll.disabled = false;
-  }
-  if(numberToPage >= 30){
-    backAll.disabled = false;
-    back.disabled = false;
-    forward.disabled = true;
-    forwardAll.disabled = true;
+    textGroup[0].innerHTML = `Сложные слова`;
+  } 
+  if(group){
+    textGroup[1].innerHTML = `Раздел ${group}`;
+    const linkStatus = document.querySelectorAll('.link__status');
+    for(let i= 0; i < linkStatus.length; i++){
+      (linkStatus[i] as HTMLLinkElement).href += `&group=${group}`;
+    }
+  }else{
+    textGroup[1].innerHTML = `Раздел 1`;
   }
 }
 
 function getPageGroupTextbook() {
   const params = new  URLSearchParams(document.location.search);
-  const page =  params.get('page') as string;
   const group =  params.get('group') as string;
-  paginationState(page, group);
-  const audioCallLink = document.querySelector('.link__audio-call') as HTMLLinkElement;
-  const sprint = document.querySelector('.link__sprint') as HTMLLinkElement;
-  audioCallLink.href = `./audio-call.html?group=${group}&page=${page}`;
-  sprint.href = `./sprint.html?group=${group}&page=${page}`;
-  let data: IapiRequestWords;
-  if (page && group) {
-    data = {page: `${Number(page)-1}`, group: `${Number(group)-1}`};
-  }
-  else{
-    data = {page: '0', group: '0'};
-  }
+  const status =  params.get('status') as string;
+  paginationState(group, status);
+  const data = {group: `${ group ? Number(group)-1: '0'}`, status: `${status ? status: 'hard'}`};
   createList(data);
 }
-if(window.location.pathname === '/ebook.html'){
+if(window.location.pathname === '/dictionary.html'){
 getPageGroupTextbook();
 }
 
-async function createList(data: IapiRequestWords){
-  const words = await getWords(data);
-  
+async function checkWordsUser(id: string, token: string){
+  if(id && token){
+    const checkWords = await getUserAllWords(id, token);
+    return checkWords;
+  }else{
+    return null;
+  }
+}
+
+async function createList(data: IapiRequestUserWords){
+  const localStorage = new getLocalStorageToken;
+  const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
+  console.log(data.status);
   const main = document.querySelector('.main') as HTMLElement;
   const list = document.createElement('div');
   list.classList.add('list-textbook');
   main.append(list);
-  for (let i = 0; i < words.length; i++) {
+  if(localStorage.token){
+  for (let i = 0; i < checkWords.length; i++) {
+    const words = await getWordId(checkWords[i].wordId);
+    if(data.status === checkWords[i].difficulty && Number(data.group) === words.group){
     const elem = document.createElement('div');
     elem.classList.add('list-textbook__elem');
     list.append(elem);
     const img = document.createElement('img');
     img.classList.add('list-textbook__elem__img');
-    img.src = `${baseUrl}${words[i].image}`;
+    img.src = `${baseUrl}${words.image}`;
     elem.append(img);
     const wordsContainer = document.createElement('div');
     wordsContainer.classList.add('list-textbook__elem__words-container');
@@ -87,46 +79,51 @@ async function createList(data: IapiRequestWords){
     wordsContainer.append(wordContainer);
     const word = document.createElement('div');
     word.classList.add('word-container__word');
-    word.innerHTML = `${words[i].word}`;
+    word.innerHTML = `${words.word}`;
     wordContainer.append(word);
     const transcription = document.createElement('div');
     transcription.classList.add('word-container__transcription');
-    transcription.innerHTML = `${words[i].transcription}`;
+    transcription.innerHTML = `${words.transcription}`;
     wordContainer.append(transcription);
     const svgElem = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
     imgAudio = document.createElementNS('http://www.w3.org/2000/svg', 'use');
     svgElem.classList.add('audio');
-    svgElem.setAttribute('data-id', `${words[i].id}`);
+    svgElem.setAttribute('data-id', `${words.id}`);
     imgAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
     svgElem.append(imgAudio);
     wordContainer.append(svgElem);
     const wordTranslate = document.createElement('div');
     wordTranslate.classList.add('word-container__wordTranslate');
-    wordTranslate.innerHTML = `${words[i].wordTranslate}`;
+    wordTranslate.innerHTML = `${words.wordTranslate}`;
     wordContainer.append(wordTranslate);
     const example = document.createElement('div');
     example.classList.add('list-textbook__elem__example');
     wordsContainer.append(example);
     const textExample = document.createElement('div');
     textExample.classList.add('example__text');
-    textExample.innerHTML = `${words[i].textExample}`;
+    textExample.innerHTML = `${words.textExample}`;
     example.append(textExample);
     const textExampleTranslate = document.createElement('div');
     textExampleTranslate.classList.add('example__textTranslate');
-    textExampleTranslate.innerHTML = `${words[i].textExampleTranslate}`;
+    textExampleTranslate.innerHTML = `${words.textExampleTranslate}`;
     example.append(textExampleTranslate);
     const meaning = document.createElement('div');
     meaning.classList.add('list-textbook__elem__meaning');
     wordsContainer.append(meaning);
     const textMeaning = document.createElement('div');
     textMeaning.classList.add('meaning__text');
-    textMeaning.innerHTML = `${words[i].textMeaning}`;
+    textMeaning.innerHTML = `${words.textMeaning}`;
     meaning.append(textMeaning);
     const textMeaningTranslate = document.createElement('div');
     textMeaningTranslate.classList.add('meaning__textTranslate');
-    textMeaningTranslate.innerHTML = `${words[i].textMeaningTranslate}`;
+    textMeaningTranslate.innerHTML = `${words.textMeaningTranslate}`;
     meaning.append(textMeaningTranslate);
   }
+  }
+}
+else{
+  list.innerText = `Авторизируйтесь для просмотра и редактирования`;
+}
 }
 
 

@@ -2,6 +2,10 @@ export interface IapiRequestWords{
   group: string,
   page: string
 }
+export interface IapiRequestUserWords{
+  group: string,
+  status: string
+}
 export interface Isignin{
   email: string,
   password: string
