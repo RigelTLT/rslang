@@ -6,8 +6,49 @@
   letter-spacing: 0.5px;
   transition: 0.3s;
 
-  &-dark{
-    
+  &-white {
+    border-color: #fff;
+    background-color: #fff;
+    color: var(--gray800);
+    &:hover {
+      border-color: #fff;
+      background-color: var(--gray800);
+      color: #fff;
+    }
+    &:active {
+      border-color: #fff;
+      background-color: #fff;
+      color: var(--gray900);
+    }
+  }
+
+  &-dark {
+    border-color: var(--gray800);
+    background-color: var(--gray800);
+    color: #fff;
+    &:hover {
+      border-color: var(--gray800);
+      background-color: #fff;
+      color: var(--gray800);
+    }
+    &:active {
+      background-color: var(--gray900);
+      color: #fff;
+    }
+  }
+
+  &-gray {
+    border-color: var(--gray300);
+    background-color: var(--gray300);
+    color: var(--gray800);
+    &:hover {
+      background-color: transparent;
+      color: var(--gray800);
+    }
+    &:active {
+      background-color: var(--gray400);
+      color: var(--gray800);
+    }
   }
 
   &-orange {
