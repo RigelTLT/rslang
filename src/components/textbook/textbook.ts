@@ -111,18 +111,7 @@ async function createList(data: IapiRequestWords){
     elem.classList.add('list-textbook__elem');
     elem.setAttribute('data-id', `${words[i].id}`);
     list.append(elem);
-    if(checkWords){
-      for(let j = 0; j < checkWords.length; j++) {
-        if(checkWords[j].wordId === words[i].id){
-          if(checkWords[j].difficulty === 'hard'){
-            elem.classList.add('hard');
-          }
-          if(checkWords[j].difficulty === 'complete'){
-            elem.classList.add('complete');
-          }
-        }
-      }
-    }
+    
     const img = document.createElement('img');
     img.classList.add('list-textbook__elem__img');
     img.src = `${baseUrl}${words[i].image}`;
@@ -187,12 +176,30 @@ async function createList(data: IapiRequestWords){
       buttonRemove.classList.add('cont-button');
       buttonRemove.classList.add('cont-button__remove');
       buttonRemove.innerText = `Убрать из сложных слов`;
+      buttonRemove.disabled = true;
       buttonContainer.append(buttonRemove);
       const buttonComplete = document.createElement('button');
       buttonComplete.classList.add('cont-button');
       buttonComplete.classList.add('cont-button__complete');
       buttonComplete.innerText = `Изученно`;
       buttonContainer.append(buttonComplete);
+      if(checkWords){
+        for(let j = 0; j < checkWords.length; j++) {
+          if(checkWords[j].wordId === words[i].id){
+            if(checkWords[j].difficulty === 'hard'){
+              elem.classList.add('hard');
+              buttonAdd.disabled = true;
+              buttonRemove.disabled = false;
+            }
+            if(checkWords[j].difficulty === 'complete'){
+              elem.classList.add('complete');
+              buttonAdd.disabled = true;
+              buttonRemove.disabled = true;
+              buttonComplete.disabled = true;
+            }
+          }
+        }
+      }
       }
   }
 }

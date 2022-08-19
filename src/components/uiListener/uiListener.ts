@@ -75,6 +75,9 @@ export function ulListenner() {
       card.classList.add('hard');
       const localStorage = new getLocalStorageToken;
       addCompoundWord(localStorage.id, wordId, localStorage.token);
+      (target as HTMLInputElement).disabled = true;
+      const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
+      buttonDelete.disabled = false;
     }
     }
     if (target.closest('.cont-button__remove')) {
@@ -95,6 +98,7 @@ export function ulListenner() {
       const buttonAdd = (target.parentNode as HTMLElement).childNodes[0] as HTMLInputElement;
       buttonDelete.disabled = true;
       buttonAdd.disabled = true;
+      (target as HTMLInputElement).disabled = true;
     }
   });
 }
