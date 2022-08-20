@@ -1,84 +1,101 @@
 import './textbook.scss';
-import { addWordsUserApi, getUserIdWords, UpdateWordsUserApi, getUserAllWords } from './../api/wordsApi';
+import {
+  addWordsUserApi,
+  getUserIdWords,
+  UpdateWordsUserApi,
+  getUserAllWords,
+} from './../api/wordsApi';
 import { baseUrl, getWords, getWordId } from './../api/basicApi';
 import { IapiRequestWords } from './../interface/interface';
 import { getLocalStorageToken } from './../authorization/auth';
 
-export function cheakPageToComplete(){
+export function cheakPageToComplete() {
   const words = document.querySelectorAll('.list-textbook__elem');
   let index = 0;
-  for(let i= 0; i < words.length; i++) {
-    if(words[i].classList.contains('hard') || words[i].classList.contains('studied')){
+  for (let i = 0; i < words.length; i++) {
+    if (
+      words[i].classList.contains('hard') ||
+      words[i].classList.contains('studied')
+    ) {
       index++;
     }
   }
   const main = document.querySelector('.main') as HTMLElement;
-    const numberPage = document.querySelector('.number-page') as HTMLElement;
-  if(index == words.length){
+  const numberPage = document.querySelector('.number-page') as HTMLElement;
+  if (index == words.length) {
     main.classList.add('studied-page');
     numberPage.classList.add('pagination-studied');
-  }else{
-    if(numberPage.classList.contains('pagination-studied') && main.classList.contains('studied-page')){
-    main.classList.remove('studied-page');
-    numberPage.classList.remove('pagination-studied');}
+  } else {
+    if (
+      numberPage.classList.contains('pagination-studied') &&
+      main.classList.contains('studied-page')
+    ) {
+      main.classList.remove('studied-page');
+      numberPage.classList.remove('pagination-studied');
+    }
   }
 }
 
-export async function addCompoundWord(id: string, idWord: string, token: string){
+export async function addCompoundWord(
+  id: string,
+  idWord: string,
+  token: string
+) {
   const cheak = await getUserIdWords(id, idWord, token);
-  const body = { difficulty: 'hard',
-  optional: {} }
-  if(!cheak){
-  await addWordsUserApi(id, idWord, token, body);
-}else{
-  await UpdateWordsUserApi(id, idWord, token, body);
+  const body = { difficulty: 'hard', optional: {} };
+  if (!cheak) {
+    await addWordsUserApi(id, idWord, token, body);
+  } else {
+    await UpdateWordsUserApi(id, idWord, token, body);
+  }
+  cheakPageToComplete();
 }
-cheakPageToComplete();
-}
-export async function studiedCompoundWord(id: string, idWord: string, token: string){
+export async function studiedCompoundWord(
+  id: string,
+  idWord: string,
+  token: string
+) {
   const cheak = await getUserIdWords(id, idWord, token);
-  const body = { difficulty: 'studied',
-  optional: {} }
-  if(!cheak){
-  await addWordsUserApi(id, idWord, token, body);
-}else{
-  await UpdateWordsUserApi(id, idWord, token, body);
-}
-cheakPageToComplete();
+  const body = { difficulty: 'studied', optional: {} };
+  if (!cheak) {
+    await addWordsUserApi(id, idWord, token, body);
+  } else {
+    await UpdateWordsUserApi(id, idWord, token, body);
+  }
+  cheakPageToComplete();
 }
 
-function paginationState(page : string, group : string){
+function paginationState(page: string, group: string) {
   const textGroup = document.querySelector('.text-group') as HTMLElement;
-  if(page){
-  textGroup.innerText = `Раздел ${group}`;
-  }else{
+  if (page) {
+    textGroup.innerText = `Раздел ${group}`;
+  } else {
     textGroup.innerText = `Раздел 1`;
   }
   const numberToPage = Number(page);
   const numberPage = document.querySelector('.number-page') as HTMLElement;
-  if(page){
+  if (page) {
     numberPage.innerText = page;
-  }
-  else{
+  } else {
     numberPage.innerText = '1';
   }
   const backAll = document.querySelector('.back-all') as HTMLInputElement;
-  const back = document.querySelector('.back') as HTMLInputElement;  
+  const back = document.querySelector('.back') as HTMLInputElement;
   const forward = document.querySelector('.forward') as HTMLInputElement;
   const forwardAll = document.querySelector('.forward-all') as HTMLInputElement;
-  if(1 < numberToPage && numberToPage < 30){
+  if (1 < numberToPage && numberToPage < 30) {
     backAll.disabled = false;
     back.disabled = false;
     forward.disabled = false;
     forwardAll.disabled = false;
   }
-  if(numberToPage <= 1){
+  if (numberToPage <= 1) {
     backAll.disabled = true;
     back.disabled = true;
     forward.disabled = false;
     forwardAll.disabled = false;
   }
-  if(numberToPage >= 30){
+  if (numberToPage >= 30) {
     backAll.disabled = false;
     back.disabled = false;
     forward.disabled = true;
@@ -87,55 +104,55 @@ function paginationState(page : string, group : string){
 }
 
 function getPageGroupTextbook() {
-  const params = new  URLSearchParams(document.location.search);
-  const page =  params.get('page') as string;
-  const group =  params.get('group') as string;
+  const params = new URLSearchParams(document.location.search);
+  const page = params.get('page') as string;
+  const group = params.get('group') as string;
   paginationState(page, group);
-  const audioCallLink = document.querySelector('.link__audio-call') as HTMLLinkElement;
+  const audioCallLink = document.querySelector(
+    '.link__audio-call'
+  ) as HTMLLinkElement;
   const sprint = document.querySelector('.link__sprint') as HTMLLinkElement;
 
   let data: IapiRequestWords;
   if (page && group) {
-    data = {page: `${Number(page)-1}`, group: `${Number(group)-1}`};
+    data = { page: `${Number(page) - 1}`, group: `${Number(group) - 1}` };
     audioCallLink.href = `./audio-call.html?group=${group}&page=${page}`;
     sprint.href = `./sprint.html?group=${group}&page=${page}`;
-  }
-  else{
-    data = {page: '0', group: '0'};
+  } else {
+    data = { page: '0', group: '0' };
     audioCallLink.href = `./audio-call.html?group=1&page=1`;
     sprint.href = `./sprint.html?group=1&page=1`;
   }
   createList(data);
 }
-if(window.location.pathname === '/ebook.html'){
-getPageGroupTextbook();
+if (window.location.pathname === '/ebook.html') {
+  getPageGroupTextbook();
 }
 
-async function checkWordsUser(id: string, token: string){
-  if(id && token){
+async function checkWordsUser(id: string, token: string) {
+  if (id && token) {
     const checkWords = await getUserAllWords(id, token);
     return checkWords;
-  }else{
+  } else {
     return null;
   }
 }
 
-
-
-async function createList(data: IapiRequestWords){
+async function createList(data: IapiRequestWords) {
   const words = await getWords(data);
-  const localStorage = new getLocalStorageToken;
+  const localStorage = new getLocalStorageToken();
   const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
-  const main = document.querySelector('.main') as HTMLElement;
+  const mainContainer = document.querySelector('.main .container') as HTMLDivElement;
+  
   const list = document.createElement('div');
   list.classList.add('list-textbook');
-  main.append(list);
+  mainContainer.append(list);
   for (let i = 0; i < words.length; i++) {
     const elem = document.createElement('div');
     elem.classList.add('list-textbook__elem');
     elem.setAttribute('data-id', `${words[i].id}`);
     list.append(elem);
-    
+
     const img = document.createElement('img');
     img.classList.add('list-textbook__elem__img');
     img.src = `${baseUrl}${words[i].image}`;
@@ -154,11 +171,18 @@ async function createList(data: IapiRequestWords){
     transcription.classList.add('word-container__transcription');
     transcription.innerText = `${words[i].transcription}`;
     wordContainer.append(transcription);
-    const svgElem = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-    imgAudio = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    const svgElem = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'svg'
+      ),
+      imgAudio = document.createElementNS('http://www.w3.org/2000/svg', 'use');
     svgElem.classList.add('audio');
     svgElem.setAttribute('data-id', `${words[i].id}`);
-    imgAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
+    imgAudio.setAttributeNS(
+      'http://www.w3.org/1999/xlink',
+      'xlink:href',
+      'assets/ico/audio-mute.svg#Capa_1'
+    );
     svgElem.append(imgAudio);
     wordContainer.append(svgElem);
     const wordTranslate = document.createElement('div');
@@ -187,7 +211,7 @@ async function createList(data: IapiRequestWords){
     textMeaningTranslate.classList.add('meaning__textTranslate');
     textMeaningTranslate.innerText = `${words[i].textMeaningTranslate}`;
     meaning.append(textMeaningTranslate);
-    if(localStorage.id){
+    if (localStorage.id) {
       const buttonContainer = document.createElement('div');
       buttonContainer.classList.add('list-textbook__cont-button');
       elem.append(buttonContainer);
@@ -207,15 +231,15 @@ async function createList(data: IapiRequestWords){
       buttonComplete.classList.add('cont-button__studied');
       buttonComplete.innerText = `Изученно`;
       buttonContainer.append(buttonComplete);
-      if(checkWords){
-        for(let j = 0; j < checkWords.length; j++) {
-          if(checkWords[j].wordId === words[i].id){
-            if(checkWords[j].difficulty === 'hard'){
+      if (checkWords) {
+        for (let j = 0; j < checkWords.length; j++) {
+          if (checkWords[j].wordId === words[i].id) {
+            if (checkWords[j].difficulty === 'hard') {
               elem.classList.add('hard');
               buttonAdd.disabled = true;
               buttonRemove.disabled = false;
             }
-            if(checkWords[j].difficulty === 'studied'){
+            if (checkWords[j].difficulty === 'studied') {
               elem.classList.add('studied');
               buttonAdd.disabled = true;
               buttonRemove.disabled = true;
@@ -224,67 +248,74 @@ async function createList(data: IapiRequestWords){
           }
         }
       }
-      }
+    }
   }
   cheakPageToComplete();
 }
 
-
-export async function sound(id: string){
+export async function sound(id: string) {
   const query = await getWordId(id);
-  const arrayAudio = ['audio', 'audioExample', 'audioMeaning']
+  const arrayAudio = ['audio', 'audioExample', 'audioMeaning'];
   const picture = document.querySelector(`svg[data-id="${id}"]`) as HTMLElement;
-  const pictureAudio = picture.firstChild  as HTMLElement;
-  pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-play.svg#Capa_1');
-    const audio = new Audio();
-    audio.src = `${baseUrl}${query[arrayAudio[0]]}`;
-    audio.autoplay = true;
-    let i = 0;
-    audio.onended = function() {
-      i++;
-      if (i < arrayAudio.length){
+  const pictureAudio = picture.firstChild as HTMLElement;
+  pictureAudio.setAttributeNS(
+    'http://www.w3.org/1999/xlink',
+    'xlink:href',
+    'assets/ico/audio-play.svg#Capa_1'
+  );
+  const audio = new Audio();
+  audio.src = `${baseUrl}${query[arrayAudio[0]]}`;
+  audio.autoplay = true;
+  let i = 0;
+  audio.onended = function () {
+    i++;
+    if (i < arrayAudio.length) {
       audio.src = `${baseUrl}${query[arrayAudio[i]]}`;
       audio.play();
-    }else{
-      pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
+    } else {
+      pictureAudio.setAttributeNS(
+        'http://www.w3.org/1999/xlink',
+        'xlink:href',
+        'assets/ico/audio-mute.svg#Capa_1'
+      );
     }
-  }
+  };
 }
 
-export function changePage(button: string){
-  const params = new  URLSearchParams(document.location.search);
-  let page =  params.get('page') as string;
-  let group =  params.get('group') as string;
+export function changePage(button: string) {
+  const params = new URLSearchParams(document.location.search);
+  let page = params.get('page') as string;
+  let group = params.get('group') as string;
   if (!page && !group) {
     page = '1';
     group = '1';
   }
   const numberToPage = Number(page);
-  let newPage: number;;
+  let newPage: number;
   const url = `${document.location.origin}${document.location.pathname}`;
-  if(button ==='back-all'){
+  if (button === 'back-all') {
     newPage = 1;
     window.location.href = `${url}?group=${group}&page=${newPage}`;
   }
-  if(button ==='back'){
-    if(numberToPage <= 1){
-    newPage = 1;
-    window.location.href = `${url}?group=${group}&page=${newPage}`;
-  }else{
-    newPage = numberToPage-1;
-    window.location.href = `${url}?group=${group}&page=${newPage}`;
-  }
-  }
-  if(button ==='forward'){
-    if(numberToPage >= 30){
-      newPage = 30;
+  if (button === 'back') {
+    if (numberToPage <= 1) {
+      newPage = 1;
       window.location.href = `${url}?group=${group}&page=${newPage}`;
-    }else{
-      newPage = numberToPage+1;
+    } else {
+      newPage = numberToPage - 1;
       window.location.href = `${url}?group=${group}&page=${newPage}`;
     }
   }
-  if(button ==='forward-all'){
+  if (button === 'forward') {
+    if (numberToPage >= 30) {
+      newPage = 30;
+      window.location.href = `${url}?group=${group}&page=${newPage}`;
+    } else {
+      newPage = numberToPage + 1;
+      window.location.href = `${url}?group=${group}&page=${newPage}`;
+    }
+  }
+  if (button === 'forward-all') {
     newPage = 30;
     window.location.href = `${url}?group=${group}&page=${newPage}`;
   }
