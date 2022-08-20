@@ -24,6 +24,7 @@ module.exports = ({ development }) => ({
     statistic: './src/components/statistic/statistic.ts',
     audioCall: './src/components/audio-call/audio-call.ts',
     sprint: './src/components/sprint/sprint.ts',
+    dictionary: './src/components/textbook/dictionary.ts',
   },
   output: {
     filename: '[name].[contenthash].js',
@@ -60,6 +61,7 @@ module.exports = ({ development }) => ({
     new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' }),
     new HtmlWebpackPlugin({ filename: 'index.html', chunks: ['main'], template: './src/index.html' }),
     new HtmlWebpackPlugin({ filename: 'ebook.html', chunks: ['main'], template: './src/ebook.html' }),
+    new HtmlWebpackPlugin({ filename: 'dictionary.html', chunks: ['main'], template: './src/dictionary.html' }),
     new HtmlWebpackPlugin({ filename: 'statistic.html', chunks: ['statistic', 'main'], template: './src/statistic.html' }),
     new HtmlWebpackPlugin({ filename: 'audio-call.html', chunks: ['audioCall', 'main'], template: './src/audio-call.html' }),
     new HtmlWebpackPlugin({ filename: 'sprint.html', chunks: ['sprint', 'main'], template: './src/sprint.html' }),

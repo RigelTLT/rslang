@@ -59,12 +59,18 @@ export async function registration(params: Iregist) {
   }
 }
 
-export function getLocalStorageToken() {
-  if (localStorage.getItem('token')) {
+export class getLocalStorageToken {
+  get token() {
     const tokens = JSON.parse(localStorage.getItem('token') as string) as string;
-    const id = JSON.parse(localStorage.getItem('id') as string) as string;
-    const name = JSON.parse(localStorage.getItem('name') as string) as string;
-    authorization({id: id, token: tokens, name: name});
+    return tokens;
   }
-}
+  get id(){
+    const id = JSON.parse(localStorage.getItem('id') as string) as string;
+    return id;
+  }
+   get name(){
+    const name = JSON.parse(localStorage.getItem('name') as string) as string;
+    return name;
+   }
+  }
 

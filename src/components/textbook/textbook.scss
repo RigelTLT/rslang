@@ -1,3 +1,39 @@
+.control-panel{
+  padding: 20px 0;
+  display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+    .pagination-panel {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-content: center;
+      justify-content: space-evenly;
+    }
+    .dropdown {
+      border: black 2px solid;
+    background: darkseagreen;
+    font-size: x-large;
+    width: 8rem;
+    text-align: center;
+    border-radius: 20px;
+    }
+  .pagination{
+    width: 40px;
+      height: 40px;
+      margin: 0 5px;
+      font-size: x-large;
+      background: #efc1a1;
+      border-radius: 20px;
+  }
+  .pagination:disabled{
+    color: #626363;
+    border: 0;
+    background: #f2dccd;
+  }
+}
 .list-textbook{
   display: flex;
     flex-direction: row;
@@ -16,6 +52,12 @@
     align-items: center;
     align-content: center;
     }
+    .hard{
+      background: #b9c769 ;
+    }
+    .studied{
+      background: #6cc769;
+    }
     .list-textbook__elem:hover{
       background: #f7f5d9;
       box-shadow: 0px 0px 10px 10px rgb(0 0 0 / 20%);
@@ -32,25 +74,35 @@
 .list-textbook__elem__word-container > div{
   padding: 0 10px;
 }
-.list-textbook__elem__example,
-.list-textbook__elem__meaning{
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  grid-template-rows: repeat(2, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-  justify-items: start;
-  }
-  .example__text,
-  .meaning__text { grid-area: 1 / 2 / 2 / 3; }
-  .example-audio,
-  .meaning-audio {grid-area: 1 / 1 / 2 / 2; }
-  .example__textTranslate,
-  .meaning__textTranslate { grid-area: 2 / 1 / 3 / 3; }
-
-.word-audio,
-.example-audio,
-.meaning-audio{
+.audio{
   width: 24px;
   height: 24px;
+}
+.list-textbook__cont-button {
+  width: 100%;
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  grid-template-rows: 1fr 1fr; 
+  gap: 0px 0px; 
+  grid-template-areas: 
+    "cont-button__add cont-button__remove"
+    "cont-button__studied cont-button__studied"; 
+}
+.cont-button__add { grid-area: cont-button__add; }
+.cont-button__remove { grid-area: cont-button__remove; }
+.cont-button__studied { grid-area: cont-button__studied; }
+.cont-button{
+  width: 100%;
+  height: 35px;
+  background: #37cb79;
+  font-size: large;
+}
+.cont-button:hover{
+  background: #b5cb37;
+}
+.studied-page{
+  background: #96f291;
+}
+.pagination-studied{
+  background: chartreuse !important;
 }

@@ -1,18 +1,109 @@
 import './textbook.scss';
-import { baseUrl } from './../api/basicApi';
-import { getWords, getWordId } from './../api/basicApi';
+import { addWordsUserApi, getUserIdWords, UpdateWordsUserApi, getUserAllWords } from './../api/wordsApi';
+import { baseUrl, getWords, getWordId } from './../api/basicApi';
 import { IapiRequestWords } from './../interface/interface';
+import { getLocalStorageToken } from './../authorization/auth';
+
+export function cheakPageToComplete(){
+  const words = document.querySelectorAll('.list-textbook__elem');
+  let index = 0;
+  for(let i= 0; i < words.length; i++) {
+    if(words[i].classList.contains('hard') || words[i].classList.contains('studied')){
+      index++;
+    }
+  }
+  const main = document.querySelector('.main') as HTMLElement;
+    const numberPage = document.querySelector('.number-page') as HTMLElement;
+  if(index == words.length){
+    main.classList.add('studied-page');
+    numberPage.classList.add('pagination-studied');
+  }else{
+    if(numberPage.classList.contains('pagination-studied') && main.classList.contains('studied-page')){
+    main.classList.remove('studied-page');
+    numberPage.classList.remove('pagination-studied');}
+  }
+}
+
+export async function addCompoundWord(id: string, idWord: string, token: string){
+  const cheak = await getUserIdWords(id, idWord, token);
+  const body = { difficulty: 'hard',
+  optional: {} }
+  if(!cheak){
+  await addWordsUserApi(id, idWord, token, body);
+}else{
+  await UpdateWordsUserApi(id, idWord, token, body);
+}
+cheakPageToComplete();
+}
+export async function studiedCompoundWord(id: string, idWord: string, token: string){
+  const cheak = await getUserIdWords(id, idWord, token);
+  const body = { difficulty: 'studied',
+  optional: {} }
+  if(!cheak){
+  await addWordsUserApi(id, idWord, token, body);
+}else{
+  await UpdateWordsUserApi(id, idWord, token, body);
+}
+cheakPageToComplete();
+}
+
+function paginationState(page : string, group : string){
+  const textGroup = document.querySelector('.text-group') as HTMLElement;
+  if(page){
+  textGroup.innerText = `Раздел ${group}`;
+  }else{
+    textGroup.innerText = `Раздел 1`;
+  }
+  const numberToPage = Number(page);
+  const numberPage = document.querySelector('.number-page') as HTMLElement;
+  if(page){
+    numberPage.innerText = page;
+  }
+  else{
+    numberPage.innerText = '1';
+  }
+  const backAll = document.querySelector('.back-all') as HTMLInputElement;
+  const back = document.querySelector('.back') as HTMLInputElement;  
+  const forward = document.querySelector('.forward') as HTMLInputElement;
+  const forwardAll = document.querySelector('.forward-all') as HTMLInputElement;
+  if(1 < numberToPage && numberToPage < 30){
+    backAll.disabled = false;
+    back.disabled = false;
+    forward.disabled = false;
+    forwardAll.disabled = false;
+  }
+  if(numberToPage <= 1){
+    backAll.disabled = true;
+    back.disabled = true;
+    forward.disabled = false;
+    forwardAll.disabled = false;
+  }
+  if(numberToPage >= 30){
+    backAll.disabled = false;
+    back.disabled = false;
+    forward.disabled = true;
+    forwardAll.disabled = true;
+  }
+}
 
 function getPageGroupTextbook() {
   const params = new  URLSearchParams(document.location.search);
   const page =  params.get('page') as string;
   const group =  params.get('group') as string;
+  paginationState(page, group);
+  const audioCallLink = document.querySelector('.link__audio-call') as HTMLLinkElement;
+  const sprint = document.querySelector('.link__sprint') as HTMLLinkElement;
+
   let data: IapiRequestWords;
   if (page && group) {
-    data = {page: page, group: group};
+    data = {page: `${Number(page)-1}`, group: `${Number(group)-1}`};
+    audioCallLink.href = `./audio-call.html?group=${group}&page=${page}`;
+    sprint.href = `./sprint.html?group=${group}&page=${page}`;
   }
   else{
     data = {page: '0', group: '0'};
+    audioCallLink.href = `./audio-call.html?group=1&page=1`;
+    sprint.href = `./sprint.html?group=1&page=1`;
   }
   createList(data);
 }
@@ -20,9 +111,21 @@ if(window.location.pathname === '/ebook.html'){
 getPageGroupTextbook();
 }
 
+async function checkWordsUser(id: string, token: string){
+  if(id && token){
+    const checkWords = await getUserAllWords(id, token);
+    return checkWords;
+  }else{
+    return null;
+  }
+}
+
+
+
 async function createList(data: IapiRequestWords){
   const words = await getWords(data);
-  
+  const localStorage = new getLocalStorageToken;
+  const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
   const main = document.querySelector('.main') as HTMLElement;
   const list = document.createElement('div');
   list.classList.add('list-textbook');
@@ -30,7 +133,9 @@ async function createList(data: IapiRequestWords){
   for (let i = 0; i < words.length; i++) {
     const elem = document.createElement('div');
     elem.classList.add('list-textbook__elem');
+    elem.setAttribute('data-id', `${words[i].id}`);
     list.append(elem);
+    
     const img = document.createElement('img');
     img.classList.add('list-textbook__elem__img');
     img.src = `${baseUrl}${words[i].image}`;
@@ -43,65 +148,144 @@ async function createList(data: IapiRequestWords){
     wordsContainer.append(wordContainer);
     const word = document.createElement('div');
     word.classList.add('word-container__word');
-    word.innerHTML = `${words[i].word}`;
+    word.innerText = `${words[i].word}`;
     wordContainer.append(word);
     const transcription = document.createElement('div');
     transcription.classList.add('word-container__transcription');
-    transcription.innerHTML = `${words[i].transcription}`;
+    transcription.innerText = `${words[i].transcription}`;
     wordContainer.append(transcription);
     const svgElem = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
     imgAudio = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    svgElem.classList.add('word-audio');
+    svgElem.classList.add('audio');
     svgElem.setAttribute('data-id', `${words[i].id}`);
     imgAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
     svgElem.append(imgAudio);
     wordContainer.append(svgElem);
     const wordTranslate = document.createElement('div');
     wordTranslate.classList.add('word-container__wordTranslate');
-    wordTranslate.innerHTML = `${words[i].wordTranslate}`;
+    wordTranslate.innerText = `${words[i].wordTranslate}`;
     wordContainer.append(wordTranslate);
     const example = document.createElement('div');
     example.classList.add('list-textbook__elem__example');
     wordsContainer.append(example);
-    const svgExample = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-    imgAudioExample = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    svgExample.classList.add('example-audio');
-    svgExample.setAttribute('data-id', `${words[i].id}`);
-    imgAudioExample.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
-    svgExample.append(imgAudioExample);
-    example.append(svgExample);
     const textExample = document.createElement('div');
     textExample.classList.add('example__text');
-    textExample.innerHTML = `${words[i].textExample}`;
+    textExample.innerText = `${words[i].textExample}`;
     example.append(textExample);
     const textExampleTranslate = document.createElement('div');
     textExampleTranslate.classList.add('example__textTranslate');
-    textExampleTranslate.innerHTML = `${words[i].textExampleTranslate}`;
+    textExampleTranslate.innerText = `${words[i].textExampleTranslate}`;
     example.append(textExampleTranslate);
     const meaning = document.createElement('div');
     meaning.classList.add('list-textbook__elem__meaning');
     wordsContainer.append(meaning);
-    const svgMeaning = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-    imgAudioMeaning = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    svgMeaning.classList.add('meaning-audio');
-    svgMeaning.setAttribute('data-id', `${words[i].id}`);
-    imgAudioMeaning.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
-    svgMeaning.append(imgAudioMeaning);
-    meaning.append(svgMeaning);
     const textMeaning = document.createElement('div');
     textMeaning.classList.add('meaning__text');
-    textMeaning.innerHTML = `${words[i].textMeaning}`;
+    textMeaning.innerText = `${words[i].textMeaning}`;
     meaning.append(textMeaning);
     const textMeaningTranslate = document.createElement('div');
     textMeaningTranslate.classList.add('meaning__textTranslate');
-    textMeaningTranslate.innerHTML = `${words[i].textMeaningTranslate}`;
+    textMeaningTranslate.innerText = `${words[i].textMeaningTranslate}`;
     meaning.append(textMeaningTranslate);
+    if(localStorage.id){
+      const buttonContainer = document.createElement('div');
+      buttonContainer.classList.add('list-textbook__cont-button');
+      elem.append(buttonContainer);
+      const buttonAdd = document.createElement('button');
+      buttonAdd.classList.add('cont-button');
+      buttonAdd.classList.add('cont-button__add');
+      buttonAdd.innerText = `Добавить в сложные слова`;
+      buttonContainer.append(buttonAdd);
+      const buttonRemove = document.createElement('button');
+      buttonRemove.classList.add('cont-button');
+      buttonRemove.classList.add('cont-button__remove');
+      buttonRemove.innerText = `Убрать из сложных слов`;
+      buttonRemove.disabled = true;
+      buttonContainer.append(buttonRemove);
+      const buttonComplete = document.createElement('button');
+      buttonComplete.classList.add('cont-button');
+      buttonComplete.classList.add('cont-button__studied');
+      buttonComplete.innerText = `Изученно`;
+      buttonContainer.append(buttonComplete);
+      if(checkWords){
+        for(let j = 0; j < checkWords.length; j++) {
+          if(checkWords[j].wordId === words[i].id){
+            if(checkWords[j].difficulty === 'hard'){
+              elem.classList.add('hard');
+              buttonAdd.disabled = true;
+              buttonRemove.disabled = false;
+            }
+            if(checkWords[j].difficulty === 'studied'){
+              elem.classList.add('studied');
+              buttonAdd.disabled = true;
+              buttonRemove.disabled = true;
+              buttonComplete.disabled = true;
+            }
+          }
+        }
+      }
+      }
+  }
+  cheakPageToComplete();
+}
+
+
+export async function sound(id: string){
+  const query = await getWordId(id);
+  const arrayAudio = ['audio', 'audioExample', 'audioMeaning']
+  const picture = document.querySelector(`svg[data-id="${id}"]`) as HTMLElement;
+  const pictureAudio = picture.firstChild  as HTMLElement;
+  pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-play.svg#Capa_1');
+    const audio = new Audio();
+    audio.src = `${baseUrl}${query[arrayAudio[0]]}`;
+    audio.autoplay = true;
+    let i = 0;
+    audio.onended = function() {
+      i++;
+      if (i < arrayAudio.length){
+      audio.src = `${baseUrl}${query[arrayAudio[i]]}`;
+      audio.play();
+    }else{
+      pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
+    }
   }
 }
 
-export async function sound(id: string, targetAudio: string){
-  const query = await getWordId(id);
-  const audio = new Audio();
-  audio.src = `${baseUrl}${query[targetAudio]}`;
-  audio.autoplay = true;
+export function changePage(button: string){
+  const params = new  URLSearchParams(document.location.search);
+  let page =  params.get('page') as string;
+  let group =  params.get('group') as string;
+  if (!page && !group) {
+    page = '1';
+    group = '1';
+  }
+  const numberToPage = Number(page);
+  let newPage: number;;
+  const url = `${document.location.origin}${document.location.pathname}`;
+  if(button ==='back-all'){
+    newPage = 1;
+    window.location.href = `${url}?group=${group}&page=${newPage}`;
+  }
+  if(button ==='back'){
+    if(numberToPage <= 1){
+    newPage = 1;
+    window.location.href = `${url}?group=${group}&page=${newPage}`;
+  }else{
+    newPage = numberToPage-1;
+    window.location.href = `${url}?group=${group}&page=${newPage}`;
+  }
+  }
+  if(button ==='forward'){
+    if(numberToPage >= 30){
+      newPage = 30;
+      window.location.href = `${url}?group=${group}&page=${newPage}`;
+    }else{
+      newPage = numberToPage+1;
+      window.location.href = `${url}?group=${group}&page=${newPage}`;
+    }
+  }
+  if(button ==='forward-all'){
+    newPage = 30;
+    window.location.href = `${url}?group=${group}&page=${newPage}`;
+  }
 }
