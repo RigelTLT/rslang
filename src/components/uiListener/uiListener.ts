@@ -1,9 +1,8 @@
 import { Login } from '../login/login';
-import { signToToken, registration, logOut, getLocalStorageToken  } from '../authorization/auth';
+import { signToToken, registration, logOut, getLocalStorageToken } from '../authorization/auth';
 import { sound, changePage, addCompoundWord, studiedCompoundWord, cheakPageToComplete } from './../textbook/textbook';
 import { deleteordsUserApi } from './../api/wordsApi';
 import { removeCompoundWord } from './../textbook/dictionary';
-
 
 const login = new Login();
 
@@ -12,7 +11,8 @@ export function ulListenner() {
     const popUp = document.querySelector('.login-popUp') as HTMLDivElement;
     const menu = document.querySelector('.login-popUp .menu') as HTMLDivElement;
     const target = event.target as HTMLElement;
-    const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
+    const EMAIL_REGEXP =
+      /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
     console.log(target);
     if (target.closest('.close') || !target.closest('.menu')) {
       popUp.style.transform = 'translateX(100%)';
@@ -32,22 +32,22 @@ export function ulListenner() {
       const email = (document.querySelector('input[name="email"]') as HTMLInputElement).value;
 
       const password = (document.querySelector('input[name="password"]') as HTMLInputElement).value;
-      if(EMAIL_REGEXP.test(email) && password.length>8){
-      event.preventDefault();
-      const dataLogin ={email:email, password: password};
-      await signToToken(dataLogin);
-      location.reload();
+      if (EMAIL_REGEXP.test(email) && password.length > 8) {
+        event.preventDefault();
+        const dataLogin = { email: email, password: password };
+        await signToToken(dataLogin);
+        location.reload();
+      }
     }
-  }
     if (target.closest('.registration__button')) {
       const email = (document.querySelector('input[name="email"]') as HTMLInputElement).value;
       const name = (document.querySelector('input[name="login"]') as HTMLInputElement).value;
       const password = (document.querySelector('input[name="pass"]') as HTMLInputElement).value;
-      if(EMAIL_REGEXP.test(email) && password.length>8 && name){
+      if (EMAIL_REGEXP.test(email) && password.length > 8 && name) {
         event.preventDefault();
-      const dataLogin ={name: name, email: email, password: password};
-      registration(dataLogin);
-    }
+        const dataLogin = { name: name, email: email, password: password };
+        registration(dataLogin);
+      }
     }
     if (target.closest('.account__out')) {
       logOut();
@@ -75,41 +75,41 @@ export function ulListenner() {
     if (target.closest('.cont-button__add')) {
       const card = (target.parentNode as HTMLElement).parentNode as HTMLElement;
       const wordId = card.dataset.id as string;
-      if(!card.classList.contains('hard')){
-      card.classList.add('hard');
-      const localStorage = new getLocalStorageToken;
-      addCompoundWord(localStorage.id, wordId, localStorage.token);
-      (target as HTMLInputElement).disabled = true;
-      const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
-      buttonDelete.disabled = false;
-    }
+      if (!card.classList.contains('hard')) {
+        card.classList.add('hard');
+        const localStorage = new getLocalStorageToken();
+        addCompoundWord(localStorage.id, wordId, localStorage.token);
+        (target as HTMLInputElement).disabled = true;
+        const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
+        buttonDelete.disabled = false;
+      }
     }
     if (target.closest('.cont-button__remove')) {
       const card = (target.parentNode as HTMLElement).parentNode as HTMLElement;
-      if(card.classList.contains('hard')){
-      card.classList.remove('hard');
-      const localStorage = new getLocalStorageToken;
-      const wordId = card.dataset.id as string;
-      deleteordsUserApi(localStorage.id, wordId, localStorage.token);
-      cheakPageToComplete();
-      const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
-      const buttonAdd = (target.parentNode as HTMLElement).childNodes[0] as HTMLInputElement;
-      buttonDelete.disabled = true;
-      buttonAdd.disabled = false;
-    }
+      if (card.classList.contains('hard')) {
+        card.classList.remove('hard');
+        const localStorage = new getLocalStorageToken();
+        const wordId = card.dataset.id as string;
+        deleteordsUserApi(localStorage.id, wordId, localStorage.token);
+        cheakPageToComplete();
+        const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
+        const buttonAdd = (target.parentNode as HTMLElement).childNodes[0] as HTMLInputElement;
+        buttonDelete.disabled = true;
+        buttonAdd.disabled = false;
+      }
     }
     if (target.closest('.cont-button__remove-to-dictionary')) {
       const card = target.parentNode as HTMLElement;
-      const localStorage = new getLocalStorageToken;
+      const localStorage = new getLocalStorageToken();
       const wordId = card.dataset.id as string;
       removeCompoundWord(localStorage.id, wordId, localStorage.token);
     }
     if (target.closest('.cont-button__studied')) {
       const card = (target.parentNode as HTMLElement).parentNode as HTMLElement;
       const wordId = card.dataset.id as string;
-      if(!card.classList.contains('studied')){
+      if (!card.classList.contains('studied')) {
         card.classList.add('studied');
-        const localStorage = new getLocalStorageToken;
+        const localStorage = new getLocalStorageToken();
         studiedCompoundWord(localStorage.id, wordId, localStorage.token);
       }
       const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;

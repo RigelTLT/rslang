@@ -80,7 +80,7 @@
   align-content: center;
 }
 
-.list-textbook__elem__word-container>div {
+.list-textbook__elem__word-container > div {
   padding: 0 10px;
 }
 
@@ -96,8 +96,8 @@
   grid-template-rows: 1fr 1fr;
   gap: 0px 0px;
   grid-template-areas:
-    "cont-button__add cont-button__remove"
-    "cont-button__studied cont-button__studied";
+    'cont-button__add cont-button__remove'
+    'cont-button__studied cont-button__studied';
 }
 
 .cont-button__add {

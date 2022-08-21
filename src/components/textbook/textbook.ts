@@ -1,10 +1,5 @@
 import './textbook.scss';
-import {
-  addWordsUserApi,
-  getUserIdWords,
-  UpdateWordsUserApi,
-  getUserAllWords,
-} from './../api/wordsApi';
+import { addWordsUserApi, getUserIdWords, UpdateWordsUserApi, getUserAllWords } from './../api/wordsApi';
 import { baseUrl, getWords, getWordId } from './../api/basicApi';
 import { IapiRequestWords } from './../interface/interface';
 import { getLocalStorageToken } from './../authorization/auth';
@@ -13,10 +8,7 @@ export function cheakPageToComplete() {
   const words = document.querySelectorAll('.list-textbook__elem');
   let index = 0;
   for (let i = 0; i < words.length; i++) {
-    if (
-      words[i].classList.contains('hard') ||
-      words[i].classList.contains('studied')
-    ) {
+    if (words[i].classList.contains('hard') || words[i].classList.contains('studied')) {
       index++;
     }
   }
@@ -26,21 +18,14 @@ export function cheakPageToComplete() {
     main.classList.add('studied-page');
     numberPage.classList.add('pagination-studied');
   } else {
-    if (
-      numberPage.classList.contains('pagination-studied') &&
-      main.classList.contains('studied-page')
-    ) {
+    if (numberPage.classList.contains('pagination-studied') && main.classList.contains('studied-page')) {
       main.classList.remove('studied-page');
       numberPage.classList.remove('pagination-studied');
     }
   }
 }
 
-export async function addCompoundWord(
-  id: string,
-  idWord: string,
-  token: string
-) {
+export async function addCompoundWord(id: string, idWord: string, token: string) {
   const cheak = await getUserIdWords(id, idWord, token);
   const body = { difficulty: 'hard', optional: {} };
   if (!cheak) {
@@ -50,11 +35,7 @@ export async function addCompoundWord(
   }
   cheakPageToComplete();
 }
-export async function studiedCompoundWord(
-  id: string,
-  idWord: string,
-  token: string
-) {
+export async function studiedCompoundWord(id: string, idWord: string, token: string) {
   const cheak = await getUserIdWords(id, idWord, token);
   const body = { difficulty: 'studied', optional: {} };
   if (!cheak) {
@@ -108,9 +89,7 @@ function getPageGroupTextbook() {
   const page = params.get('page') as string;
   const group = params.get('group') as string;
   paginationState(page, group);
-  const audioCallLink = document.querySelector(
-    '.link__audio-call'
-  ) as HTMLLinkElement;
+  const audioCallLink = document.querySelector('.link__audio-call') as HTMLLinkElement;
   const sprint = document.querySelector('.link__sprint') as HTMLLinkElement;
 
   let data: IapiRequestWords;
@@ -143,7 +122,7 @@ async function createList(data: IapiRequestWords) {
   const localStorage = new getLocalStorageToken();
   const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
   const mainContainer = document.querySelector('.main .container') as HTMLDivElement;
-  
+
   const list = document.createElement('div');
   list.classList.add('list-textbook');
   mainContainer.append(list);
@@ -171,18 +150,11 @@ async function createList(data: IapiRequestWords) {
     transcription.classList.add('word-container__transcription');
     transcription.innerText = `${words[i].transcription}`;
     wordContainer.append(transcription);
-    const svgElem = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'svg'
-      ),
+    const svgElem = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
       imgAudio = document.createElementNS('http://www.w3.org/2000/svg', 'use');
     svgElem.classList.add('audio');
     svgElem.setAttribute('data-id', `${words[i].id}`);
-    imgAudio.setAttributeNS(
-      'http://www.w3.org/1999/xlink',
-      'xlink:href',
-      'assets/ico/audio-mute.svg#Capa_1'
-    );
+    imgAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
     svgElem.append(imgAudio);
     wordContainer.append(svgElem);
     const wordTranslate = document.createElement('div');
@@ -258,14 +230,11 @@ export async function sound(id: string) {
   const arrayAudio = ['audio', 'audioExample', 'audioMeaning'];
   const picture = document.querySelector(`svg[data-id="${id}"]`) as HTMLElement;
   const pictureAudio = picture.firstChild as HTMLElement;
-  pictureAudio.setAttributeNS(
-    'http://www.w3.org/1999/xlink',
-    'xlink:href',
-    'assets/ico/audio-play.svg#Capa_1'
-  );
+  pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-play.svg#Capa_1');
   const audio = new Audio();
   audio.src = `${baseUrl}${query[arrayAudio[0]]}`;
   audio.autoplay = true;
+  //TODO удалить EventListner
   let i = 0;
   audio.onended = function () {
     i++;
@@ -273,11 +242,8 @@ export async function sound(id: string) {
       audio.src = `${baseUrl}${query[arrayAudio[i]]}`;
       audio.play();
     } else {
-      pictureAudio.setAttributeNS(
-        'http://www.w3.org/1999/xlink',
-        'xlink:href',
-        'assets/ico/audio-mute.svg#Capa_1'
-      );
+      pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
+      //TODO добавить EventListner
     }
   };
 }
