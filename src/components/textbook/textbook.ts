@@ -44,6 +44,7 @@ export async function studiedCompoundWord(id: string, idWord: string, token: str
     await UpdateWordsUserApi(id, idWord, token, body);
   }
   cheakPageToComplete();
+  //TODO добавление в статистику
 }
 
 function paginationState(page: string, group: string) {

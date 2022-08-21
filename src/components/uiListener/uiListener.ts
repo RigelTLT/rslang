@@ -32,7 +32,7 @@ export function ulListenner() {
       const email = (document.querySelector('input[name="email"]') as HTMLInputElement).value;
 
       const password = (document.querySelector('input[name="password"]') as HTMLInputElement).value;
-      if (EMAIL_REGEXP.test(email) && password.length > 8) {
+      if (EMAIL_REGEXP.test(email) && password.length >= 8) {
         event.preventDefault();
         const dataLogin = { email: email, password: password };
         await signToToken(dataLogin);
