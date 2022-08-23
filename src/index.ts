@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function(event){
   if(namePage === '/audio-call.html' || namePage === '/sprint.html') {
     const game = new Game()
     game.createLibrary()
+    game.renderTemplate(game.checkGameName())
   }
 
 
