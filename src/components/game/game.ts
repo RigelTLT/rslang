@@ -9,6 +9,8 @@ export default class Game {
     let template;
     if (this.checkParameter() === undefined) {
       template = document.querySelector(`#selection-menu`) as HTMLTemplateElement;
+      const selectPure = document.querySelector('select-pure') as SelectPure;
+    //   console.log(selectPure.selectedIndex, 'select value');
     } else {
       template = document.querySelector(`#${templateId}`) as HTMLTemplateElement;
     }
@@ -16,9 +18,7 @@ export default class Game {
     main.innerHTML = '';
     main.append(template.content.cloneNode(true));
 
-    // const selectPure = document.querySelector('select-pure') as SelectPure;
 
-    // console.log(selectPure.selectedIndex, 'select value');
   }
 
   checkGameName(): 'sprint' | 'audio-call' {
