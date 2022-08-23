@@ -10,15 +10,13 @@ export default class Game {
     if (this.checkParameter() === undefined) {
       template = document.querySelector(`#selection-menu`) as HTMLTemplateElement;
       const selectPure = document.querySelector('select-pure') as SelectPure;
-    //   console.log(selectPure.selectedIndex, 'select value');
+      //   console.log(selectPure.selectedIndex, 'select value');
     } else {
       template = document.querySelector(`#${templateId}`) as HTMLTemplateElement;
     }
     const main = document.querySelector('.main') as HTMLElement;
     main.innerHTML = '';
     main.append(template.content.cloneNode(true));
-
-
   }
 
   checkGameName(): 'sprint' | 'audio-call' {
@@ -41,14 +39,6 @@ export default class Game {
     console.log(parameterPage, 'parameterPage');
     console.log(realPageNumber, 'gameRealPageName');
     console.log(pageNumber, 'pageNumber');
-    // getWords()
-    if (gameName === 'sprint') {
-      if (Number(pageNumber) >= 1 && parameterPage !== undefined) {
-        console.log(await getWords(parameterPage), 'библиотека слов');
-
-        // return await getWords(parameterPage);
-      }
-    } else if (gameName === 'audio-call') {
-    }
+    if (Number(pageNumber) >= 1 && parameterPage !== undefined) return await getWords(parameterPage);
   }
 }
