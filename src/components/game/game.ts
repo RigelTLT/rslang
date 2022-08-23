@@ -16,9 +16,9 @@ export default class Game {
     main.innerHTML = '';
     main.append(template.content.cloneNode(true));
 
-    const selectPure = document.querySelector('select-pure') as SelectPure;
+    // const selectPure = document.querySelector('select-pure') as SelectPure;
 
-    console.log(selectPure.selectedIndex, 'select value');
+    // console.log(selectPure.selectedIndex, 'select value');
   }
 
   checkGameName(): 'sprint' | 'audio-call' {
