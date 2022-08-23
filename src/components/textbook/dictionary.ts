@@ -2,7 +2,7 @@ import './textbook.scss';
 import { baseUrl, getWordId } from './../api/basicApi';
 import { deleteordsUserApi, getUserAllWords } from './../api/wordsApi';
 import { IapiRequestUserWords } from './../interface/interface';
-import { getLocalStorageToken } from './../authorization/auth';
+import { GetLocalStorageToken } from './../authorization/auth';
 
 function paginationState(group: string, status: string) {
   const textGroup = document.querySelectorAll('.text-group');
@@ -39,6 +39,7 @@ function getPageGroupTextbook() {
     group: `${group ? Number(group) - 1 : '0'}`,
     status: `${status ? status : 'hard'}`
   };
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   createList(data);
 }
 if (window.location.pathname === '/dictionary.html') {
@@ -61,7 +62,7 @@ export async function removeCompoundWord(id: string, idWord: string, token: stri
 }
 
 async function createList(data: IapiRequestUserWords) {
-  const localStorage = new getLocalStorageToken();
+  const localStorage = new GetLocalStorageToken();
   const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
   const main = document.querySelector('.main') as HTMLElement;
   const list = document.createElement('div');

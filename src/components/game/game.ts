@@ -1,19 +1,15 @@
 import { getWords } from '../api/basicApi';
-import { IapiRequestWords } from '../interface/interface';
+import { IapiRequestWords, ILibraryResponse } from '../interface/interface';
 import 'select-pure';
 import './game.scss';
-import { SelectPure } from 'select-pure/lib/components';
 
 export default class Game {
   renderTemplate(templateId: string): void {
-    let template;
-    if (this.checkParameter() === undefined) {
-      template = document.querySelector(`#selection-menu`) as HTMLTemplateElement;
-      const selectPure = document.querySelector('select-pure') as SelectPure;
-      //   console.log(selectPure.selectedIndex, 'select value');
-    } else {
-      template = document.querySelector(`#${templateId}`) as HTMLTemplateElement;
-    }
+    const template =
+      this.checkParameter() === undefined
+        ? (document.querySelector(`#selection-menu`) as HTMLTemplateElement)
+        : (document.querySelector(`#${templateId}`) as HTMLTemplateElement);
+
     const main = document.querySelector('.main') as HTMLElement;
     main.innerHTML = '';
     main.append(template.content.cloneNode(true));
@@ -31,14 +27,19 @@ export default class Game {
     return { page, group };
   }
 
-  async createLibrary() {
-    const gameName = this.checkGameName();
+  async createLibrary(): Promise<ILibraryResponse[] | undefined> {
+    // const gameName = this.checkGameName();
     const parameterPage = this.checkParameter();
-    const realPageNumber = String(Number(parameterPage?.page) - 1);
+    // const realPageNumber = String(Number(parameterPage?.page) - 1);
     const pageNumber = Number(parameterPage?.page);
-    console.log(parameterPage, 'parameterPage');
-    console.log(realPageNumber, 'gameRealPageName');
-    console.log(pageNumber, 'pageNumber');
-    if (Number(pageNumber) >= 1 && parameterPage !== undefined) return await getWords(parameterPage);
+
+    // console.log(parameterPage, 'parameterPage');
+    // console.log(realPageNumber, 'gameRealPageName');
+    // console.log(pageNumber, 'pageNumber');
+
+    if (pageNumber >= 1 && parameterPage !== undefined) {
+      const getWordsLibrary = await getWords(parameterPage);
+      return getWordsLibrary;
+    }
   }
 }

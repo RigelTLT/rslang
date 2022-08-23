@@ -1,5 +1,5 @@
 import { Iauth, Isignin, Iregist, IidToken } from '../interface/interface';
-import { signinApi, registrationApi } from '../api/authApi';
+import { signinApi } from '../api/authApi';
 
 function setLocalStorageAuth(id: string, token: string, name: string) {
   localStorage.setItem('id', JSON.stringify(id));
@@ -26,8 +26,7 @@ export function logOut() {
 }
 
 export async function signToToken(params: Isignin) {
-  let paramsAuth: Iauth;
-  paramsAuth = await signinApi(params);
+  const paramsAuth: Iauth = await signinApi(params);
   if (typeof paramsAuth === 'number') {
     const textMenu = document.querySelector('.menu__text') as HTMLElement;
     if (paramsAuth === 404) {
@@ -40,14 +39,14 @@ export async function signToToken(params: Isignin) {
     textMenu.style.fontSize = 'x-large';
   } else {
     setLocalStorageAuth(paramsAuth.userId, paramsAuth.token, paramsAuth.name);
-    const params = { id: paramsAuth.userId, token: paramsAuth.token, name: paramsAuth.name };
-    authorization(params);
+
+    authorization({ id: paramsAuth.userId, token: paramsAuth.token, name: paramsAuth.name });
   }
 }
 
 export async function registration(params: Iregist) {
   try {
-    const code = await registrationApi(params);
+    // const code = await registrationApi(params);
     await signToToken({ email: params.email, password: params.password });
     location.reload();
   } catch {
@@ -58,15 +57,17 @@ export async function registration(params: Iregist) {
   }
 }
 
-export class getLocalStorageToken {
+export class GetLocalStorageToken {
   get token() {
     const tokens = JSON.parse(localStorage.getItem('token') as string) as string;
     return tokens;
   }
+
   get id() {
     const id = JSON.parse(localStorage.getItem('id') as string) as string;
     return id;
   }
+
   get name() {
     const name = JSON.parse(localStorage.getItem('name') as string) as string;
     return name;

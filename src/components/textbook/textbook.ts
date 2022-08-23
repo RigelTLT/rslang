@@ -2,7 +2,7 @@ import './textbook.scss';
 import { addWordsUserApi, getUserIdWords, UpdateWordsUserApi, getUserAllWords } from './../api/wordsApi';
 import { baseUrl, getWords, getWordId } from './../api/basicApi';
 import { IapiRequestWords } from './../interface/interface';
-import { getLocalStorageToken } from './../authorization/auth';
+import { GetLocalStorageToken } from './../authorization/auth';
 
 export function cheakPageToComplete() {
   const words = document.querySelectorAll('.list-textbook__elem');
@@ -103,6 +103,7 @@ function getPageGroupTextbook() {
     audioCallLink.href = `./audio-call.html?group=1&page=1`;
     sprint.href = `./sprint.html?group=1&page=1`;
   }
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   createList(data);
 }
 if (window.location.pathname === '/ebook.html') {
@@ -120,7 +121,7 @@ async function checkWordsUser(id: string, token: string) {
 
 async function createList(data: IapiRequestWords) {
   const words = await getWords(data);
-  const localStorage = new getLocalStorageToken();
+  const localStorage = new GetLocalStorageToken();
   const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
   const mainContainer = document.querySelector('.main .container') as HTMLDivElement;
 

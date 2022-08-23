@@ -1,5 +1,5 @@
 import { Login } from '../login/login';
-import { signToToken, registration, logOut, getLocalStorageToken } from '../authorization/auth';
+import { signToToken, registration, logOut, GetLocalStorageToken } from '../authorization/auth';
 import { sound, changePage, addCompoundWord, studiedCompoundWord, cheakPageToComplete } from './../textbook/textbook';
 import { deleteordsUserApi } from './../api/wordsApi';
 import { removeCompoundWord } from './../textbook/dictionary';
@@ -13,7 +13,7 @@ export function ulListenner() {
     const target = event.target as HTMLElement;
     const EMAIL_REGEXP =
       /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
-    console.log(target);
+
     if (target.closest('.close') || !target.closest('.menu')) {
       popUp.style.transform = 'translateX(100%)';
     }
@@ -77,7 +77,7 @@ export function ulListenner() {
       const wordId = card.dataset.id as string;
       if (!card.classList.contains('hard')) {
         card.classList.add('hard');
-        const localStorage = new getLocalStorageToken();
+        const localStorage = new GetLocalStorageToken();
         addCompoundWord(localStorage.id, wordId, localStorage.token);
         (target as HTMLInputElement).disabled = true;
         const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
@@ -88,7 +88,7 @@ export function ulListenner() {
       const card = (target.parentNode as HTMLElement).parentNode as HTMLElement;
       if (card.classList.contains('hard')) {
         card.classList.remove('hard');
-        const localStorage = new getLocalStorageToken();
+        const localStorage = new GetLocalStorageToken();
         const wordId = card.dataset.id as string;
         deleteordsUserApi(localStorage.id, wordId, localStorage.token);
         cheakPageToComplete();
@@ -100,7 +100,7 @@ export function ulListenner() {
     }
     if (target.closest('.cont-button__remove-to-dictionary')) {
       const card = target.parentNode as HTMLElement;
-      const localStorage = new getLocalStorageToken();
+      const localStorage = new GetLocalStorageToken();
       const wordId = card.dataset.id as string;
       removeCompoundWord(localStorage.id, wordId, localStorage.token);
     }
@@ -109,7 +109,7 @@ export function ulListenner() {
       const wordId = card.dataset.id as string;
       if (!card.classList.contains('studied')) {
         card.classList.add('studied');
-        const localStorage = new getLocalStorageToken();
+        const localStorage = new GetLocalStorageToken();
         studiedCompoundWord(localStorage.id, wordId, localStorage.token);
       }
       const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
