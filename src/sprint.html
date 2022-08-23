@@ -88,19 +88,27 @@
   <template id="selection-menu">
     <section class="selection-menu">
       <div class="container">
-        <h1 class="gameName">Спринт</h1>
-        <div class="information">
-          <p>«Спринт» - это тренировка для повторения заученных слов из вашего словаря.</p>
-          <ul>
-            <li>Используйте мышь, чтобы выбрать.</li>
-            <li>Используйте клавиши влево или вправо</li>
-          </ul>
-        </div>
-        <div class="controls">
-          <div class="select-levels">
-            Написать кастомный селект\библиотеку
+        <div class="info">
+            <h1 class="gameName">Спринт</h1>
+          <div class="information">
+            <p>«Спринт» - это тренировка для повторения заученных слов из вашего словаря.</p>
+            <ul>
+              <li>Используйте мышь, чтобы выбрать.</li>
+              <li>Используйте клавиши влево или вправо</li>
+            </ul>
           </div>
-          <button class="play">Начать</button>
+          <div class="controls">
+            <select-pure class="custom-select" id="level">
+              <option-pure value="" disabled hidden>Выберите сложность</option-pure>
+              <option-pure value="1">1</option-pure>
+              <option-pure value="2">2</option-pure>
+              <option-pure value="3">3</option-pure>
+              <option-pure value="4">4</option-pure>
+              <option-pure value="5">5</option-pure>
+              <option-pure value="6">6</option-pure>
+            </select-pure>
+            <button class="btn btn-normal btn-hollow-orange">Начать</button>
+          </div>
         </div>
       </div>
     </section>

@@ -1,0 +1,44 @@
+.selection-menu {
+    background-color: var(--gray200);
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    .container {
+        margin: auto;
+    }
+
+    .info {
+        max-width: 800px;
+        width: 100%;
+        margin: auto;
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .information {
+            p {
+                margin-bottom: 20px;
+                font-size: 24px;
+            }
+
+            ul {
+                font-size: 24px;
+            }
+        }
+
+        .controls {
+            display: flex;
+        }
+
+        .custom-select {
+            max-width: 200px;
+            width: 100%;
+            margin-right: 60px;
+            .label{
+                border-color: var(--orange);
+            }
+        }
+    }
+}
