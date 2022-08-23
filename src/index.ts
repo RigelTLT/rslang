@@ -5,11 +5,13 @@ import Game from './components/game/game';
 
 document.addEventListener('DOMContentLoaded', function(event){
   const namePage = document.location.pathname;
+  
   console.log(document.location.search, "параметры страницы");
+
   if(namePage === '/audio-call.html' || namePage === '/sprint.html') {
-    const game = new Game()
-    game.createLibrary()
-    game.renderTemplate(game.checkGameName())
+    const game = new Game();
+    game.createLibrary();
+    game.renderTemplate(game.checkGameName());
   }
 
 
