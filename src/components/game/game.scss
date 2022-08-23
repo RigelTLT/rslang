@@ -58,7 +58,9 @@
     &__container {
         max-width: 650px;
         margin: 0 auto;
-
+    }
+    
+    &.sprint {
         .count {
             display: flex;
             flex-wrap: wrap;
@@ -83,8 +85,8 @@
             .points {
                 font-size: 40px;
             }
-        }
 
+        }
         .game-container {
             background-color: rgba(255, 63, 58, 0.4);
             border-radius: 4px;
@@ -143,6 +145,49 @@
                     }
                 }
             }
+        }
+    }
+    
+    &.audio-call {
+        .game-container{
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: rgba(255, 63, 58, 0.4);
+            border-radius: 4px;
+            padding: 20px 10px;
+
+            .illustration{
+                max-width: 200px;
+                margin: 0 auto 40px;
+                img{
+                    width: 120px;
+                    height: 120px;
+                    border-radius: 50%;
+                    border: 2px solid black;
+                    margin: 0 auto;
+                }
+            }         
+            .control{
+                .options{
+                    display: flex;
+                    justify-content: space-between;
+                    align-content: center;
+                    max-width: 600px;
+                    width: 100%;
+                    margin: 0 auto 40px;
+                    &__item{
+                        font-weight: 700;
+                        font-size: 22px;
+                    }
+                }
+                .btn{
+                    width: 200px;
+                    height: 70px;
+                    margin: 0 auto;
+                    display: block;
+                }
+            }   
         }
     }
 }
