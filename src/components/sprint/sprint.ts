@@ -14,15 +14,21 @@ export class Sprint {
 
   wrongWordArr: ILibraryResponse[] = [];
 
+  private _bool = () => (Math.random() > 0.5 ? true : false);
+
+  get boolean(): boolean {
+    return this._bool();
+  }
+
   async start() {
     const game = new Game();
 
     this.library = (await game.createLibrary()) as ILibraryResponse[];
     game.renderTemplate(game.checkGameName());
-    this.timer();
-    this.fillWord(this.selectedWordIndex, this.randomBooleanGenerator());
+    this.fillWord(this.selectedWordIndex, this.boolean);
 
     this.trueButtonHandler();
+    this.timer();
     // this.falseButtonHandler();
   }
 
@@ -56,26 +62,28 @@ export class Sprint {
 
   trueButtonHandler() {
     const trueButton = document.querySelector('.control .true');
+    const points = document.querySelector('.points') as HTMLElement;
 
     const btnListener = () => {
-      if (this.selectedWordIndex >= this.library.length) return alert('слова кончились');
+      const realIndexPlusOne = this.selectedWordIndex + 1;
 
-      const isRightTranslate = this.randomBooleanGenerator();
-
-      this.fillWord(this.selectedWordIndex, isRightTranslate);
+      const isRightTranslate = this.boolean;
+      if (realIndexPlusOne < this.library.length) {
+        this.fillWord(this.selectedWordIndex + 1, isRightTranslate);
+      }
 
       if (isRightTranslate) {
-        this.countRight++;
+        this.countRight += 1;
         this.resultScores += 20;
+        points.textContent = String(this.resultScores);
         this.rightWordsArr.push(this.library[this.selectedWordIndex]);
-        // массив правильно переведенных слов пользователем
-        console.log(this.rightWordsArr, 'right');
       } else {
         this.wrongWordArr.push(this.library[this.selectedWordIndex]);
-        // массив неправильно переведенных слов пользователем
-        console.log(this.wrongWordArr, 'wrong');
       }
-      this.selectedWordIndex++;
+      this.selectedWordIndex += 1;
+      if (realIndexPlusOne >= this.library.length) {
+        return alert('слова кончились');
+      }
     };
 
     trueButton?.addEventListener('click', btnListener);
@@ -89,15 +97,11 @@ export class Sprint {
   //   document.body.addEventListener('keyup', (event) => event.key === 'ArrowRight' && this.btnListener());
   // }
 
-  randomBooleanGenerator() {
-    return Math.random() > 0.5 ? true : false;
-  }
-
-  randomIndexGenerator(maxLength: number, exclude: number) {
+  randomIndexGenerator(maxLength: number, exclude: number): number {
     const randomNubmer = Math.floor(Math.random() * maxLength);
 
     if (randomNubmer === exclude) {
-      this.randomIndexGenerator(maxLength, exclude);
+      return this.randomIndexGenerator(maxLength, exclude);
     }
 
     return randomNubmer;
