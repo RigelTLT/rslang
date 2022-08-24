@@ -29,7 +29,8 @@ export class Sprint {
 
     this.trueButtonHandler();
     this.timer();
-    // this.falseButtonHandler();
+    this.falseButtonHandler();
+    console.log(this.library);
   }
 
   timer() {
@@ -60,48 +61,93 @@ export class Sprint {
     }
   }
 
+  btnListener = () => {
+    const realIndexPlusOne = this.selectedWordIndex + 1;
+
+    const isRightTranslate = this.boolean;
+    if (realIndexPlusOne < this.library.length) {
+      this.fillWord(this.selectedWordIndex + 1, isRightTranslate);
+    }
+
+    if (isRightTranslate) {
+      this.countRight += 1;
+      this.resultScores += 20;
+      // points.textContent = String(this.resultScores);
+      this.rightWordsArr.push(this.library[this.selectedWordIndex]);
+    } else {
+      this.wrongWordArr.push(this.library[this.selectedWordIndex]);
+    }
+    this.selectedWordIndex += 1;
+    if (realIndexPlusOne >= this.library.length) {
+      return alert('слова кончились');
+    }
+  };
+
   trueButtonHandler() {
     const trueButton = document.querySelector('.control .true');
     const points = document.querySelector('.points') as HTMLElement;
 
-    const btnListener = () => {
-      const realIndexPlusOne = this.selectedWordIndex + 1;
+    // const btnListener = () => {
+    //   const realIndexPlusOne = this.selectedWordIndex + 1;
 
-      const isRightTranslate = this.boolean;
-      if (realIndexPlusOne < this.library.length) {
-        this.fillWord(this.selectedWordIndex + 1, isRightTranslate);
-      }
+    //   const isRightTranslate = this.boolean;
+    //   if (realIndexPlusOne < this.library.length) {
+    //     this.fillWord(this.selectedWordIndex + 1, isRightTranslate);
+    //   }
 
-      if (isRightTranslate) {
-        this.countRight += 1;
-        this.resultScores += 20;
-        points.textContent = String(this.resultScores);
-        this.rightWordsArr.push(this.library[this.selectedWordIndex]);
-      } else {
-        this.wrongWordArr.push(this.library[this.selectedWordIndex]);
-      }
-      this.selectedWordIndex += 1;
-      if (realIndexPlusOne >= this.library.length) {
-        return alert('слова кончились');
-      }
-    };
+    //   if (isRightTranslate) {
+    //     this.countRight += 1;
+    //     this.resultScores += 20;
+    //     points.textContent = String(this.resultScores);
+    //     this.rightWordsArr.push(this.library[this.selectedWordIndex]);
+    //   } else {
+    //     this.wrongWordArr.push(this.library[this.selectedWordIndex]);
+    //   }
+    //   this.selectedWordIndex += 1;
+    //   if (realIndexPlusOne >= this.library.length) {
+    //     return alert('слова кончились');
+    //   }
+    // };
 
-    trueButton?.addEventListener('click', btnListener);
-    document.body.addEventListener('keyup', (event) => event.key === 'ArrowRight' && btnListener());
+    trueButton?.addEventListener('click', this.btnListener);
+    document.body.addEventListener('keyup', (event) => event.key === 'ArrowLeft' && this.btnListener());
   }
 
-  // falseButtonHandler() {
-  //   const falseButton = document.querySelector('.control .false');
+  falseButtonHandler() {
+    const falseButton = document.querySelector('.control .false');
+    const points = document.querySelector('.points') as HTMLElement;
 
-  //   falseButton?.addEventListener('click', () => this.btnListener());
-  //   document.body.addEventListener('keyup', (event) => event.key === 'ArrowRight' && this.btnListener());
-  // }
+    // const btnListener = () => {
+    //   const realIndexPlusOne = this.selectedWordIndex + 1;
+
+    //   const isRightTranslate = this.boolean;
+    //   if (realIndexPlusOne < this.library.length) {
+    //     this.fillWord(this.selectedWordIndex + 1, isRightTranslate);
+    //   }
+
+    //   if (!isRightTranslate) {
+    //     this.countRight += 1;
+    //     this.resultScores += 20;
+    //     points.textContent = String(this.resultScores);
+    //     this.rightWordsArr.push(this.library[this.selectedWordIndex]);
+    //   } else {
+    //     this.wrongWordArr.push(this.library[this.selectedWordIndex]);
+    //   }
+    //   this.selectedWordIndex += 1;
+    //   if (realIndexPlusOne >= this.library.length) {
+    //     return alert('слова кончились');
+    //   }
+    // };
+
+    falseButton?.addEventListener('click', () => this.btnListener());
+    document.body.addEventListener('keyup', (event) => event.key === 'ArrowRight' && this.btnListener());
+  }
 
   randomIndexGenerator(maxLength: number, exclude: number): number {
-    const randomNubmer = Math.floor(Math.random() * maxLength);
+    const randomNubmer = Math.floor(Math.random() * maxLength - 1);
 
     if (randomNubmer === exclude) {
-      return this.randomIndexGenerator(maxLength, exclude);
+      return this.randomIndexGenerator(maxLength - 1, exclude);
     }
 
     return randomNubmer;
