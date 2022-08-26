@@ -1,213 +1,213 @@
 .selection-menu {
-    background-color: var(--gray200);
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
+  background-color: var(--gray200);
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
 
-    .container {
-        margin: auto;
+  .container {
+    margin: auto;
+  }
+
+  .info {
+    max-width: 800px;
+    width: 100%;
+    margin: auto;
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
     }
 
-    .info {
-        max-width: 800px;
-        width: 100%;
-        margin: auto;
+    .information {
+      p {
+        margin-bottom: 20px;
+        font-size: 24px;
+      }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .information {
-            p {
-                margin-bottom: 20px;
-                font-size: 24px;
-            }
-
-            ul {
-                font-size: 24px;
-            }
-        }
-
-        .controls {
-            display: flex;
-        }
-
-        .custom-select {
-            max-width: 200px;
-            width: 100%;
-            margin-right: 60px;
-
-            .label {
-                border-color: var(--orange);
-            }
-        }
+      ul {
+        font-size: 24px;
+      }
     }
+
+    .controls {
+      display: flex;
+    }
+
+    .custom-select {
+      max-width: 200px;
+      width: 100%;
+      margin-right: 60px;
+
+      .label {
+        border-color: var(--orange);
+      }
+    }
+  }
 }
 
 .game {
-    background-color: var(--gray200);
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
+  background-color: var(--gray200);
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
 
-    .container {
-        margin: auto;
+  .container {
+    margin: auto;
+  }
+
+  &__container {
+    max-width: 650px;
+    margin: 0 auto;
+  }
+
+  &.sprint {
+    .count {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 40px;
+      width: 100%;
+      max-width: 400px;
+
+      .timer {
+        font-size: 40px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .text {
+        font-size: 28px;
+        flex-grow: 1;
+        flex-shrink: 1;
+      }
+
+      .points {
+        font-size: 40px;
+      }
     }
 
-    &__container {
-        max-width: 650px;
-        margin: 0 auto;
-    }
+    .game-container {
+      background-color: rgba(255, 63, 58, 0.4);
+      border-radius: 4px;
+      padding: 20px 10px;
 
-    &.sprint {
-        .count {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 40px;
-            width: 100%;
-            max-width: 400px;
+      .coefficient {
+        margin-bottom: 10px;
+        color: #fff;
+        text-align: center;
+        font-size: 18px;
 
-            .timer {
-                font-size: 40px;
-                width: 100%;
-                text-align: center;
-            }
+        span {
+          margin: 0 15px;
+          font-size: 24px;
+        }
+      }
 
-            .text {
-                font-size: 28px;
-                flex-grow: 1;
-                flex-shrink: 1;
-            }
+      .series-response {
+        display: flex;
+        justify-content: space-between;
+        max-width: 300px;
+        width: 100%;
+        margin: 0 auto 40px;
 
-            .points {
-                font-size: 40px;
-            }
+        .circle {
+          border-radius: 50%;
+          background-color: #fff;
+          width: 50px;
+          height: 50px;
+
+          &.active {
+            background-color: green;
+          }
+        }
+      }
+
+      .words {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 40px;
+
+        .original {
+          font-size: 40px;
+          font-weight: 700;
         }
 
-        .game-container {
-            background-color: rgba(255, 63, 58, 0.4);
-            border-radius: 4px;
-            padding: 20px 10px;
-
-            .coefficient {
-                margin-bottom: 10px;
-                color: #fff;
-                text-align: center;
-                font-size: 18px;
-                
-                span{
-                    margin: 0 15px;
-                    font-size: 24px;
-                }
-            }
-
-            .series-response {
-                display: flex;
-                justify-content: space-between;
-                max-width: 300px;
-                width: 100%;
-                margin: 0 auto 40px;
-
-                .circle {
-                    border-radius: 50%;
-                    background-color: #fff;
-                    width: 50px;
-                    height: 50px;
-
-                    &.active{
-                        background-color: var(--orange);
-                    }
-                }
-            }
-
-            .words {
-                text-align: center;
-                color: #fff;
-                margin-bottom: 40px;
-
-                .original {
-                    font-size: 40px;
-                    font-weight: 700;
-                }
-
-                .translate {
-                    font-size: 28px;
-                }
-            }
-
-            .control {
-                display: flex;
-                justify-content: center;
-                gap: 80px;
-
-                .true {
-                    background-color: rgba(148, 247, 0, 0.8);
-                    color: var(--gray900);
-
-                    &:hover {
-                        background-color: darken($color: rgba(148, 247, 0, 0.8), $amount: 20);
-                    }
-                }
-
-                .false {
-                    background-color: var(--danger);
-                    color: var(--gray900);
-
-                    &:hover {
-                        background-color: darken($color: #ff4242, $amount: 20);
-                    }
-                }
-            }
+        .translate {
+          font-size: 28px;
         }
-    }
+      }
 
-    &.audio-call {
-        .game-container {
-            max-width: 700px;
-            width: 100%;
-            margin: 0 auto;
-            background-color: rgba(255, 63, 58, 0.4);
-            border-radius: 4px;
-            padding: 20px 10px;
+      .control {
+        display: flex;
+        justify-content: center;
+        gap: 80px;
 
-            .illustration {
-                max-width: 200px;
-                margin: 0 auto 40px;
+        .true {
+          background-color: rgba(148, 247, 0, 0.8);
+          color: var(--gray900);
 
-                img {
-                    width: 120px;
-                    height: 120px;
-                    border-radius: 50%;
-                    border: 2px solid black;
-                    margin: 0 auto;
-                }
-            }
-
-            .control {
-                .options {
-                    display: flex;
-                    justify-content: space-between;
-                    align-content: center;
-                    max-width: 600px;
-                    width: 100%;
-                    margin: 0 auto 40px;
-
-                    &__item {
-                        font-weight: 700;
-                        font-size: 22px;
-                    }
-                }
-
-                .btn {
-                    width: 200px;
-                    height: 70px;
-                    margin: 0 auto;
-                    display: block;
-                }
-            }
+          &:hover {
+            background-color: darken($color: rgba(148, 247, 0, 0.8), $amount: 20);
+          }
         }
+
+        .false {
+          background-color: var(--danger);
+          color: var(--gray900);
+
+          &:hover {
+            background-color: darken($color: #ff4242, $amount: 20);
+          }
+        }
+      }
     }
+  }
+
+  &.audio-call {
+    .game-container {
+      max-width: 700px;
+      width: 100%;
+      margin: 0 auto;
+      background-color: rgba(255, 63, 58, 0.4);
+      border-radius: 4px;
+      padding: 20px 10px;
+
+      .illustration {
+        max-width: 200px;
+        margin: 0 auto 40px;
+
+        img {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          border: 2px solid black;
+          margin: 0 auto;
+        }
+      }
+
+      .control {
+        .options {
+          display: flex;
+          justify-content: space-between;
+          align-content: center;
+          max-width: 600px;
+          width: 100%;
+          margin: 0 auto 40px;
+
+          &__item {
+            font-weight: 700;
+            font-size: 22px;
+          }
+        }
+
+        .btn {
+          width: 200px;
+          height: 70px;
+          margin: 0 auto;
+          display: block;
+        }
+      }
+    }
+  }
 }
