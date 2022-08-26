@@ -30,7 +30,7 @@ export class Sprint {
     this.trueButtonHandler();
     this.timer();
     this.falseButtonHandler();
-    console.log(this.library);
+    console.log(this.library, 'библиотека слов');
   }
 
   timer() {
@@ -61,86 +61,74 @@ export class Sprint {
     }
   }
 
-  btnListener = () => {
-    const realIndexPlusOne = this.selectedWordIndex + 1;
-
-    const isRightTranslate = this.boolean;
-    if (realIndexPlusOne < this.library.length) {
-      this.fillWord(this.selectedWordIndex + 1, isRightTranslate);
-    }
-
-    if (isRightTranslate) {
-      this.countRight += 1;
-      this.resultScores += 20;
-      // points.textContent = String(this.resultScores);
-      this.rightWordsArr.push(this.library[this.selectedWordIndex]);
-    } else {
-      this.wrongWordArr.push(this.library[this.selectedWordIndex]);
-    }
-    this.selectedWordIndex += 1;
-    if (realIndexPlusOne >= this.library.length) {
-      return alert('слова кончились');
-    }
-  };
-
   trueButtonHandler() {
-    const trueButton = document.querySelector('.control .true');
+    const trueButton = document.querySelector('.control .true') as HTMLElement;
     const points = document.querySelector('.points') as HTMLElement;
 
-    // const btnListener = () => {
-    //   const realIndexPlusOne = this.selectedWordIndex + 1;
+    trueButton?.addEventListener('click', (event) => {
+      const translateWord = (document.querySelector('.words .translate') as HTMLDivElement).textContent;
+      console.log(this.library[this.selectedWordIndex].wordTranslate === translateWord);
 
-    //   const isRightTranslate = this.boolean;
-    //   if (realIndexPlusOne < this.library.length) {
-    //     this.fillWord(this.selectedWordIndex + 1, isRightTranslate);
-    //   }
+      const nextIndex = this.selectedWordIndex + 1;
 
-    //   if (isRightTranslate) {
-    //     this.countRight += 1;
-    //     this.resultScores += 20;
-    //     points.textContent = String(this.resultScores);
-    //     this.rightWordsArr.push(this.library[this.selectedWordIndex]);
-    //   } else {
-    //     this.wrongWordArr.push(this.library[this.selectedWordIndex]);
-    //   }
-    //   this.selectedWordIndex += 1;
-    //   if (realIndexPlusOne >= this.library.length) {
-    //     return alert('слова кончились');
-    //   }
-    // };
+      const isRightTranslate = this.boolean;
+      if (nextIndex < this.library.length) {
+        this.fillWord(nextIndex, isRightTranslate);
+      }
 
-    trueButton?.addEventListener('click', this.btnListener);
-    document.body.addEventListener('keyup', (event) => event.key === 'ArrowLeft' && this.btnListener());
+      if (this.library[this.selectedWordIndex].wordTranslate === translateWord) {
+        this.countRight += 1;
+        this.resultScores += 20;
+        points.textContent = String(this.resultScores);
+        this.rightWordsArr.push(this.library[this.selectedWordIndex]);
+      } else {
+        this.countRight = 0;
+        this.wrongWordArr.push(this.library[this.selectedWordIndex]);
+      }
+
+      this.selectedWordIndex += 1;
+      if (nextIndex >= this.library.length) {
+        console.log(this.wrongWordArr, 'не верно отмеченные слова');
+        console.log(this.rightWordsArr, 'верно отмеченные слова');
+        return alert('слова кончились');
+      }
+    });
+    // document.body.addEventListener('keyup', (event) => event.key === 'ArrowLeft' && this.btnListener());
   }
 
   falseButtonHandler() {
-    const falseButton = document.querySelector('.control .false');
+    const falseButton = document.querySelector('.control .false') as HTMLElement;
     const points = document.querySelector('.points') as HTMLElement;
 
-    // const btnListener = () => {
-    //   const realIndexPlusOne = this.selectedWordIndex + 1;
+    falseButton?.addEventListener('click', (event) => {
+      const translateWord = (document.querySelector('.words .translate') as HTMLDivElement).textContent;
 
-    //   const isRightTranslate = this.boolean;
-    //   if (realIndexPlusOne < this.library.length) {
-    //     this.fillWord(this.selectedWordIndex + 1, isRightTranslate);
-    //   }
+      const nextIndex = this.selectedWordIndex + 1;
 
-    //   if (!isRightTranslate) {
-    //     this.countRight += 1;
-    //     this.resultScores += 20;
-    //     points.textContent = String(this.resultScores);
-    //     this.rightWordsArr.push(this.library[this.selectedWordIndex]);
-    //   } else {
-    //     this.wrongWordArr.push(this.library[this.selectedWordIndex]);
-    //   }
-    //   this.selectedWordIndex += 1;
-    //   if (realIndexPlusOne >= this.library.length) {
-    //     return alert('слова кончились');
-    //   }
-    // };
+      const isRightTranslate = this.boolean;
+      if (nextIndex < this.library.length) {
+        this.fillWord(nextIndex, isRightTranslate);
+      }
 
-    falseButton?.addEventListener('click', () => this.btnListener());
-    document.body.addEventListener('keyup', (event) => event.key === 'ArrowRight' && this.btnListener());
+      console.log(this.library[this.selectedWordIndex].wordTranslate !== translateWord);
+      if (this.library[this.selectedWordIndex].wordTranslate !== translateWord) {
+        this.countRight += 1;
+        this.resultScores += 20;
+        points.textContent = String(this.resultScores);
+        this.rightWordsArr.push(this.library[this.selectedWordIndex]);
+      } else {
+        this.countRight = 0;
+        this.wrongWordArr.push(this.library[this.selectedWordIndex]);
+      }
+
+      this.selectedWordIndex += 1;
+      if (nextIndex >= this.library.length) {
+        console.log(this.wrongWordArr, 'не верно отмеченные слова');
+        console.log(this.rightWordsArr, 'верно отмеченные слова');
+        return alert('слова кончились');
+      }
+    });
+    // document.body.addEventListener('keyup', (event) => event.key === 'ArrowRight' && this.btnListener());
   }
 
   randomIndexGenerator(maxLength: number, exclude: number): number {
