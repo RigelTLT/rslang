@@ -8,19 +8,17 @@ export class Sprint {
 
   countRight = 0;
 
+  coefficient = 10;
+
   resultScores = 0;
 
   rightWordsArr: ILibraryResponse[] = [];
 
   wrongWordArr: ILibraryResponse[] = [];
 
-  //
-
   private _bool = () => (Math.random() > 0.5 ? true : false);
 
   get boolean(): boolean {
-    console.log(this._bool(), 'результат геттера boolean');
-
     return this._bool();
   }
 
@@ -29,8 +27,6 @@ export class Sprint {
 
     this.library = (await game.createLibrary()) as ILibraryResponse[];
     game.renderTemplate(game.checkGameName());
-    console.log(this.boolean, 'boolean при старте');
-
     this.fillWord(this.selectedWordIndex, this.boolean);
 
     this.trueButtonHandler();
@@ -54,14 +50,12 @@ export class Sprint {
 
   fillWord(wordId: number, isRightTranslate: boolean) {
     const [originalWord, translateWord] = (document.querySelector('.words') as HTMLDivElement).children;
-    console.log(isRightTranslate, 'isRightTranslate в fillWord');
 
     if (isRightTranslate) {
       originalWord.innerHTML = this.library[wordId].word;
       translateWord.innerHTML = this.library[wordId].wordTranslate;
     } else {
       originalWord.innerHTML = this.library[wordId].word;
-      // console.log(this.randomIndexGenerator(this.library.length, wordId), 'при фолсе');
       const randomIndex = this.randomIndexGenerator(this.library.length, wordId);
 
       translateWord.innerHTML = this.library[randomIndex].wordTranslate;
@@ -73,20 +67,24 @@ export class Sprint {
 
     const btnListener = () => {
       const points = document.querySelector('.points') as HTMLElement;
+      const coefficientValue = document.querySelector('.coefficient span') as HTMLElement;
       const translateWord = (document.querySelector('.words .translate') as HTMLDivElement).textContent;
       const nextIndex = this.selectedWordIndex + 1;
 
       const isRightTranslate = this.boolean;
-      console.log('нажатие на true');
 
-      console.log(isRightTranslate, 'isRightTranslate в кнопке true');
       if (nextIndex < this.library.length) {
         this.fillWord(nextIndex, isRightTranslate);
       }
 
       if (this.library[this.selectedWordIndex].wordTranslate === translateWord) {
+        if (this.countRight > 3) {
+          this.countRight = 0;
+          this.coefficient *= 2;
+          coefficientValue.textContent = String(this.coefficient);
+        }
         this.countRight += 1;
-        this.resultScores += 20;
+        this.resultScores += this.coefficient;
         points.textContent = String(this.resultScores);
         this.rightWordsArr.push(this.library[this.selectedWordIndex]);
       } else {
@@ -109,19 +107,23 @@ export class Sprint {
 
     const btnListener = () => {
       const points = document.querySelector('.points') as HTMLElement;
+      const coefficientValue = document.querySelector('.coefficient span') as HTMLElement;
       const translateWord = (document.querySelector('.words .translate') as HTMLDivElement).textContent;
       const nextIndex = this.selectedWordIndex + 1;
 
       const isRightTranslate = this.boolean;
-      console.log('нажатие на false');
-      console.log(isRightTranslate, 'isRightTranslate в кнопке false');
       if (nextIndex < this.library.length) {
         this.fillWord(nextIndex, isRightTranslate);
       }
 
       if (this.library[this.selectedWordIndex].wordTranslate !== translateWord) {
+        if (this.countRight > 3) {
+          this.countRight = 0;
+          this.coefficient *= 2;
+          coefficientValue.textContent = String(this.coefficient);
+        }
         this.countRight += 1;
-        this.resultScores += 20;
+        this.resultScores += this.coefficient;
         points.textContent = String(this.resultScores);
         this.rightWordsArr.push(this.library[this.selectedWordIndex]);
       } else {

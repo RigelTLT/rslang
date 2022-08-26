@@ -59,7 +59,7 @@
         max-width: 650px;
         margin: 0 auto;
     }
-    
+
     &.sprint {
         .count {
             display: flex;
@@ -85,12 +85,24 @@
             .points {
                 font-size: 40px;
             }
-
         }
+
         .game-container {
             background-color: rgba(255, 63, 58, 0.4);
             border-radius: 4px;
             padding: 20px 10px;
+
+            .coefficient {
+                margin-bottom: 10px;
+                color: #fff;
+                text-align: center;
+                font-size: 18px;
+                
+                span{
+                    margin: 0 15px;
+                    font-size: 24px;
+                }
+            }
 
             .series-response {
                 display: flex;
@@ -147,9 +159,9 @@
             }
         }
     }
-    
+
     &.audio-call {
-        .game-container{
+        .game-container {
             max-width: 700px;
             width: 100%;
             margin: 0 auto;
@@ -157,37 +169,41 @@
             border-radius: 4px;
             padding: 20px 10px;
 
-            .illustration{
+            .illustration {
                 max-width: 200px;
                 margin: 0 auto 40px;
-                img{
+
+                img {
                     width: 120px;
                     height: 120px;
                     border-radius: 50%;
                     border: 2px solid black;
                     margin: 0 auto;
                 }
-            }         
-            .control{
-                .options{
+            }
+
+            .control {
+                .options {
                     display: flex;
                     justify-content: space-between;
                     align-content: center;
                     max-width: 600px;
                     width: 100%;
                     margin: 0 auto 40px;
-                    &__item{
+
+                    &__item {
                         font-weight: 700;
                         font-size: 22px;
                     }
                 }
-                .btn{
+
+                .btn {
                     width: 200px;
                     height: 70px;
                     margin: 0 auto;
                     display: block;
                 }
-            }   
+            }
         }
     }
 }
