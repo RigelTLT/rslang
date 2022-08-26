@@ -62,6 +62,18 @@ export class Sprint {
     }
   }
 
+  fillCircle(): void {
+    const circles = document.querySelectorAll('.series-response .circle') as NodeList;
+    (circles[this.countRight - 1] as HTMLElement).classList.add('active');
+  }
+
+  clearCircles(): void {
+    const circles = document.querySelectorAll('.series-response .circle') as NodeList;
+    circles.forEach((elem) => {
+      (elem as HTMLElement).classList.remove('active');
+    });
+  }
+
   trueButtonHandler() {
     const trueButton = document.querySelector('.control .true') as HTMLElement;
 
@@ -78,19 +90,23 @@ export class Sprint {
       }
 
       if (this.library[this.selectedWordIndex].wordTranslate === translateWord) {
-        if (this.countRight > 3) {
-          this.countRight = 0;
+        if (this.countRight >= 3) {
+          this.countRight = -1;
           this.coefficient *= 2;
           coefficientValue.textContent = String(this.coefficient);
+          this.clearCircles();
         }
         this.countRight += 1;
         this.resultScores += this.coefficient;
         points.textContent = String(this.resultScores);
         this.rightWordsArr.push(this.library[this.selectedWordIndex]);
+        this.fillCircle();
       } else {
         this.countRight = 0;
         this.wrongWordArr.push(this.library[this.selectedWordIndex]);
+        this.clearCircles();
       }
+      console.log(this.countRight);
 
       this.selectedWordIndex += 1;
       if (nextIndex >= this.library.length) {
@@ -117,19 +133,23 @@ export class Sprint {
       }
 
       if (this.library[this.selectedWordIndex].wordTranslate !== translateWord) {
-        if (this.countRight > 3) {
-          this.countRight = 0;
+        if (this.countRight >= 3) {
+          this.countRight = -1;
           this.coefficient *= 2;
           coefficientValue.textContent = String(this.coefficient);
+          this.clearCircles();
         }
         this.countRight += 1;
         this.resultScores += this.coefficient;
         points.textContent = String(this.resultScores);
         this.rightWordsArr.push(this.library[this.selectedWordIndex]);
+        this.fillCircle();
       } else {
         this.countRight = 0;
         this.wrongWordArr.push(this.library[this.selectedWordIndex]);
+        this.clearCircles();
       }
+      console.log(this.countRight);
 
       this.selectedWordIndex += 1;
       if (nextIndex >= this.library.length) {
