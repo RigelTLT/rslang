@@ -4,15 +4,11 @@ import 'select-pure';
 import './game.scss';
 
 export default class Game {
-  renderTemplate(templateId: string): void {
-    const template =
-      this.checkParameter() === undefined
-        ? (document.querySelector(`#selection-menu`) as HTMLTemplateElement)
-        : (document.querySelector(`#${templateId}`) as HTMLTemplateElement);
-
-    const main = document.querySelector('.main') as HTMLElement;
-    main.innerHTML = '';
-    main.append(template.content.cloneNode(true));
+  renderTemplate(templateId: string, selector: string): void {
+    const template = document.querySelector(`#${templateId}`) as HTMLTemplateElement;
+    const container = document.querySelector(`${selector}`) as HTMLElement;
+    container.innerHTML = '';
+    container.append(template.content.cloneNode(true));
   }
 
   checkGameName(): 'sprint' | 'audio-call' {

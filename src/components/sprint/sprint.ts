@@ -25,13 +25,15 @@ export class Sprint {
   async start() {
     const game = new Game();
 
+    const template = game.checkParameter() === undefined ? 'selection-menu' : game.checkGameName();
+
     this.library = (await game.createLibrary()) as ILibraryResponse[];
-    game.renderTemplate(game.checkGameName());
+    game.renderTemplate(template, '.main');
     this.fillWord(this.selectedWordIndex, this.boolean);
 
     this.trueButtonHandler();
-    this.timer();
     this.falseButtonHandler();
+    this.timer();
   }
 
   timer() {
@@ -39,10 +41,15 @@ export class Sprint {
     let timeLeft = Number(timerSelect.textContent);
 
     const intervalId = setInterval(() => {
-      timeLeft = timeLeft - 1;
+      timeLeft--;
       timerSelect.innerText = timeLeft.toString();
 
-      if (timeLeft < 1) clearInterval(intervalId);
+      const isAllWordsCompleted = this.rightWordsArr.length + this.wrongWordArr.length === this.library.length;
+      if (timeLeft < 1 || isAllWordsCompleted) {
+        clearInterval(intervalId);
+        // показывать статистику
+        alert('0');
+      }
     }, 1000);
 
     return timeLeft;
@@ -115,9 +122,6 @@ export class Sprint {
       }
 
       this.selectedWordIndex += 1;
-      if (nextIndex >= this.library.length) {
-        return alert('слова кончились');
-      }
     };
 
     trueButton?.addEventListener('click', btnListener);
@@ -158,9 +162,6 @@ export class Sprint {
       }
 
       this.selectedWordIndex += 1;
-      if (nextIndex >= this.library.length) {
-        return alert('слова кончились');
-      }
     };
 
     falseButton?.addEventListener('click', btnListener);
