@@ -1,5 +1,5 @@
 import { baseUrl, path } from './basicApi';
-import { Isignin, Iregist } from './../interface/interface';
+import { Isignin, Iregist } from '../../types/interface';
 
 export async function signinApi(body?: Isignin) {
   let params = {

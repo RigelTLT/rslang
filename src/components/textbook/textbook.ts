@@ -1,7 +1,7 @@
 import './textbook.scss';
 import { addWordsUserApi, getUserIdWords, UpdateWordsUserApi, getUserAllWords } from './../api/wordsApi';
 import { baseUrl, getWords, getWordId } from './../api/basicApi';
-import { IapiRequestWords } from './../interface/interface';
+import { IapiRequestWords } from '../../types/interface';
 import { GetLocalStorageToken } from './../authorization/auth';
 
 export function cheakPageToComplete() {

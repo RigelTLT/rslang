@@ -1,5 +1,5 @@
 import Game from '../game/game';
-import { ILibraryResponse } from '../interface/interface';
+import { ILibraryResponse } from '../../types/interface';
 
 export class Sprint {
   library: ILibraryResponse[] = [];
@@ -33,10 +33,10 @@ export class Sprint {
 
     this.trueButtonHandler();
     this.falseButtonHandler();
-    this.timer();
+    this.timer(game);
   }
 
-  timer() {
+  timer(game: Game) {
     const timerSelect = document.querySelector('.timer') as HTMLDivElement;
     let timeLeft = Number(timerSelect.textContent);
 
@@ -47,10 +47,9 @@ export class Sprint {
       const isAllWordsCompleted = this.rightWordsArr.length + this.wrongWordArr.length === this.library.length;
       if (timeLeft < 1 || isAllWordsCompleted) {
         clearInterval(intervalId);
-        // показывать статистику
-        alert('0');
+        game.gameResult(this.rightWordsArr, this.wrongWordArr);
       }
-    }, 1000);
+    }, 100);
 
     return timeLeft;
   }

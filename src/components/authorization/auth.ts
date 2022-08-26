@@ -1,4 +1,4 @@
-import { Iauth, Isignin, Iregist, IidToken } from '../interface/interface';
+import { Iauth, Isignin, Iregist, IidToken } from '../../types/interface';
 import { signinApi } from '../api/authApi';
 
 function setLocalStorageAuth(id: string, token: string, name: string) {

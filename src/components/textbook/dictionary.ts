@@ -1,7 +1,7 @@
 import './textbook.scss';
 import { baseUrl, getWordId } from './../api/basicApi';
 import { deleteordsUserApi, getUserAllWords } from './../api/wordsApi';
-import { IapiRequestUserWords } from './../interface/interface';
+import { IapiRequestUserWords } from '../../types/interface';
 import { GetLocalStorageToken } from './../authorization/auth';
 
 function paginationState(group: string, status: string) {
