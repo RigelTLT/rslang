@@ -29,87 +29,43 @@ export default class Game {
     // const realPageNumber = String(Number(parameterPage?.page) - 1);
     const pageNumber = Number(parameterPage?.page);
 
-    // console.log(parameterPage, 'parameterPage');
-    // console.log(realPageNumber, 'gameRealPageName');
-    // console.log(pageNumber, 'pageNumber');
-
     if (pageNumber >= 1 && parameterPage !== undefined) {
       const getWordsLibrary = await getWords(parameterPage);
       return getWordsLibrary;
     }
   }
 
-  gameResult(arrOfTrue: ILibraryResponse[], arrOfFalse: ILibraryResponse[]) {
+  gameResult(arrOfRight: ILibraryResponse[], arrOfWrong: ILibraryResponse[]) {
+    const template = document.querySelector('#statistics') as HTMLTemplateElement;
     const main = document.querySelector('.main') as HTMLElement;
-
-    const section = document.createElement('section');
-    section.classList.add('statisctic-game');
-
-    const container = document.createElement('div');
-    container.classList.add('container');
-
-    const message = document.createElement('h2');
-    message.textContent = arrOfTrue.length < 15 ? 'Неплохо, но есть еще чему поучиться!' : 'Отличный результат!';
-    message.classList.add('message');
-
-    const contentContainer = document.createElement('div');
-    contentContainer.classList.add('content-container');
-
-    const learnedWordsContainer = document.createElement('div');
-    learnedWordsContainer.classList.add('learned-words');
-
-    const learningWordsContainer = document.createElement('div');
-    learningWordsContainer.classList.add('learning-words');
-
-    const learnedHeading = document.createElement('h4');
-    learnedHeading.textContent = `Изучено: ${arrOfTrue.length}`;
-    learnedHeading.classList.add('heading');
-
-    const learningHeading = document.createElement('h4');
-    learningHeading.textContent = `Не изучено: ${arrOfFalse.length}`;
-    learningHeading.classList.add('heading');
-
-    const trueWordsContainer = document.createElement('div');
-    trueWordsContainer.classList.add('words');
-
-    const trueWordsString = arrOfTrue
-      .map(
-        (elem) =>
-          `<div class='word'>
-            <img src='' class='word__audio' alt='word audio image'>
-            <span class="word__original">${elem.word}</span>
-            -
-            <span class="word__translate">${elem.wordTranslate}</span>
-          </div>`
-      )
-      .join(' ');
-
-    trueWordsContainer.innerHTML = `${trueWordsString}`;
-
-    const falseWordsContainer = document.createElement('div');
-    falseWordsContainer.classList.add('words');
-
-    const falsewordsString = arrOfFalse
-      .map(
-        (elem) =>
-          `<div class='word'>
-            <img src='' class='word__audio' alt='word audio image'>
-            <span class="word__original">${elem.word}</span>
-            -
-            <span class="word__translate">${elem.wordTranslate}</span>
-          </div>`
-      )
-      .join(' ');
-
-    falseWordsContainer.innerHTML = `${falsewordsString}`;
-
     main.innerHTML = '';
-    main.append(section);
-    section.append(container);
-    container.append(message, contentContainer);
-    contentContainer.append(learnedWordsContainer, learningWordsContainer);
+    main.append(template.content.cloneNode(true));
 
-    learnedWordsContainer.append(learnedHeading, trueWordsContainer);
-    learningWordsContainer.append(learningHeading, falseWordsContainer);
+    const headingRight = document.querySelector('.heading-right') as HTMLElement;
+    headingRight.textContent = `Изучено: ${arrOfRight.length}`;
+
+    const headingWrong = document.querySelector('.heading-wrong') as HTMLElement;
+    headingWrong.textContent = `Не изучено: ${arrOfWrong.length}`;
+
+    const message = document.querySelector('.message') as HTMLElement;
+    message.textContent = arrOfRight.length < 15 ? 'Неплохо, но есть еще чему поучиться!' : 'Отличный результат!';
+
+    const wordsRightContainer = document.querySelector('.words-right') as HTMLDivElement;
+    const wordsWrongContainer = document.querySelector('.words-wrong') as HTMLDivElement;
+
+    const wordsTemplate = (arrName: ILibraryResponse[]) =>
+      arrName
+        .map(
+          (elem) =>
+            `<div class='word'>
+              <img src='' class='word__audio' alt='word audio image'>
+              <span class="word__original">${elem.word}</span>-
+              <span class="word__translate">${elem.wordTranslate}</span>
+            </div>`
+        )
+        .join(' ');
+
+    wordsRightContainer.innerHTML = wordsTemplate(arrOfRight);
+    wordsWrongContainer.innerHTML = wordsTemplate(arrOfWrong);
   }
 }

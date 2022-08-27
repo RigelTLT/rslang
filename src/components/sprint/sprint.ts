@@ -14,7 +14,7 @@ export class Sprint {
 
   rightWordsArr: ILibraryResponse[] = [];
 
-  wrongWordArr: ILibraryResponse[] = [];
+  wrongWordsArr: ILibraryResponse[] = [];
 
   private _bool = () => (Math.random() > 0.5 ? true : false);
 
@@ -44,10 +44,12 @@ export class Sprint {
       timeLeft--;
       timerSelect.innerText = timeLeft.toString();
 
-      const isAllWordsCompleted = this.rightWordsArr.length + this.wrongWordArr.length === this.library.length;
+      const isAllWordsCompleted = this.rightWordsArr.length + this.wrongWordsArr.length === this.library.length;
       if (timeLeft < 1 || isAllWordsCompleted) {
         clearInterval(intervalId);
-        game.gameResult(this.rightWordsArr, this.wrongWordArr);
+        if (!this.rightWordsArr.length) this.wrongWordsArr = this.library;
+
+        game.gameResult(this.rightWordsArr, this.wrongWordsArr);
       }
     }, 100);
 
@@ -116,7 +118,7 @@ export class Sprint {
         }
       } else {
         this.countRight = 0;
-        this.wrongWordArr.push(this.library[this.selectedWordIndex]);
+        this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
         this.clearCircles();
       }
 
@@ -156,7 +158,7 @@ export class Sprint {
         }
       } else {
         this.countRight = 0;
-        this.wrongWordArr.push(this.library[this.selectedWordIndex]);
+        this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
         this.clearCircles();
       }
 
