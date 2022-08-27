@@ -48,7 +48,13 @@ export default class Game {
     headingWrong.textContent = `Не изучено: ${arrOfWrong.length}`;
 
     const message = document.querySelector('.message') as HTMLElement;
-    message.textContent = arrOfRight.length < 15 ? 'Неплохо, но есть еще чему поучиться!' : 'Отличный результат!';
+    if (arrOfRight.length < 5) {
+      message.textContent = 'А репетитора вы можете найти в сервисе <место для вашей рекламы> ';
+    } else if (arrOfRight.length < 15) {
+      message.textContent = 'Неплохо, но есть еще чему поучиться!';
+    } else {
+      message.textContent = 'Отличный результат!';
+    }
 
     const wordsRightContainer = document.querySelector('.words-right') as HTMLDivElement;
     const wordsWrongContainer = document.querySelector('.words-wrong') as HTMLDivElement;
@@ -58,8 +64,10 @@ export default class Game {
         .map(
           (elem) =>
             `<div class='word'>
-              <img src='' class='word__audio' alt='word audio image'>
-              <span class="word__original">${elem.word}</span>-
+              <svg class="audio" data-id="">
+                <use xlink:href="assets/ico/audio-play.svg#Capa_1"></use>
+              </svg>
+              <span class="word__original">${elem.word}</span> -
               <span class="word__translate">${elem.wordTranslate}</span>
             </div>`
         )
@@ -67,5 +75,15 @@ export default class Game {
 
     wordsRightContainer.innerHTML = wordsTemplate(arrOfRight);
     wordsWrongContainer.innerHTML = wordsTemplate(arrOfWrong);
+
+    const playAgainBtn = document.querySelector('#play-again') as HTMLButtonElement;
+    playAgainBtn.addEventListener('click', () => {
+      location.replace(location.href);
+    });
+
+    const returnToStartBtn = document.querySelector('#to-start') as HTMLButtonElement;
+    returnToStartBtn.addEventListener('click', () => {
+      location.replace('http://localhost:8080/sprint.html');
+    });
   }
 }

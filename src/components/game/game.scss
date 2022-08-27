@@ -230,6 +230,22 @@
     padding: 10px;
   }
 
+  .word {
+    display: flex;
+    gap: 10px;
+  }
+
+  .controls {
+    margin: 15px auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      margin: 0 10px;
+    }
+  }
+
   .learned-words {
   }
 
