@@ -128,6 +128,7 @@ async function createList(data: IapiRequestWords) {
   const list = document.createElement('div');
   list.classList.add('list-textbook');
   mainContainer.append(list);
+
   for (let i = 0; i < words.length; i++) {
     const elem = document.createElement('div');
     elem.classList.add('list-textbook__elem');
@@ -138,73 +139,90 @@ async function createList(data: IapiRequestWords) {
     img.classList.add('list-textbook__elem__img');
     img.src = `${baseUrl}${words[i].image}`;
     elem.append(img);
+
     const wordsContainer = document.createElement('div');
     wordsContainer.classList.add('list-textbook__elem__words-container');
     elem.append(wordsContainer);
+
     const wordContainer = document.createElement('div');
     wordContainer.classList.add('list-textbook__elem__word-container');
     wordsContainer.append(wordContainer);
+
     const word = document.createElement('div');
     word.classList.add('word-container__word');
     word.innerText = `${words[i].word}`;
     wordContainer.append(word);
+
     const transcription = document.createElement('div');
     transcription.classList.add('word-container__transcription');
     transcription.innerText = `${words[i].transcription}`;
     wordContainer.append(transcription);
-    const svgElem = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-      imgAudio = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+
+    const svgElem = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const imgAudio = document.createElementNS('http://www.w3.org/2000/svg', 'use');
     svgElem.classList.add('audio');
     svgElem.setAttribute('data-id', `${words[i].id}`);
     imgAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-mute.svg#Capa_1');
     svgElem.append(imgAudio);
     wordContainer.append(svgElem);
+
     const wordTranslate = document.createElement('div');
     wordTranslate.classList.add('word-container__wordTranslate');
     wordTranslate.innerText = `${words[i].wordTranslate}`;
     wordContainer.append(wordTranslate);
+
     const example = document.createElement('div');
     example.classList.add('list-textbook__elem__example');
     wordsContainer.append(example);
+
     const textExample = document.createElement('div');
     textExample.classList.add('example__text');
     textExample.innerText = `${words[i].textExample}`;
     example.append(textExample);
+
     const textExampleTranslate = document.createElement('div');
     textExampleTranslate.classList.add('example__textTranslate');
     textExampleTranslate.innerText = `${words[i].textExampleTranslate}`;
     example.append(textExampleTranslate);
+
     const meaning = document.createElement('div');
     meaning.classList.add('list-textbook__elem__meaning');
     wordsContainer.append(meaning);
+
     const textMeaning = document.createElement('div');
     textMeaning.classList.add('meaning__text');
     textMeaning.innerText = `${words[i].textMeaning}`;
     meaning.append(textMeaning);
+
     const textMeaningTranslate = document.createElement('div');
     textMeaningTranslate.classList.add('meaning__textTranslate');
     textMeaningTranslate.innerText = `${words[i].textMeaningTranslate}`;
     meaning.append(textMeaningTranslate);
+
     if (localStorage.id) {
       const buttonContainer = document.createElement('div');
       buttonContainer.classList.add('list-textbook__cont-button');
       elem.append(buttonContainer);
+
       const buttonAdd = document.createElement('button');
       buttonAdd.classList.add('cont-button');
       buttonAdd.classList.add('cont-button__add');
       buttonAdd.innerText = `Добавить в сложные слова`;
       buttonContainer.append(buttonAdd);
+
       const buttonRemove = document.createElement('button');
       buttonRemove.classList.add('cont-button');
       buttonRemove.classList.add('cont-button__remove');
       buttonRemove.innerText = `Убрать из сложных слов`;
       buttonRemove.disabled = true;
       buttonContainer.append(buttonRemove);
+
       const buttonComplete = document.createElement('button');
       buttonComplete.classList.add('cont-button');
       buttonComplete.classList.add('cont-button__studied');
       buttonComplete.innerText = `Изученно`;
       buttonContainer.append(buttonComplete);
+
       if (checkWords) {
         for (let j = 0; j < checkWords.length; j++) {
           if (checkWords[j].wordId === words[i].id) {
@@ -213,6 +231,7 @@ async function createList(data: IapiRequestWords) {
               buttonAdd.disabled = true;
               buttonRemove.disabled = false;
             }
+
             if (checkWords[j].difficulty === 'studied') {
               elem.classList.add('studied');
               buttonAdd.disabled = true;
