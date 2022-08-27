@@ -1,5 +1,6 @@
 import Game from '../game/game';
 import { ILibraryResponse } from '../../types/interface';
+import { SelectPure } from 'select-pure/lib/components';
 
 export class Sprint {
   library: ILibraryResponse[] = [];
@@ -27,13 +28,42 @@ export class Sprint {
 
     const template = game.checkParameter() === undefined ? 'selection-menu' : game.checkGameName();
 
-    this.library = (await game.createLibrary()) as ILibraryResponse[];
     game.renderTemplate(template, '.main');
-    this.fillWord(this.selectedWordIndex, this.boolean);
 
-    this.trueButtonHandler();
-    this.falseButtonHandler();
-    this.timer(game);
+    if (template === 'selection-menu') {
+      this.menu(game);
+    } else {
+      this.library = (await game.createLibrary()) as ILibraryResponse[];
+      this.fillWord(this.selectedWordIndex, this.boolean);
+      this.trueButtonHandler();
+      this.falseButtonHandler();
+      this.timer(game);
+    }
+  }
+
+  menu(game: Game) {
+    // todo перенести весь метод в game, переделать location.replace
+    // todo сделать так чтобы все методы внтури вызвывались вне menu
+    const startBtn = document.querySelector('#start-btn') as HTMLButtonElement;
+
+    let selectedDificultLevel: string;
+    const selectPure = document.querySelector('select-pure') as SelectPure;
+    selectPure.addEventListener('change', () => {
+      selectedDificultLevel = selectPure.value;
+    });
+
+    startBtn?.addEventListener('click', async () => {
+      if (!Number(selectedDificultLevel)) return alert('Сначала выбери уровень сложности');
+
+      const randomPageNumber = this.randomIndexGenerator(30);
+      location.replace(`http://localhost:8080/sprint.html?group=${selectedDificultLevel}&page=${randomPageNumber}`);
+
+      this.library = (await game.createLibrary()) as ILibraryResponse[];
+      this.fillWord(this.selectedWordIndex, this.boolean);
+      this.trueButtonHandler();
+      this.falseButtonHandler();
+      this.timer(game);
+    });
   }
 
   timer(game: Game) {
@@ -51,7 +81,7 @@ export class Sprint {
 
         game.gameResult(this.rightWordsArr, this.wrongWordsArr);
       }
-    }, 100);
+    }, 1000);
 
     return timeLeft;
   }
@@ -169,7 +199,7 @@ export class Sprint {
     document.body.addEventListener('keyup', (event) => event.key === 'ArrowRight' && btnListener());
   }
 
-  randomIndexGenerator(maxLength: number, exclude: number): number {
+  randomIndexGenerator(maxLength: number, exclude?: number): number {
     const randomNumber = Math.floor(Math.random() * maxLength);
     if (!randomNumber) {
       return this.randomIndexGenerator(maxLength, exclude);
@@ -183,4 +213,4 @@ export class Sprint {
   }
 }
 
-new Sprint();
+new Sprint().start();
