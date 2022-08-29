@@ -105,6 +105,7 @@ export default class Game {
     // todo перенести весь метод в game, переделать location.replace
     // todo сделать так чтобы все методы внтури вызвывались вне menu
     const startBtn = document.querySelector('#start-btn') as HTMLButtonElement;
+    const page = this.checkGameName();
 
     let selectedDifficultLevel: string;
     const selectPure = document.querySelector('select-pure') as SelectPure;
@@ -116,7 +117,7 @@ export default class Game {
       if (!Number(selectedDifficultLevel)) return alert('Сначала выбери уровень сложности');
 
       const randomPageNumber = this.randomIndexGenerator(30);
-      location.replace(`http://localhost:8080/sprint.html?group=${selectedDifficultLevel}&page=${randomPageNumber}`);
+      location.replace(`http://localhost:8080/${page}.html?group=${selectedDifficultLevel}&page=${randomPageNumber}`);
     });
   }
 }
