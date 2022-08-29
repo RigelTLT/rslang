@@ -91,16 +91,20 @@ export default class Game {
   randomIndexGenerator(maxLength: number, exclude?: number): number {
     const randomNumber = Math.floor(Math.random() * maxLength);
     if (!exclude) {
+      console.log('в условии 1');
       return randomNumber;
     }
 
     if (!randomNumber) {
+      console.log('в условии 2');
       return this.randomIndexGenerator(maxLength, exclude);
     }
 
     if (randomNumber === exclude) {
+      console.log('в условии 3');
       return this.randomIndexGenerator(maxLength, exclude);
     }
+    console.log('не попали в условие');
 
     return randomNumber;
   }
@@ -116,7 +120,7 @@ export default class Game {
     });
 
     startBtn?.addEventListener('click', () => {
-      if (!Number(selectedDifficultLevel)) return alert('Сначала выбери уровень сложности');
+      if (selectedDifficultLevel === '') return alert('Сначала выбери уровень сложности');
 
       const randomPageNumber = this.randomIndexGenerator(30);
       location.replace(`http://localhost:8080/${page}.html?group=${selectedDifficultLevel}&page=${randomPageNumber}`);
