@@ -90,6 +90,10 @@ export default class Game {
 
   randomIndexGenerator(maxLength: number, exclude?: number): number {
     const randomNumber = Math.floor(Math.random() * maxLength);
+    if (!exclude) {
+      return randomNumber;
+    }
+
     if (!randomNumber) {
       return this.randomIndexGenerator(maxLength, exclude);
     }
@@ -102,8 +106,6 @@ export default class Game {
   }
 
   menu() {
-    // todo перенести весь метод в game, переделать location.replace
-    // todo сделать так чтобы все методы внтури вызвывались вне menu
     const startBtn = document.querySelector('#start-btn') as HTMLButtonElement;
     const page = this.checkGameName();
 
@@ -113,7 +115,7 @@ export default class Game {
       selectedDifficultLevel = selectPure.value;
     });
 
-    startBtn?.addEventListener('click', async () => {
+    startBtn?.addEventListener('click', () => {
       if (!Number(selectedDifficultLevel)) return alert('Сначала выбери уровень сложности');
 
       const randomPageNumber = this.randomIndexGenerator(30);

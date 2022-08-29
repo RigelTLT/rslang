@@ -174,8 +174,19 @@
       padding: 20px 10px;
 
       .illustration {
-        max-width: 200px;
+        cursor: pointer;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 1px solid red;
         margin: 0 auto 40px;
+        display: flex;
+        svg {
+          margin: auto;
+        }
+        use {
+          width: 30px;
+        }
 
         img {
           width: 120px;
