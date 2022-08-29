@@ -21,7 +21,6 @@ class AudioCall {
       this.library = (await game.createLibrary()) as ILibraryResponse[];
       this.fillWord(this.selectedWordIndex, game);
       this.buttonHandler(game);
-      this.keyboardUp();
     }
   }
 
@@ -48,8 +47,18 @@ class AudioCall {
     const controlButtons = document.querySelector('.control') as HTMLElement;
 
     controlButtons.addEventListener('click', (event) => {
+      const isAllWordsCompleted = this.rightWordsArr.length + this.wrongWordsArr.length === this.library.length;
+
+      if (isAllWordsCompleted) {
+        return game.gameResult(this.rightWordsArr, this.wrongWordsArr);
+      }
+
       this.gameClick(event, game);
     });
+
+    // document.body.addEventListener('keyup', (event) => {
+    //   const keyName = event.key;
+    // });
   }
 
   gameClick(event: Event, game: Game) {
@@ -110,10 +119,6 @@ class AudioCall {
         this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
       }
     }
-  }
-
-  keyboardUp() {
-    document.body.addEventListener('keyup', (event) => {});
   }
 }
 

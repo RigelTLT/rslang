@@ -82,9 +82,10 @@ export default class Game {
       location.replace(location.href);
     });
 
+    const page = this.checkGameName();
     const returnToStartBtn = document.querySelector('#to-start') as HTMLButtonElement;
     returnToStartBtn.addEventListener('click', () => {
-      location.replace('http://localhost:8080/sprint.html');
+      location.replace(`http://localhost:8080/${page}.html`);
     });
   }
 
