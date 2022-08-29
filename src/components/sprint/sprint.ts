@@ -1,6 +1,5 @@
 import Game from '../game/game';
 import { ILibraryResponse } from '../../types/interface';
-import { SelectPure } from 'select-pure/lib/components';
 
 export class Sprint {
   library: ILibraryResponse[] = [];
@@ -31,33 +30,14 @@ export class Sprint {
     game.renderTemplate(template, '.main');
 
     if (template === 'selection-menu') {
-      this.menu(game);
+      game.menu();
     } else {
       this.library = (await game.createLibrary()) as ILibraryResponse[];
-      this.fillWord(this.selectedWordIndex, this.boolean);
-      this.trueButtonHandler();
-      this.falseButtonHandler();
+      this.fillWord(this.selectedWordIndex, this.boolean, game);
+      this.trueButtonHandler(game);
+      this.falseButtonHandler(game);
       this.timer(game);
     }
-  }
-
-  menu(game: Game) {
-    // todo перенести весь метод в game, переделать location.replace
-    // todo сделать так чтобы все методы внтури вызвывались вне menu
-    const startBtn = document.querySelector('#start-btn') as HTMLButtonElement;
-
-    let selectedDificultLevel: string;
-    const selectPure = document.querySelector('select-pure') as SelectPure;
-    selectPure.addEventListener('change', () => {
-      selectedDificultLevel = selectPure.value;
-    });
-
-    startBtn?.addEventListener('click', async () => {
-      if (!Number(selectedDificultLevel)) return alert('Сначала выбери уровень сложности');
-
-      const randomPageNumber = this.randomIndexGenerator(30);
-      location.replace(`http://localhost:8080/sprint.html?group=${selectedDificultLevel}&page=${randomPageNumber}`);
-    });
   }
 
   timer(game: Game) {
@@ -80,7 +60,7 @@ export class Sprint {
     return timeLeft;
   }
 
-  fillWord(wordId: number, isRightTranslate: boolean) {
+  fillWord(wordId: number, isRightTranslate: boolean, game: Game) {
     const [originalWord, translateWord] = (document.querySelector('.words') as HTMLDivElement).children;
 
     if (isRightTranslate) {
@@ -88,7 +68,7 @@ export class Sprint {
       translateWord.innerHTML = this.library[wordId].wordTranslate;
     } else {
       originalWord.innerHTML = this.library[wordId].word;
-      const randomIndex = this.randomIndexGenerator(this.library.length, wordId);
+      const randomIndex = game.randomIndexGenerator(this.library.length, wordId);
 
       translateWord.innerHTML = this.library[randomIndex].wordTranslate;
     }
@@ -112,7 +92,7 @@ export class Sprint {
     });
   }
 
-  trueButtonHandler() {
+  trueButtonHandler(game: Game) {
     const trueButton = document.querySelector('.control .true') as HTMLElement;
 
     const btnListener = () => {
@@ -124,7 +104,7 @@ export class Sprint {
       const isRightTranslate = this.boolean;
 
       if (nextIndex < this.library.length) {
-        this.fillWord(nextIndex, isRightTranslate);
+        this.fillWord(nextIndex, isRightTranslate, game);
       }
 
       if (this.library[this.selectedWordIndex].wordTranslate === translateWord) {
@@ -153,7 +133,7 @@ export class Sprint {
     document.body.addEventListener('keyup', (event) => event.key === 'ArrowLeft' && btnListener());
   }
 
-  falseButtonHandler() {
+  falseButtonHandler(game: Game) {
     const falseButton = document.querySelector('.control .false') as HTMLElement;
 
     const btnListener = () => {
@@ -164,7 +144,7 @@ export class Sprint {
 
       const isRightTranslate = this.boolean;
       if (nextIndex < this.library.length) {
-        this.fillWord(nextIndex, isRightTranslate);
+        this.fillWord(nextIndex, isRightTranslate, game);
       }
 
       if (this.library[this.selectedWordIndex].wordTranslate !== translateWord) {
@@ -191,19 +171,6 @@ export class Sprint {
 
     falseButton?.addEventListener('click', btnListener);
     document.body.addEventListener('keyup', (event) => event.key === 'ArrowRight' && btnListener());
-  }
-
-  randomIndexGenerator(maxLength: number, exclude?: number): number {
-    const randomNumber = Math.floor(Math.random() * maxLength);
-    if (!randomNumber) {
-      return this.randomIndexGenerator(maxLength, exclude);
-    }
-
-    if (randomNumber === exclude) {
-      return this.randomIndexGenerator(maxLength, exclude);
-    }
-
-    return randomNumber;
   }
 }
 

@@ -32,7 +32,7 @@ class AudioCall {
   //     if (!Number(selectedDificultLevel)) return alert('Сначала выбери уровень сложности');
 
   //     const randomPageNumber = this.randomIndexGenerator(30);
-      // location.replace(`http://localhost:8080/audio-call.html?group=${selectedDificultLevel}&page=${randomPageNumber}`);
+  //     location.replace(`http://localhost:8080/audio-call.html?group=${selectedDificultLevel}&page=${randomPageNumber}`);
   //   });
   // }
 }

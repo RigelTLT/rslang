@@ -2,6 +2,7 @@ import { getWords } from '../api/basicApi';
 import { IapiRequestWords, ILibraryResponse } from '../../types/interface';
 import 'select-pure';
 import './game.scss';
+import { SelectPure } from 'select-pure/lib/components';
 
 export default class Game {
   renderTemplate(templateId: string, selector: string): void {
@@ -84,6 +85,38 @@ export default class Game {
     const returnToStartBtn = document.querySelector('#to-start') as HTMLButtonElement;
     returnToStartBtn.addEventListener('click', () => {
       location.replace('http://localhost:8080/sprint.html');
+    });
+  }
+
+  randomIndexGenerator(maxLength: number, exclude?: number): number {
+    const randomNumber = Math.floor(Math.random() * maxLength);
+    if (!randomNumber) {
+      return this.randomIndexGenerator(maxLength, exclude);
+    }
+
+    if (randomNumber === exclude) {
+      return this.randomIndexGenerator(maxLength, exclude);
+    }
+
+    return randomNumber;
+  }
+
+  menu() {
+    // todo перенести весь метод в game, переделать location.replace
+    // todo сделать так чтобы все методы внтури вызвывались вне menu
+    const startBtn = document.querySelector('#start-btn') as HTMLButtonElement;
+
+    let selectedDifficultLevel: string;
+    const selectPure = document.querySelector('select-pure') as SelectPure;
+    selectPure.addEventListener('change', () => {
+      selectedDifficultLevel = selectPure.value;
+    });
+
+    startBtn?.addEventListener('click', async () => {
+      if (!Number(selectedDifficultLevel)) return alert('Сначала выбери уровень сложности');
+
+      const randomPageNumber = this.randomIndexGenerator(30);
+      location.replace(`http://localhost:8080/sprint.html?group=${selectedDifficultLevel}&page=${randomPageNumber}`);
     });
   }
 }
