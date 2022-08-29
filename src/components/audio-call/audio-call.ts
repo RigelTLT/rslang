@@ -21,7 +21,7 @@ class AudioCall {
       this.library = (await game.createLibrary()) as ILibraryResponse[];
       this.fillWord(this.selectedWordIndex, game);
       this.buttonHandler(game);
-      // console.log(this.library);
+      this.keyboardUp();
     }
   }
 
@@ -83,10 +83,37 @@ class AudioCall {
           buttonCopy.disabled = true;
         });
 
+        this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
+
         nextWordButton.textContent = 'дальше';
         nextWordButton.classList.add('words-changed');
       }
     }
+
+    if (target.classList.contains('options__item')) {
+      wordsButtons.forEach((button) => {
+        const buttonCopy = button as HTMLButtonElement;
+
+        if (buttonCopy.classList.contains('right')) {
+          buttonCopy.classList.add('active');
+        }
+        buttonCopy.disabled = true;
+      });
+      nextWordButton.textContent = 'дальше';
+      nextWordButton.classList.add('words-changed');
+
+      if (target.classList.contains('right')) {
+        // добавляются слова в библиотеку верных ответов
+        this.rightWordsArr.push(this.library[this.selectedWordIndex]);
+      } else {
+        // добавляются слова в библиотеку ложных ответов
+        this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
+      }
+    }
+  }
+
+  keyboardUp() {
+    document.body.addEventListener('keyup', (event) => {});
   }
 }
 

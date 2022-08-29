@@ -218,13 +218,12 @@
             }
 
             &:disabled {
+              cursor: initial;
+
+              background-color: transparent;
               &.active {
                 background-color: white;
                 color: black;
-              }
-
-              &:hover {
-                background-color: transparent;
               }
             }
           }
