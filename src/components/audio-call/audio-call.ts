@@ -21,6 +21,7 @@ class AudioCall {
       this.library = (await game.createLibrary()) as ILibraryResponse[];
       this.fillWord(this.selectedWordIndex, game);
       this.buttonHandler(game);
+      // console.log(this.library);
     }
   }
 
@@ -29,40 +30,62 @@ class AudioCall {
     const randomRightPosition = game.randomIndexGenerator(words.length);
 
     words.forEach((elem, index) => {
+      (elem as HTMLElement).classList.remove('right');
+      (elem as HTMLElement).classList.remove('active');
+
       if (index !== randomRightPosition) {
-        elem.textContent = `${index + 1} ${
-          this.library[game.randomIndexGenerator(this.library.length, wordId)].wordTranslate
-        }`;
+        const wrongWordIndex = game.randomIndexGenerator(this.library.length, wordId);
+
+        elem.textContent = `${index + 1} ${this.library[wrongWordIndex].wordTranslate}`;
       } else {
         elem.textContent = `${index + 1} ${this.library[wordId].wordTranslate}`;
+        (elem as HTMLElement).classList.add('right');
       }
     });
   }
 
   buttonHandler(game: Game) {
-    const gameContainer = document.querySelector('.game-container') as HTMLElement;
-    gameContainer.addEventListener('click', (event) => {
+    const controlButtons = document.querySelector('.control') as HTMLElement;
+
+    controlButtons.addEventListener('click', (event) => {
       this.gameClick(event, game);
     });
   }
 
   gameClick(event: Event, game: Game) {
+    const nextWordButton = document.querySelector('.nextWordButton') as HTMLButtonElement;
+    const wordsButtons = document.querySelectorAll('.options__item') as NodeList;
+
     const target = event.target as HTMLButtonElement;
-
-    if (target.getAttribute('active')) {
-      target.textContent = 'не знаю';
-      target.setAttribute('active', 'false');
-      this.selectedWordIndex++;
-      this.fillWord(this.selectedWordIndex, game);
-    }
-
-    if (target.classList.contains('options__item')) {
-      this.selectedWordIndex++;
-    }
+    if (target.tagName !== 'BUTTON') return;
 
     if (target.classList.contains('nextWordButton')) {
-      target.textContent = 'дальше';
-      target.setAttribute('active', 'true');
+      if (nextWordButton.classList.contains('words-changed')) {
+        // 1. меняем текст кнопки на "дальше"
+        nextWordButton.textContent = 'не знаю';
+        this.selectedWordIndex++;
+        this.fillWord(this.selectedWordIndex, game);
+
+        wordsButtons.forEach((button) => {
+          const buttonCopy = button as HTMLButtonElement;
+          buttonCopy.disabled = false;
+        });
+
+        nextWordButton.classList.remove('words-changed');
+      } else {
+        // 2. возвращаем текст кнопки на "не знаю", увеличиваем индекс, вызываем fillWord
+        wordsButtons.forEach((button) => {
+          const buttonCopy = button as HTMLButtonElement;
+
+          if (buttonCopy.classList.contains('right')) {
+            buttonCopy.classList.add('active');
+          }
+          buttonCopy.disabled = true;
+        });
+
+        nextWordButton.textContent = 'дальше';
+        nextWordButton.classList.add('words-changed');
+      }
     }
   }
 }

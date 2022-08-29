@@ -91,20 +91,16 @@ export default class Game {
   randomIndexGenerator(maxLength: number, exclude?: number): number {
     const randomNumber = Math.floor(Math.random() * maxLength);
     if (!exclude) {
-      console.log('в условии 1');
       return randomNumber;
     }
 
     if (!randomNumber) {
-      console.log('в условии 2');
       return this.randomIndexGenerator(maxLength, exclude);
     }
 
     if (randomNumber === exclude) {
-      console.log('в условии 3');
       return this.randomIndexGenerator(maxLength, exclude);
     }
-    console.log('не попали в условие');
 
     return randomNumber;
   }
