@@ -57,12 +57,6 @@ export class Sprint {
 
       const randomPageNumber = this.randomIndexGenerator(30);
       location.replace(`http://localhost:8080/sprint.html?group=${selectedDificultLevel}&page=${randomPageNumber}`);
-
-      this.library = (await game.createLibrary()) as ILibraryResponse[];
-      this.fillWord(this.selectedWordIndex, this.boolean);
-      this.trueButtonHandler();
-      this.falseButtonHandler();
-      this.timer(game);
     });
   }
 
