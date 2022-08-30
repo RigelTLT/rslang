@@ -1,4 +1,4 @@
-import { IapiRequestWords } from '../types/interface';
+import { IapiRequestWords, ILibraryResponse } from '../types/interface';
 
 export const baseUrl = 'https://react-learnwords-2022.herokuapp.com/';
 export const path = {
@@ -11,12 +11,12 @@ export const path = {
   tokens: 'tokens'
 };
 
-export async function getWords(query: IapiRequestWords) {
+export async function getWords(query: IapiRequestWords): Promise<ILibraryResponse[]> {
   const response = await fetch(`${baseUrl}${path.words}?group=${query.group}&page=${query.page}`);
   const data = await response.json();
   return data;
 }
-export async function getWordId(id: string) {
+export async function getWordId(id: string): Promise<ILibraryResponse> {
   const response = await fetch(`${baseUrl}${path.words}/${id}`);
   const data = await response.json();
   return data;

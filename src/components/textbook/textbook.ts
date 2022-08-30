@@ -35,6 +35,7 @@ export async function addCompoundWord(id: string, idWord: string, token: string)
   }
   cheakPageToComplete();
 }
+
 export async function studiedCompoundWord(id: string, idWord: string, token: string) {
   const cheak = await getUserIdWords(id, idWord, token);
   const body = { difficulty: 'studied', optional: {} };
@@ -49,22 +50,18 @@ export async function studiedCompoundWord(id: string, idWord: string, token: str
 
 function paginationState(page: string, group: string) {
   const textGroup = document.querySelector('.text-group') as HTMLElement;
-  if (page) {
-    textGroup.innerText = `Раздел ${group}`;
-  } else {
-    textGroup.innerText = `Раздел 1`;
-  }
-  const numberToPage = Number(page);
+  textGroup.innerText = page ? `Раздел ${group}` : 'Раздел 1';
+
   const numberPage = document.querySelector('.number-page') as HTMLElement;
-  if (page) {
-    numberPage.innerText = page;
-  } else {
-    numberPage.innerText = '1';
-  }
+  numberPage.innerText = page ? page : '1';
+
   const backAll = document.querySelector('.back-all') as HTMLInputElement;
   const back = document.querySelector('.back') as HTMLInputElement;
   const forward = document.querySelector('.forward') as HTMLInputElement;
   const forwardAll = document.querySelector('.forward-all') as HTMLInputElement;
+
+  const numberToPage = Number(page);
+
   if (1 < numberToPage && numberToPage < 30) {
     backAll.disabled = false;
     back.disabled = false;
@@ -106,28 +103,18 @@ function getPageGroupTextbook() {
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   createList(data);
 }
-if (window.location.pathname === '/ebook.html') {
-  getPageGroupTextbook();
-}
 
-async function checkWordsUser(id: string, token: string) {
-  if (id && token) {
-    const checkWords = await getUserAllWords(id, token);
-    return checkWords;
-  } else {
-    return null;
-  }
+if (window.location.pathname === '/ebook.html') getPageGroupTextbook();
+
+export async function checkWordsUser(id: string, token: string) {
+  return id && token ? getUserAllWords(id, token) : null;
 }
 
 async function createList(data: IapiRequestWords) {
   const words = await getWords(data);
   const localStorage = new GetLocalStorageToken();
   const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
-  const mainContainer = document.querySelector('.main .container') as HTMLDivElement;
-
-  const list = document.createElement('div');
-  list.classList.add('list-textbook');
-  mainContainer.append(list);
+  const list = document.querySelector('.list-textbook') as HTMLElement;
 
   for (let i = 0; i < words.length; i++) {
     const elem = document.createElement('div');
@@ -223,21 +210,21 @@ async function createList(data: IapiRequestWords) {
       buttonComplete.innerText = `Изученно`;
       buttonContainer.append(buttonComplete);
 
-      if (checkWords) {
-        for (let j = 0; j < checkWords.length; j++) {
-          if (checkWords[j].wordId === words[i].id) {
-            if (checkWords[j].difficulty === 'hard') {
-              elem.classList.add('hard');
-              buttonAdd.disabled = true;
-              buttonRemove.disabled = false;
-            }
+      if (!checkWords) return;
 
-            if (checkWords[j].difficulty === 'studied') {
-              elem.classList.add('studied');
-              buttonAdd.disabled = true;
-              buttonRemove.disabled = true;
-              buttonComplete.disabled = true;
-            }
+      for (let j = 0; j < checkWords.length; j++) {
+        if (checkWords[j].wordId === words[i].id) {
+          if (checkWords[j].difficulty === 'hard') {
+            elem.classList.add('hard');
+            buttonAdd.disabled = true;
+            buttonRemove.disabled = false;
+          }
+
+          if (checkWords[j].difficulty === 'studied') {
+            elem.classList.add('studied');
+            buttonAdd.disabled = true;
+            buttonRemove.disabled = true;
+            buttonComplete.disabled = true;
           }
         }
       }
@@ -248,7 +235,7 @@ async function createList(data: IapiRequestWords) {
 
 export async function sound(id: string) {
   const query = await getWordId(id);
-  const arrayAudio = ['audio', 'audioExample', 'audioMeaning'];
+  const arrayAudio: ('audio' | 'audioExample' | 'audioMeaning')[] = ['audio', 'audioExample', 'audioMeaning'];
   const picture = document.querySelector(`svg[data-id="${id}"]`) as HTMLElement;
   const pictureAudio = picture.firstChild as HTMLElement;
   pictureAudio.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'assets/ico/audio-play.svg#Capa_1');
@@ -269,41 +256,33 @@ export async function sound(id: string) {
   };
 }
 
-export function changePage(button: string) {
+export function changePage(button: 'back-all' | 'back' | 'forward' | 'forward-all') {
   const params = new URLSearchParams(document.location.search);
   let page = params.get('page') as string;
   let group = params.get('group') as string;
+
   if (!page && !group) {
     page = '1';
     group = '1';
   }
+
   const numberToPage = Number(page);
-  let newPage: number;
+
+  let newPage: number | undefined;
+
   const url = `${document.location.origin}${document.location.pathname}`;
-  if (button === 'back-all') {
-    newPage = 1;
-    window.location.href = `${url}?group=${group}&page=${newPage}`;
-  }
+
+  if (button === 'back-all') newPage = 1;
+
   if (button === 'back') {
-    if (numberToPage <= 1) {
-      newPage = 1;
-      window.location.href = `${url}?group=${group}&page=${newPage}`;
-    } else {
-      newPage = numberToPage - 1;
-      window.location.href = `${url}?group=${group}&page=${newPage}`;
-    }
+    if (numberToPage <= 1) newPage = 1;
+    else newPage = numberToPage - 1;
   }
   if (button === 'forward') {
-    if (numberToPage >= 30) {
-      newPage = 30;
-      window.location.href = `${url}?group=${group}&page=${newPage}`;
-    } else {
-      newPage = numberToPage + 1;
-      window.location.href = `${url}?group=${group}&page=${newPage}`;
-    }
+    if (numberToPage >= 30) newPage = 30;
+    else newPage = numberToPage + 1;
   }
-  if (button === 'forward-all') {
-    newPage = 30;
-    window.location.href = `${url}?group=${group}&page=${newPage}`;
-  }
+  if (button === 'forward-all') newPage = 30;
+
+  window.location.href = `${url}?group=${group}&page=${newPage ? newPage : 1}`;
 }
