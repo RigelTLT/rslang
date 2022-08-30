@@ -115,15 +115,16 @@ class AudioCall {
     const wordsButtons = document.querySelectorAll('.options__item') as NodeList;
 
     const illustration = document.querySelector('.illustration') as HTMLDivElement;
-    const svgCopy = illustration.children[0].cloneNode(true) as Node;
+    const svgElem = document.querySelector('.illustration__svg') as Node;
 
     if (nextWordButton.classList.contains('words-changed')) {
       // 1. меняем текст кнопки на "дальше"
       nextWordButton.textContent = 'не знаю';
       this.selectedWordIndex++;
       this.fillWord(this.selectedWordIndex, game);
+
       illustration.innerHTML = '';
-      illustration.append(svgCopy);
+      illustration.append(svgElem);
 
       wordsButtons.forEach((button) => {
         const buttonCopy = button as HTMLButtonElement;
@@ -142,7 +143,6 @@ class AudioCall {
         buttonCopy.disabled = true;
       });
 
-      this.newIllustration(illustration, svgCopy);
       this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
 
       nextWordButton.textContent = 'дальше';
@@ -171,18 +171,18 @@ class AudioCall {
     if (target.classList.contains('right')) {
       // добавляются слова в библиотеку верных ответов
       this.rightWordsArr.push(this.library[this.selectedWordIndex]);
-      this.newIllustration(illustration, svgCopy);
     } else {
       // добавляются слова в библиотеку ложных ответов
       this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
-      this.newIllustration(illustration, svgCopy);
     }
+
+    this.newIllustration(illustration, svgCopy);
   }
 
   newIllustration(selector: HTMLDivElement, svg: Node) {
     const image = document.createElement('img');
     image.classList.add('illustration-img');
-    image.src = this.library[this.selectedWordIndex].image;
+    image.src = `https://react-learnwords-2022.herokuapp.com/${this.library[this.selectedWordIndex].image}`;
 
     const block = document.createElement('div');
     block.classList.add('illustration-block');
@@ -193,7 +193,6 @@ class AudioCall {
 
     selector.innerHTML = '';
     selector.append(image, block);
-    console.log('newIllustration вызван');
   }
 }
 
