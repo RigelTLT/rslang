@@ -1,5 +1,6 @@
-import Game from '../game/game';
+import Game, { playAudio } from '../game/game';
 import { ILibraryResponse } from '../../types/interface';
+import { baseUrl } from '../../api/basicApi';
 
 class AudioCall {
   library: ILibraryResponse[] = [];
@@ -37,15 +38,20 @@ class AudioCall {
 
         elem.textContent = `${index + 1} ${this.library[wrongWordIndex].wordTranslate}`;
       } else {
+        const svgButton = document.querySelector('.illustration__svg');
+
+        svgButton?.setAttribute('data-id', `${this.library[this.selectedWordIndex].id}`);
         elem.textContent = `${index + 1} ${this.library[wordId].wordTranslate}`;
         (elem as HTMLElement).classList.add('right');
       }
     });
+
+    const audioPath = `${baseUrl}${this.library[this.selectedWordIndex].audio}`;
+    playAudio(audioPath);
   }
 
   buttonHandler(game: Game) {
     const controlButtons = document.querySelector('.control') as HTMLElement;
-
     controlButtons.addEventListener('click', (event) => {
       const isAllWordsCompleted = this.rightWordsArr.length + this.wrongWordsArr.length === this.library.length;
 
@@ -54,6 +60,12 @@ class AudioCall {
       }
 
       this.gameClick(event, game);
+    });
+
+    const illustrationSvgImage = document.querySelector('.illustration__svg');
+    illustrationSvgImage?.addEventListener('click', () => {
+      const audioPath = `${baseUrl}${this.library[this.selectedWordIndex].audio}`;
+      playAudio(audioPath);
     });
 
     document.body.addEventListener('keyup', (event) => {
@@ -66,11 +78,10 @@ class AudioCall {
       const keyCode = event.code;
 
       if (keyCode === 'Space') {
-        alert('воспроизводит аудио');
+        const audioPath = `${baseUrl}${this.library[this.selectedWordIndex].audio}`;
+        playAudio(audioPath);
       }
       if (keyCode === 'Enter') {
-        // показывает правильный ответ и меняет элементы в диваке illustration
-        // логика аналогична нажатию мышкой
         this.nextStep(game);
       }
       if (keyCode === 'Digit1') {
@@ -136,12 +147,11 @@ class AudioCall {
       // 2. возвращаем текст кнопки на "не знаю", увеличиваем индекс, вызываем fillWord
       wordsButtons.forEach((button) => {
         const buttonCopy = button as HTMLButtonElement;
+        if (buttonCopy.classList.contains('right')) buttonCopy.classList.add('active');
 
-        if (buttonCopy.classList.contains('right')) {
-          buttonCopy.classList.add('active');
-        }
         buttonCopy.disabled = true;
       });
+      this.newIllustration(illustration, svgElem);
 
       this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
 
@@ -155,7 +165,7 @@ class AudioCall {
     const wordsButtons = document.querySelectorAll('.options__item') as NodeList;
 
     const illustration = document.querySelector('.illustration') as HTMLDivElement;
-    const svgCopy = illustration.children[0].cloneNode(true) as Node;
+    const svgElem = document.querySelector('.illustration__svg') as Node;
 
     wordsButtons.forEach((button) => {
       const buttonCopy = button as HTMLButtonElement;
@@ -176,13 +186,13 @@ class AudioCall {
       this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
     }
 
-    this.newIllustration(illustration, svgCopy);
+    this.newIllustration(illustration, svgElem);
   }
 
   newIllustration(selector: HTMLDivElement, svg: Node) {
     const image = document.createElement('img');
     image.classList.add('illustration-img');
-    image.src = `https://react-learnwords-2022.herokuapp.com/${this.library[this.selectedWordIndex].image}`;
+    image.src = `${baseUrl}${this.library[this.selectedWordIndex].image}`;
 
     const block = document.createElement('div');
     block.classList.add('illustration-block');

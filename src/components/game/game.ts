@@ -1,8 +1,14 @@
-import { getWords } from '../../api/basicApi';
+import { baseUrl, getWordId, getWords } from '../../api/basicApi';
 import { IapiRequestWords, ILibraryResponse } from '../../types/interface';
 import 'select-pure';
 import './game.scss';
 import { SelectPure } from 'select-pure/lib/components';
+
+export function playAudio(pathToSrc: string): void {
+  const audio = new Audio();
+  audio.src = pathToSrc;
+  audio.autoplay = true;
+}
 
 export default class Game {
   renderTemplate(templateId: string, selector: string): void {
@@ -65,9 +71,21 @@ export default class Game {
         .map(
           (elem) =>
             `<div class='word'>
-              <svg class="audio" data-id="">
-                <use xlink:href="assets/ico/audio-play.svg#Capa_1"></use>
-              </svg>
+              <svg 
+                data-id="${elem.id}" 
+                class="illustration__svg" 
+                focusable="false" 
+                viewBox="0 0 24 24" 
+                aria-hidden="true"
+              >
+              <path
+                d="M3 9v6h4l5 5V4L7 9H3zm13.5 
+                3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 
+                2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 
+                3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91
+                 7-4.49 7-8.77s-2.99-7.86-7-8.77z">
+              </path>
+            </svg>
               <span class="word__original">${elem.word}</span> -
               <span class="word__translate">${elem.wordTranslate}</span>
             </div>`
@@ -77,6 +95,10 @@ export default class Game {
     wordsRightContainer.innerHTML = wordsTemplate(arrOfRight);
     wordsWrongContainer.innerHTML = wordsTemplate(arrOfWrong);
 
+    this.gameResultListeners();
+  }
+
+  gameResultListeners() {
     const playAgainBtn = document.querySelector('#play-again') as HTMLButtonElement;
     playAgainBtn.addEventListener('click', () => {
       location.replace(location.href);
@@ -86,6 +108,19 @@ export default class Game {
     const returnToStartBtn = document.querySelector('#to-start') as HTMLButtonElement;
     returnToStartBtn.addEventListener('click', () => {
       location.replace(`http://localhost:8080/${page}.html`);
+    });
+
+    const svgElem = document.querySelectorAll('.illustration__svg') as NodeList;
+    svgElem.forEach((svg) => {
+      svg.addEventListener('click', async () => {
+        const svgId = (svg as HTMLElement).getAttribute('data-id');
+        if (!svgId) return alert('id не найден');
+
+        const wordObj: ILibraryResponse = await getWordId(svgId);
+
+        const audioPath = `${baseUrl}${wordObj.audio}`;
+        playAudio(audioPath);
+      });
     });
   }
 
