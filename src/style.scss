@@ -1,11 +1,11 @@
 @import '~normalize.css';
-@import './common-style/vars.scss';
-@import './common-style/font.scss';
-@import './common-style/btns.scss';
+@import './styles/common-style/vars.scss';
+@import './styles/common-style/font.scss';
+@import './styles/common-style/btns.scss';
 
-@import './section-style/introduction.scss';
-@import './section-style/benefits.scss';
-@import './section-style/members.scss';
+@import './styles/section-style/introduction.scss';
+@import './styles/section-style/benefits.scss';
+@import './styles/section-style/members.scss';
 
 // common style
 html {

@@ -1,5 +1,5 @@
 import { baseUrl, path } from './basicApi';
-import { IuserWords } from '../../types/interface';
+import { IuserWords } from '../types/interface';
 
 export async function getUserAllWords(id: string, token: string) {
   const response = await fetch(`${baseUrl}${path.users}/${id}/words`, {

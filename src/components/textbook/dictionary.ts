@@ -1,6 +1,6 @@
 import './textbook.scss';
-import { baseUrl, getWordId } from './../api/basicApi';
-import { deleteordsUserApi, getUserAllWords } from './../api/wordsApi';
+import { baseUrl, getWordId } from '../../api/basicApi';
+import { deleteordsUserApi, getUserAllWords } from '../../api/wordsApi';
 import { IapiRequestUserWords } from '../../types/interface';
 import { GetLocalStorageToken } from './../authorization/auth';
 

@@ -1,4 +1,4 @@
-import { IapiRequestWords } from '../../types/interface';
+import { IapiRequestWords } from '../types/interface';
 
 export const baseUrl = 'https://react-learnwords-2022.herokuapp.com/';
 export const path = {

@@ -1,4 +1,4 @@
-import { getWords } from '../api/basicApi';
+import { getWords } from '../../api/basicApi';
 import { IapiRequestWords, ILibraryResponse } from '../../types/interface';
 import 'select-pure';
 import './game.scss';

@@ -1,5 +1,5 @@
 import { Iauth, Isignin, Iregist, IidToken } from '../../types/interface';
-import { signinApi } from '../api/authApi';
+import { signinApi } from '../../api/authApi';
 
 function setLocalStorageAuth(id: string, token: string, name: string) {
   localStorage.setItem('id', JSON.stringify(id));

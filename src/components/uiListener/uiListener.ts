@@ -1,7 +1,7 @@
 import { Login } from '../login/login';
 import { signToToken, registration, logOut, GetLocalStorageToken } from '../authorization/auth';
 import { sound, changePage, addCompoundWord, studiedCompoundWord, cheakPageToComplete } from './../textbook/textbook';
-import { deleteordsUserApi } from './../api/wordsApi';
+import { deleteordsUserApi } from '../../api/wordsApi';
 import { removeCompoundWord } from './../textbook/dictionary';
 
 const login = new Login();
