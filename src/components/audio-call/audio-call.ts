@@ -114,11 +114,16 @@ class AudioCall {
     const nextWordButton = document.querySelector('.nextWordButton') as HTMLButtonElement;
     const wordsButtons = document.querySelectorAll('.options__item') as NodeList;
 
+    const illustration = document.querySelector('.illustration') as HTMLDivElement;
+    const svgCopy = illustration.children[0].cloneNode(true) as Node;
+
     if (nextWordButton.classList.contains('words-changed')) {
       // 1. меняем текст кнопки на "дальше"
       nextWordButton.textContent = 'не знаю';
       this.selectedWordIndex++;
       this.fillWord(this.selectedWordIndex, game);
+      illustration.innerHTML = '';
+      illustration.append(svgCopy);
 
       wordsButtons.forEach((button) => {
         const buttonCopy = button as HTMLButtonElement;
@@ -137,6 +142,7 @@ class AudioCall {
         buttonCopy.disabled = true;
       });
 
+      this.newIllustration(illustration, svgCopy);
       this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
 
       nextWordButton.textContent = 'дальше';
@@ -147,6 +153,10 @@ class AudioCall {
   optionsChange(target: HTMLButtonElement) {
     const nextWordButton = document.querySelector('.nextWordButton') as HTMLButtonElement;
     const wordsButtons = document.querySelectorAll('.options__item') as NodeList;
+
+    const illustration = document.querySelector('.illustration') as HTMLDivElement;
+    const svgCopy = illustration.children[0].cloneNode(true) as Node;
+
     wordsButtons.forEach((button) => {
       const buttonCopy = button as HTMLButtonElement;
 
@@ -161,10 +171,29 @@ class AudioCall {
     if (target.classList.contains('right')) {
       // добавляются слова в библиотеку верных ответов
       this.rightWordsArr.push(this.library[this.selectedWordIndex]);
+      this.newIllustration(illustration, svgCopy);
     } else {
       // добавляются слова в библиотеку ложных ответов
       this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
+      this.newIllustration(illustration, svgCopy);
     }
+  }
+
+  newIllustration(selector: HTMLDivElement, svg: Node) {
+    const image = document.createElement('img');
+    image.classList.add('illustration-img');
+    image.src = this.library[this.selectedWordIndex].image;
+
+    const block = document.createElement('div');
+    block.classList.add('illustration-block');
+    const word = document.createElement('span');
+    word.classList.add('illustration-word');
+    word.textContent = this.library[this.selectedWordIndex].word;
+    block.append(svg, word);
+
+    selector.innerHTML = '';
+    selector.append(image, block);
+    console.log('newIllustration вызван');
   }
 }
 
