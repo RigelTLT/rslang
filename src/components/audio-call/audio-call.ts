@@ -11,6 +11,8 @@ class AudioCall {
 
   wrongWordsArr: ILibraryResponse[] = [];
 
+  excludedIndexesArr: number[] = [];
+
   async start() {
     const game = new Game();
     const template = game.checkParameter() === undefined ? 'selection-menu' : game.checkGameName();
@@ -27,6 +29,7 @@ class AudioCall {
 
   fillWord(wordId: number, game: Game) {
     const words = document.querySelectorAll('.options__item') as NodeList;
+
     const randomRightPosition = game.randomIndexGenerator(words.length);
 
     words.forEach((elem, index) => {
@@ -34,7 +37,12 @@ class AudioCall {
       (elem as HTMLElement).classList.remove('active');
 
       if (index !== randomRightPosition) {
-        const wrongWordIndex = game.randomIndexGenerator(this.library.length, wordId);
+        let wrongWordIndex = game.randomIndexGenerator(this.library.length, wordId);
+
+        while (this.excludedIndexesArr.includes(wrongWordIndex)) {
+          this.excludedIndexesArr.push(wrongWordIndex);
+          wrongWordIndex = game.randomIndexGenerator(this.library.length, wordId);
+        }
 
         elem.textContent = `${index + 1} ${this.library[wrongWordIndex].wordTranslate}`;
       } else {
@@ -45,6 +53,8 @@ class AudioCall {
         (elem as HTMLElement).classList.add('right');
       }
     });
+
+    this.excludedIndexesArr = [];
 
     const audioPath = `${baseUrl}${this.library[this.selectedWordIndex].audio}`;
     playAudio(audioPath);

@@ -125,17 +125,10 @@ export default class Game {
   }
 
   randomIndexGenerator(maxLength: number, exclude?: number): number {
-    const randomNumber = Math.floor(Math.random() * maxLength);
-    if (!exclude) {
-      return randomNumber;
-    }
+    let randomNumber = Math.floor(Math.random() * maxLength);
 
-    if (!randomNumber) {
-      return this.randomIndexGenerator(maxLength, exclude);
-    }
-
-    if (randomNumber === exclude) {
-      return this.randomIndexGenerator(maxLength, exclude);
+    while (randomNumber === exclude) {
+      randomNumber = Math.floor(Math.random() * maxLength);
     }
 
     return randomNumber;
