@@ -256,17 +256,131 @@
   //   }
   // }
 
+  .question-icons {
+    max-width: 200px;
+    width: 100%;
+    flex-grow: 0.5;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    justify-content: space-between;
+
+    &.right {
+      transform: scale(-1, 1);
+      .question{
+        transform: scale(1, 1);
+      }
+    }
+    .question {
+      background: linear-gradient(135deg, #fed8d6 0%, #fde5cf 100%);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      &:nth-child(1) {
+        width: 24px;
+        height: 24px;
+        align-self: flex-end;
+        transform: rotate(5deg);
+      }
+      &:nth-child(2) {
+        width: 42px;
+        height: 42px;
+        align-self: flex-start;
+        margin-left: 52px;
+        margin-right: 20px;
+        transform: rotate(30deg);
+      }
+      &:nth-child(3) {
+        width: 20px;
+        height: 20px;
+        align-self: center;
+        margin: 15px 0 15px 13px;
+        margin-right: 20px;
+        transform: rotate(-19deg);
+      }
+      &:nth-child(4) {
+        width: 81px;
+        height: 81px;
+        align-self: flex-start;
+        margin-right: 20px;
+        transform: rotate(-27deg);
+        font-size: 34px;
+        font-weight: 700;
+      }
+      &:nth-child(5) {
+        width: 54px;
+        height: 54px;
+        align-self: flex-end;
+        margin-right: 20px;
+        transform: rotate(15deg);
+        font-size: 24px;
+        font-weight: 700;
+      }
+    }
+  }
   &.audio-call {
+    .control {
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+    }
+    .illustration {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      &-img {
+        max-width: 300px;
+      }
+      &-block {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 50px;
+        .illustration-word {
+          text-align: center;
+          font-size: 16px;
+          font-weight: 700;
+        }
+      }
+      svg {
+        fill: #fff;
+        cursor: pointer;
+        background: linear-gradient(135deg, #ffbe83 0%, #ff7e76 100%);
+        width: 94px;
+        height: 94px;
+        border-radius: 50%;
+        margin: 0 auto;
+      }
+    }
     .options {
+      max-width: 672px;
+      width: 100%;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 30px;
+      gap: 30px 20px;
       button {
         max-width: 326px;
         width: 100%;
         border-radius: 4px;
         padding: 20px 0;
+        &:not(.nextWordButton) {
+          background: linear-gradient(135deg, #fed8d6 0%, #fde5cf 100%);
+        }
+        .nextWordButton {
+          background: linear-gradient(135deg, #b4b4b4 0%, #d5d5d5 100%);
+        }
+        &:disabled {
+          background: linear-gradient(135deg, #fed8d6 0%, #fde5cf 100%);
+        }
+        &.active {
+          color: #fff;
+          background: linear-gradient(135deg, #ffbe83 0%, #ff7e76 100%),
+            linear-gradient(135deg, #fed8d6 0%, #fde5cf 100%);
+        }
       }
     }
   }

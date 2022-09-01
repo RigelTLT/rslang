@@ -20,7 +20,10 @@
   --info: #5a87fc;
   --warning: #f89828;
   --activeGradient: linear-gradient(55.95deg, #ff3f3a 0%, #f75e05 100%);
-  --game-bg: linear-gradient(55.953deg,
-      rgba(255, 63, 58, 0.30015756302521013) 0%,
-      rgba(247, 94, 5, 0.30015756302521013) 100%);
+  --game-bg: linear-gradient(
+    55.953deg,
+    rgba(255, 63, 58, 0.30015756302521013) 0%,
+    rgba(247, 94, 5, 0.30015756302521013) 100%
+  );
+  --orange-gradient: linear-gradient(135deg, #ffbe83 0%, #ff7e76 100%);
 }
