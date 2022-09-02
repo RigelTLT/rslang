@@ -42,12 +42,15 @@ export class Sprint {
 
   timer(game: Game) {
     const timerSelect = document.querySelector('.timer') as HTMLDivElement;
+    const innerBar = document.querySelector('.inner-bar') as HTMLDivElement;
+    let width = 0;
     let timeLeft = Number(timerSelect.textContent);
 
     const intervalId = setInterval(() => {
+      width += 1.67;
       timeLeft--;
       timerSelect.innerText = timeLeft.toString();
-
+      innerBar.style.width = `${String(width)}%`;
       const isAllWordsCompleted = this.rightWordsArr.length + this.wrongWordsArr.length === this.library.length;
       if (timeLeft < 1 || isAllWordsCompleted) {
         clearInterval(intervalId);
