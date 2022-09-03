@@ -1,7 +1,7 @@
 import { baseUrl, path } from './basicApi';
 import { IapiWords, IgetUserAllWords } from '../types/interface';
 
-export async function getUserAllWords(id: string, token: string): Promise<IgetUserAllWords[] | null> {
+export async function getUserAllWords(id: string, token: string): Promise<IgetUserAllWords[]> {
   const response = await fetch(`${baseUrl}${path.users}/${id}/words`, {
     method: 'GET',
     headers: {
@@ -9,9 +9,12 @@ export async function getUserAllWords(id: string, token: string): Promise<IgetUs
       Accept: 'application/json',
       'Content-Type': 'application/json'
     }
-  });
+  }).then((data) => data.json());
+  // .catch(() => {
+  //   throw new Error('Произошла ошибка, попробуйте снова');
+  // });
 
-  return response.ok ? response.json() : null;
+  return response;
 }
 
 export async function getUserIdWords(id: string, idWord: string, token: string) {
@@ -22,12 +25,15 @@ export async function getUserIdWords(id: string, idWord: string, token: string) 
       Accept: 'application/json',
       'Content-Type': 'application/json'
     }
-  });
+  }).then((data) => data.json());
+  // .catch(() => {
+  //   throw new Error('Произошла ошибка, попробуйте снова');
+  // });
 
-  return response.ok ? response.json() : null;
+  return response;
 }
 
-export async function addWordsUserApi({ id, idWord, token, body }: IapiWords): Promise<IgetUserAllWords | null> {
+export async function addWordsUserApi({ id, idWord, token, body }: IapiWords): Promise<IgetUserAllWords> {
   const response = await fetch(`${baseUrl}${path.users}/${id}/words/${idWord}`, {
     method: 'POST',
     headers: {
@@ -36,12 +42,15 @@ export async function addWordsUserApi({ id, idWord, token, body }: IapiWords): P
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
-  });
+  }).then((data) => data.json());
+  // .catch(() => {
+  //   throw new Error('Произошла ошибка, попробуйте снова');
+  // });
 
-  return response.ok ? response.json() : null;
+  return response;
 }
 
-export async function UpdateWordsUserApi({ id, idWord, token, body }: IapiWords): Promise<IgetUserAllWords | null> {
+export async function UpdateWordsUserApi({ id, idWord, token, body }: IapiWords): Promise<IgetUserAllWords> {
   const response = await fetch(`${baseUrl}${path.users}/${id}/words/${idWord}`, {
     method: 'PUT',
     headers: {
@@ -50,9 +59,12 @@ export async function UpdateWordsUserApi({ id, idWord, token, body }: IapiWords)
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
-  });
+  }).then((data) => data.json());
+  // .catch(() => {
+  //   throw new Error('Произошла ошибка, попробуйте снова');
+  // });
 
-  return response.ok ? response.json() : null;
+  return response;
 }
 
 export async function deleteordsUserApi(id: string, idWord: string, token: string) {
@@ -63,7 +75,10 @@ export async function deleteordsUserApi(id: string, idWord: string, token: strin
       Accept: 'application/json',
       'Content-Type': 'application/json'
     }
-  });
+  }).then((data) => data.json());
+  // .catch(() => {
+  //   throw new Error('Произошла ошибка, попробуйте снова');
+  // });
 
-  return response.ok ? response : null;
+  return response;
 }

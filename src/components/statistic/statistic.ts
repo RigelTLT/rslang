@@ -12,4 +12,5 @@ class Statistic {
     // const gamePapametr = game.checkParameter();
   }
 }
+
 new Statistic().start();

@@ -85,3 +85,7 @@ export interface IstatisticBody {
     percentageOfCorrectAnswers: string;
   };
 }
+
+export interface IstatisticResponse extends Istatistic {
+  id?: string;
+}

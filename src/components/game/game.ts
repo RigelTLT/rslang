@@ -1,9 +1,9 @@
 import { baseUrl, getWordId, getWords } from '../../api/basicApi';
-import { IapiRequestWords, ILibraryResponse, Istatistic } from '../../types/interface';
+import { IapiRequestWords, ILibraryResponse, IstatisticResponse } from '../../types/interface';
 import 'select-pure';
 import './game.scss';
 import { SelectPure } from 'select-pure/lib/components';
-import { putStatistic } from '../../api/statisticApi';
+import { getStatistic, putStatistic } from '../../api/statisticApi';
 import { GetLocalStorageToken } from '../authorization/auth';
 
 export function playAudio(pathToSrc: string): void {
@@ -13,9 +13,9 @@ export function playAudio(pathToSrc: string): void {
 }
 
 export default class Game {
-  sendingResult(body: Istatistic) {
-    const localStorage = new GetLocalStorageToken();
-    putStatistic(localStorage.id, localStorage.token, body);
+  sendingResult(token: string, id: string, body: IstatisticResponse) {
+    delete body.id;
+    putStatistic(id, token, body);
   }
 
   renderTemplate(templateId: string, selector: string): void {
@@ -38,18 +38,18 @@ export default class Game {
   }
 
   async createLibrary(): Promise<ILibraryResponse[] | undefined> {
-    // const gameName = this.checkGameName();
     const parameterPage = this.checkParameter();
-    // const realPageNumber = String(Number(parameterPage?.page) - 1);
     const pageNumber = Number(parameterPage?.page);
 
     if (pageNumber >= 1 && parameterPage !== undefined) {
-      const getWordsLibrary = await getWords(parameterPage);
-      return getWordsLibrary;
+      parameterPage.page = (Number(parameterPage.page) - 1).toString();
+      parameterPage.group = (Number(parameterPage.group) - 1).toString();
+
+      return getWords(parameterPage);
     }
   }
 
-  gameResult(arrOfRight: ILibraryResponse[], arrOfWrong: ILibraryResponse[]) {
+  async gameResult(arrOfRight: ILibraryResponse[], arrOfWrong: ILibraryResponse[]) {
     const template = document.querySelector('#statistics') as HTMLTemplateElement;
     const main = document.querySelector('.main') as HTMLElement;
     main.innerHTML = '';
@@ -102,34 +102,46 @@ export default class Game {
     wordsRightContainer.innerHTML = wordsTemplate(arrOfRight);
     wordsWrongContainer.innerHTML = wordsTemplate(arrOfWrong);
 
-    const date = new Date();
-    const output = `${String(date.getDate()).padStart(2, '0')}/${String(date.getDate()).padStart(
-      2,
-      '0'
-    )}/${date.getFullYear()}`;
+    const localStorage = new GetLocalStorageToken();
+    const userStatistics = await getStatistic(localStorage.id, localStorage.token);
 
-    const bodyResult = {
-      learnedWords: 0,
-      optional: {
-        date: output,
-        sprint: {
-          learnedWord: [...arrOfRight],
-          correctAnswersPercent: 'string',
-          longestSeriesCorrect: 'string'
-        },
-        audioCall: {
-          learnedWord: [...arrOfRight],
-          correctAnswersPercent: 'string',
-          longestSeriesCorrect: 'string'
-        },
-        textBook: {
-          learnedWord: [...arrOfRight],
-          numberOfWordsLearned: 0,
-          percentageOfCorrectAnswers: ''
-        }
-      }
-    };
-    this.sendingResult(bodyResult);
+    if (this.checkGameName() === 'sprint') {
+      userStatistics.optional.sprint.correctAnswersPercent = '10%';
+      userStatistics.optional.sprint.learnedWord = [...arrOfRight];
+      userStatistics.optional.sprint.longestSeriesCorrect = '10';
+    } else {
+      userStatistics.optional.audioCall.correctAnswersPercent = '10%';
+      userStatistics.optional.audioCall.learnedWord = [...arrOfRight];
+      userStatistics.optional.audioCall.longestSeriesCorrect = '10';
+    }
+
+    this.sendingResult(localStorage.token, localStorage.id, userStatistics);
+
+    // const date = new Date();
+    // const output = `${String(date.getDate()).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0' )}/${date.getFullYear()}`;
+
+    // const bodyResult = {
+    //   learnedWords: 0,
+    //   optional: {
+    //     date: output,
+    //     sprint: {
+    //       learnedWord: [...arrOfRight],
+    //       correctAnswersPercent: 'string',
+    //       longestSeriesCorrect: 'string'
+    //     },
+    //     audioCall: {
+    //       learnedWord: [...arrOfRight],
+    //       correctAnswersPercent: 'string',
+    //       longestSeriesCorrect: 'string'
+    //     },
+    //     textBook: {
+    //       learnedWord: [...arrOfRight],
+    //       numberOfWordsLearned: 0,
+    //       percentageOfCorrectAnswers: ''
+    //     }
+    //   }
+    // };
+    // this.sendingResult(bodyResult);
 
     this.gameResultListeners();
   }
@@ -163,7 +175,7 @@ export default class Game {
   randomIndexGenerator(maxLength: number, exclude?: number): number {
     let randomNumber = Math.floor(Math.random() * maxLength);
 
-    while (randomNumber === exclude) {
+    while (randomNumber === exclude || randomNumber === 0) {
       randomNumber = Math.floor(Math.random() * maxLength);
     }
 
