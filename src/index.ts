@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   const userStatistics = await getStatistic(localStorage.id, localStorage.token);
-
   try {
     if (!userStatistics.id) {
       const currDate = new Date();

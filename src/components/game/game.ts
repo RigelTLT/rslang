@@ -15,7 +15,9 @@ export function playAudio(pathToSrc: string): void {
 export default class Game {
   sendingResult(token: string, id: string, body: IstatisticResponse) {
     delete body.id;
-    putStatistic(id, token, body);
+    setTimeout(() => {
+      putStatistic(id, token, body);
+    }, 300);
   }
 
   renderTemplate(templateId: string, selector: string): void {
@@ -49,7 +51,7 @@ export default class Game {
     }
   }
 
-  async gameResult(arrOfRight: ILibraryResponse[], arrOfWrong: ILibraryResponse[]) {
+  async gameResult(arrOfRight: ILibraryResponse[], arrOfWrong: ILibraryResponse[], longestSeriesRightAnswers: number) {
     const template = document.querySelector('#statistics') as HTMLTemplateElement;
     const main = document.querySelector('.main') as HTMLElement;
     main.innerHTML = '';
@@ -105,43 +107,19 @@ export default class Game {
     const localStorage = new GetLocalStorageToken();
     const userStatistics = await getStatistic(localStorage.id, localStorage.token);
 
+    const rightAnswersProcent = (arrOfRight.length / (arrOfRight.length + arrOfWrong.length)) * 100;
+
     if (this.checkGameName() === 'sprint') {
-      userStatistics.optional.sprint.correctAnswersPercent = '10%';
+      userStatistics.optional.sprint.correctAnswersPercent = `${rightAnswersProcent}%`;
       userStatistics.optional.sprint.learnedWord = [...arrOfRight];
-      userStatistics.optional.sprint.longestSeriesCorrect = '10';
+      userStatistics.optional.sprint.longestSeriesCorrect = longestSeriesRightAnswers.toString();
     } else {
-      userStatistics.optional.audioCall.correctAnswersPercent = '10%';
+      userStatistics.optional.audioCall.correctAnswersPercent = `${rightAnswersProcent}%`;
       userStatistics.optional.audioCall.learnedWord = [...arrOfRight];
-      userStatistics.optional.audioCall.longestSeriesCorrect = '10';
+      userStatistics.optional.audioCall.longestSeriesCorrect = longestSeriesRightAnswers.toString();
     }
 
     this.sendingResult(localStorage.token, localStorage.id, userStatistics);
-
-    // const date = new Date();
-    // const output = `${String(date.getDate()).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0' )}/${date.getFullYear()}`;
-
-    // const bodyResult = {
-    //   learnedWords: 0,
-    //   optional: {
-    //     date: output,
-    //     sprint: {
-    //       learnedWord: [...arrOfRight],
-    //       correctAnswersPercent: 'string',
-    //       longestSeriesCorrect: 'string'
-    //     },
-    //     audioCall: {
-    //       learnedWord: [...arrOfRight],
-    //       correctAnswersPercent: 'string',
-    //       longestSeriesCorrect: 'string'
-    //     },
-    //     textBook: {
-    //       learnedWord: [...arrOfRight],
-    //       numberOfWordsLearned: 0,
-    //       percentageOfCorrectAnswers: ''
-    //     }
-    //   }
-    // };
-    // this.sendingResult(bodyResult);
 
     this.gameResultListeners();
   }

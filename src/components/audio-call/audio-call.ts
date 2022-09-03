@@ -13,6 +13,10 @@ class AudioCall {
 
   excludedIndexesArr: number[] = [];
 
+  maxCorrectAnswersCount = 0;
+
+  correctAnsersCount = 0;
+
   async start() {
     const game = new Game();
     const template = game.checkParameter() === undefined ? 'selection-menu' : game.checkGameName();
@@ -66,7 +70,7 @@ class AudioCall {
       const isAllWordsCompleted = this.rightWordsArr.length + this.wrongWordsArr.length === this.library.length;
 
       if (isAllWordsCompleted) {
-        return game.gameResult(this.rightWordsArr, this.wrongWordsArr);
+        return game.gameResult(this.rightWordsArr, this.wrongWordsArr, this.maxCorrectAnswersCount);
       }
 
       this.gameClick(event, game);
@@ -82,7 +86,7 @@ class AudioCall {
       const isAllWordsCompleted = this.rightWordsArr.length + this.wrongWordsArr.length === this.library.length;
 
       if (isAllWordsCompleted) {
-        return game.gameResult(this.rightWordsArr, this.wrongWordsArr);
+        return game.gameResult(this.rightWordsArr, this.wrongWordsArr, this.maxCorrectAnswersCount);
       }
 
       const keyCode = event.code;
@@ -189,8 +193,13 @@ class AudioCall {
     nextWordButton.classList.add('words-changed');
 
     if (target.classList.contains('right')) {
+      this.correctAnsersCount++;
       // добавляются слова в библиотеку верных ответов
       this.rightWordsArr.push(this.library[this.selectedWordIndex]);
+
+      if (this.maxCorrectAnswersCount > this.correctAnsersCount) {
+        this.maxCorrectAnswersCount = this.correctAnsersCount;
+      }
     } else {
       // добавляются слова в библиотеку ложных ответов
       this.wrongWordsArr.push(this.library[this.selectedWordIndex]);

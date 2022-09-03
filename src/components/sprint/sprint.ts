@@ -16,6 +16,10 @@ export class Sprint {
 
   wrongWordsArr: ILibraryResponse[] = [];
 
+  maxCorrectAnswersCount = 0;
+
+  correctAnsersCount = 0;
+
   private _bool = () => (Math.random() > 0.5 ? true : false);
 
   get boolean(): boolean {
@@ -56,7 +60,7 @@ export class Sprint {
         clearInterval(intervalId);
         if (!this.rightWordsArr.length) this.wrongWordsArr = this.library;
 
-        game.gameResult(this.rightWordsArr, this.wrongWordsArr);
+        game.gameResult(this.rightWordsArr, this.wrongWordsArr, this.maxCorrectAnswersCount);
       }
     }, 1000);
 
@@ -111,6 +115,7 @@ export class Sprint {
       }
 
       if (this.library[this.selectedWordIndex].wordTranslate === translateWord) {
+        this.correctAnsersCount++;
         this.countRight += 1;
         this.resultScores += this.coefficient;
         points.textContent = String(this.resultScores);
@@ -123,7 +128,12 @@ export class Sprint {
           coefficientValue.textContent = String(this.coefficient);
           this.clearCircles();
         }
+
+        if (this.correctAnsersCount > this.maxCorrectAnswersCount) {
+          this.maxCorrectAnswersCount = this.correctAnsersCount;
+        }
       } else {
+        this.correctAnsersCount = 0;
         this.countRight = 0;
         this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
         this.clearCircles();
@@ -151,6 +161,7 @@ export class Sprint {
       }
 
       if (this.library[this.selectedWordIndex].wordTranslate !== translateWord) {
+        this.correctAnsersCount++;
         this.countRight += 1;
         this.resultScores += this.coefficient;
         points.textContent = String(this.resultScores);
@@ -163,7 +174,12 @@ export class Sprint {
           coefficientValue.textContent = String(this.coefficient);
           this.clearCircles();
         }
+
+        if (this.correctAnsersCount > this.maxCorrectAnswersCount) {
+          this.maxCorrectAnswersCount = this.correctAnsersCount;
+        }
       } else {
+        this.correctAnsersCount = 0;
         this.countRight = 0;
         this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
         this.clearCircles();

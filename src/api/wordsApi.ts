@@ -9,10 +9,9 @@ export async function getUserAllWords(id: string, token: string): Promise<IgetUs
       Accept: 'application/json',
       'Content-Type': 'application/json'
     }
-  }).then((data) => data.json());
-  // .catch(() => {
-  //   throw new Error('Произошла ошибка, попробуйте снова');
-  // });
+  })
+    .then((data) => data.json())
+    .catch((err: Error) => alert(err.message));
 
   return response;
 }
@@ -25,10 +24,9 @@ export async function getUserIdWords(id: string, idWord: string, token: string) 
       Accept: 'application/json',
       'Content-Type': 'application/json'
     }
-  }).then((data) => data.json());
-  // .catch(() => {
-  //   throw new Error('Произошла ошибка, попробуйте снова');
-  // });
+  })
+    .then((data) => data.json())
+    .catch((err: Error) => alert(err.message));
 
   return response;
 }
@@ -42,10 +40,9 @@ export async function addWordsUserApi({ id, idWord, token, body }: IapiWords): P
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
-  }).then((data) => data.json());
-  // .catch(() => {
-  //   throw new Error('Произошла ошибка, попробуйте снова');
-  // });
+  })
+    .then((data) => data.json())
+    .catch((err: Error) => alert(err.message));
 
   return response;
 }
@@ -59,10 +56,9 @@ export async function UpdateWordsUserApi({ id, idWord, token, body }: IapiWords)
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
-  }).then((data) => data.json());
-  // .catch(() => {
-  //   throw new Error('Произошла ошибка, попробуйте снова');
-  // });
+  })
+    .then((data) => data.json())
+    .catch((err: Error) => alert(err.message));
 
   return response;
 }
@@ -75,10 +71,9 @@ export async function deleteordsUserApi(id: string, idWord: string, token: strin
       Accept: 'application/json',
       'Content-Type': 'application/json'
     }
-  }).then((data) => data.json());
-  // .catch(() => {
-  //   throw new Error('Произошла ошибка, попробуйте снова');
-  // });
+  })
+    .then((data) => data.json())
+    .catch((err: Error) => alert(err.message));
 
   return response;
 }
