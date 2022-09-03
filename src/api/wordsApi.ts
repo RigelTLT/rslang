@@ -1,7 +1,7 @@
 import { baseUrl, path } from './basicApi';
-import { IuserWords } from '../types/interface';
+import { IapiWords, IgetUserAllWords } from '../types/interface';
 
-export async function getUserAllWords(id: string, token: string) {
+export async function getUserAllWords(id: string, token: string): Promise<IgetUserAllWords[] | null> {
   const response = await fetch(`${baseUrl}${path.users}/${id}/words`, {
     method: 'GET',
     headers: {
@@ -10,8 +10,8 @@ export async function getUserAllWords(id: string, token: string) {
       'Content-Type': 'application/json'
     }
   });
-  const data = await response.json();
-  return data;
+
+  return response.ok ? response.json() : null;
 }
 
 export async function getUserIdWords(id: string, idWord: string, token: string) {
@@ -23,15 +23,11 @@ export async function getUserIdWords(id: string, idWord: string, token: string) 
       'Content-Type': 'application/json'
     }
   });
-  if (response.ok) {
-    const employee = await response.json();
-    return employee;
-  } else {
-    return null;
-  }
+
+  return response.ok ? response.json() : null;
 }
 
-export async function addWordsUserApi(id: string, idWord: string, token: string, body: IuserWords) {
+export async function addWordsUserApi({ id, idWord, token, body }: IapiWords): Promise<IgetUserAllWords | null> {
   const response = await fetch(`${baseUrl}${path.users}/${id}/words/${idWord}`, {
     method: 'POST',
     headers: {
@@ -41,15 +37,11 @@ export async function addWordsUserApi(id: string, idWord: string, token: string,
     },
     body: JSON.stringify(body)
   });
-  if (response.ok) {
-    const employee = await response.json();
-    return employee;
-  } else {
-    return null;
-  }
+
+  return response.ok ? response.json() : null;
 }
 
-export async function UpdateWordsUserApi(id: string, idWord: string, token: string, body: IuserWords) {
+export async function UpdateWordsUserApi({ id, idWord, token, body }: IapiWords): Promise<IgetUserAllWords | null> {
   const response = await fetch(`${baseUrl}${path.users}/${id}/words/${idWord}`, {
     method: 'PUT',
     headers: {
@@ -59,12 +51,8 @@ export async function UpdateWordsUserApi(id: string, idWord: string, token: stri
     },
     body: JSON.stringify(body)
   });
-  if (response.ok) {
-    const employee = await response.json();
-    return employee;
-  } else {
-    return null;
-  }
+
+  return response.ok ? response.json() : null;
 }
 
 export async function deleteordsUserApi(id: string, idWord: string, token: string) {
@@ -76,9 +64,6 @@ export async function deleteordsUserApi(id: string, idWord: string, token: strin
       'Content-Type': 'application/json'
     }
   });
-  if (response.ok) {
-    return response;
-  } else {
-    return null;
-  }
+
+  return response.ok ? response : null;
 }

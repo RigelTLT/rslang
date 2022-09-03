@@ -29,9 +29,9 @@ export async function addCompoundWord(id: string, idWord: string, token: string)
   const cheak = await getUserIdWords(id, idWord, token);
   const body = { difficulty: 'hard', optional: {} };
   if (!cheak) {
-    await addWordsUserApi(id, idWord, token, body);
+    await addWordsUserApi({ id, idWord, token, body });
   } else {
-    await UpdateWordsUserApi(id, idWord, token, body);
+    await UpdateWordsUserApi({ id, idWord, token, body });
   }
   cheakPageToComplete();
 }
@@ -40,9 +40,9 @@ export async function studiedCompoundWord(id: string, idWord: string, token: str
   const cheak = await getUserIdWords(id, idWord, token);
   const body = { difficulty: 'studied', optional: {} };
   if (!cheak) {
-    await addWordsUserApi(id, idWord, token, body);
+    await addWordsUserApi({ id, idWord, token, body });
   } else {
-    await UpdateWordsUserApi(id, idWord, token, body);
+    await UpdateWordsUserApi({ id, idWord, token, body });
   }
   cheakPageToComplete();
   //TODO добавление в статистику

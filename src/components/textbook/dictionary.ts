@@ -53,7 +53,7 @@ async function createList(data: IapiRequestUserWords) {
   const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
   const list = document.querySelector('.list-textbook') as HTMLElement;
 
-  if (localStorage.token) {
+  if (localStorage.token && checkWords) {
     for (let i = 0; i < checkWords.length; i++) {
       const words = await getWordId(checkWords[i].wordId);
       if (data.status === checkWords[i].difficulty && Number(data.group) === words.group) {
