@@ -63,7 +63,7 @@ export interface IapiWords {
 }
 
 export interface Istatistic {
-  wordsPerDay: number;
+  learnedWords: number;
   optional: IstatisticBody;
 }
 

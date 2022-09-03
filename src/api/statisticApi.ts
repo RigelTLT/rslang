@@ -1,7 +1,7 @@
-import { IstatisticBody } from '../types/interface';
-import { baseUrl, path } from './basicApi';
+import { Istatistic } from '../types/interface';
+import { baseUrl } from './basicApi';
 
-export async function getStatistic(userId: string, token: string) {
+export async function getStatistic(userId: string, token: string): Promise<Istatistic> {
   const response = await fetch(`${baseUrl}users/${userId}/statistics`, {
     method: 'GET',
     headers: {
@@ -12,11 +12,8 @@ export async function getStatistic(userId: string, token: string) {
   });
   return response.ok ? response.json() : null;
 }
-export async function putStatistic(
-  userId: string,
-  token: string,
-  body: IstatisticBody
-): Promise<IstatisticBody | null> {
+
+export async function putStatistic(userId: string, token: string, body: Istatistic): Promise<Istatistic | null> {
   const response = await fetch(`${baseUrl}users/${userId}/statistics`, {
     method: 'PUT',
     headers: {
@@ -26,5 +23,8 @@ export async function putStatistic(
     },
     body: JSON.stringify(body)
   });
+
+  console.log(response.json());
+
   return response.ok ? response.json() : null;
 }

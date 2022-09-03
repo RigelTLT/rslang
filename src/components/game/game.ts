@@ -1,11 +1,10 @@
 import { baseUrl, getWordId, getWords } from '../../api/basicApi';
-import { IapiRequestWords, ILibraryResponse } from '../../types/interface';
+import { IapiRequestWords, ILibraryResponse, Istatistic } from '../../types/interface';
 import 'select-pure';
 import './game.scss';
 import { SelectPure } from 'select-pure/lib/components';
 import { putStatistic } from '../../api/statisticApi';
 import { GetLocalStorageToken } from '../authorization/auth';
-import { IstatisticBody } from '../../types/interface';
 
 export function playAudio(pathToSrc: string): void {
   const audio = new Audio();
@@ -14,7 +13,7 @@ export function playAudio(pathToSrc: string): void {
 }
 
 export default class Game {
-  sendingResult(body: IstatisticBody) {
+  sendingResult(body: Istatistic) {
     const localStorage = new GetLocalStorageToken();
     putStatistic(localStorage.id, localStorage.token, body);
   }
@@ -108,22 +107,26 @@ export default class Game {
       2,
       '0'
     )}/${date.getFullYear()}`;
+
     const bodyResult = {
-      date: output,
-      sprint: {
-        learnedWord: [...arrOfRight],
-        correctAnswersPercent: 'string',
-        longestSeriesCorrect: 'string'
-      },
-      audioCall: {
-        learnedWord: [],
-        correctAnswersPercent: 'string',
-        longestSeriesCorrect: 'string'
-      },
-      textBook: {
-        learnedWord: [],
-        numberOfWordsLearned: 0,
-        percentageOfCorrectAnswers: ''
+      learnedWords: 0,
+      optional: {
+        date: output,
+        sprint: {
+          learnedWord: [...arrOfRight],
+          correctAnswersPercent: 'string',
+          longestSeriesCorrect: 'string'
+        },
+        audioCall: {
+          learnedWord: [...arrOfRight],
+          correctAnswersPercent: 'string',
+          longestSeriesCorrect: 'string'
+        },
+        textBook: {
+          learnedWord: [...arrOfRight],
+          numberOfWordsLearned: 0,
+          percentageOfCorrectAnswers: ''
+        }
       }
     };
     this.sendingResult(bodyResult);
