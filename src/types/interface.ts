@@ -29,7 +29,6 @@ export interface Iauth {
 }
 export interface IuserWords {
   difficulty: string;
-  // todo указать тип для optional
   optional: unknown;
 }
 
@@ -48,4 +47,17 @@ export interface ILibraryResponse {
   transcription: string;
   word: string;
   wordTranslate: string;
+}
+
+export interface IgetUserAllWords {
+  id: string;
+  difficulty: string;
+  wordId: string;
+}
+
+export interface IapiWords {
+  id: string;
+  idWord: string;
+  token: string;
+  body: IuserWords;
 }
