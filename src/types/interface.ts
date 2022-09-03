@@ -61,3 +61,27 @@ export interface IapiWords {
   token: string;
   body: IuserWords;
 }
+
+export interface Istatistic {
+  wordsPerDay: number;
+  optional: IstatisticBody;
+}
+
+export interface IstatisticBody {
+  date: string;
+  sprint: {
+    learnedWord: ILibraryResponse[];
+    correctAnswersPercent: string;
+    longestSeriesCorrect: string;
+  };
+  audioCall: {
+    learnedWord: ILibraryResponse[];
+    correctAnswersPercent: string;
+    longestSeriesCorrect: string;
+  };
+  textBook: {
+    learnedWord: ILibraryResponse[];
+    numberOfWordsLearned: number;
+    percentageOfCorrectAnswers: string;
+  };
+}

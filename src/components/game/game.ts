@@ -3,6 +3,9 @@ import { IapiRequestWords, ILibraryResponse } from '../../types/interface';
 import 'select-pure';
 import './game.scss';
 import { SelectPure } from 'select-pure/lib/components';
+import { putStatistic } from '../../api/statisticApi';
+import { GetLocalStorageToken } from '../authorization/auth';
+import { IstatisticBody } from '../../types/interface';
 
 export function playAudio(pathToSrc: string): void {
   const audio = new Audio();
@@ -11,6 +14,11 @@ export function playAudio(pathToSrc: string): void {
 }
 
 export default class Game {
+  sendingResult(body: IstatisticBody) {
+    const localStorage = new GetLocalStorageToken();
+    putStatistic(localStorage.id, localStorage.token, body);
+  }
+
   renderTemplate(templateId: string, selector: string): void {
     const template = document.querySelector(`#${templateId}`) as HTMLTemplateElement;
     const container = document.querySelector(`${selector}`) as HTMLElement;
@@ -94,6 +102,31 @@ export default class Game {
 
     wordsRightContainer.innerHTML = wordsTemplate(arrOfRight);
     wordsWrongContainer.innerHTML = wordsTemplate(arrOfWrong);
+
+    const date = new Date();
+    const output = `${String(date.getDate()).padStart(2, '0')}/${String(date.getDate()).padStart(
+      2,
+      '0'
+    )}/${date.getFullYear()}`;
+    const bodyResult = {
+      date: output,
+      sprint: {
+        learnedWord: [...arrOfRight],
+        correctAnswersPercent: 'string',
+        longestSeriesCorrect: 'string'
+      },
+      audioCall: {
+        learnedWord: [],
+        correctAnswersPercent: 'string',
+        longestSeriesCorrect: 'string'
+      },
+      textBook: {
+        learnedWord: [],
+        numberOfWordsLearned: 0,
+        percentageOfCorrectAnswers: ''
+      }
+    };
+    this.sendingResult(bodyResult);
 
     this.gameResultListeners();
   }
