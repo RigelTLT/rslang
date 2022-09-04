@@ -13,6 +13,10 @@ export function playAudio(pathToSrc: string): void {
 }
 
 export default class Game {
+  static trueButtonFunc: (event: KeyboardEvent) => void;
+
+  static falseButtonFunc: (event: KeyboardEvent) => void;
+
   renderTemplate(templateId: string, selector: string): void {
     const template = document.querySelector(`#${templateId}`) as HTMLTemplateElement;
     const container = document.querySelector(`${selector}`) as HTMLElement;
@@ -45,6 +49,11 @@ export default class Game {
   }
 
   async gameResult(arrOfRight: ILibraryResponse[], arrOfWrong: ILibraryResponse[], longestSeriesRightAnswers: number) {
+    if (this.checkGameName() === 'sprint') {
+      document.body.removeEventListener('keyup', Game.trueButtonFunc);
+      document.body.removeEventListener('keyup', Game.falseButtonFunc);
+    }
+
     const template = document.querySelector('#statistics') as HTMLTemplateElement;
     const main = document.querySelector('.main') as HTMLElement;
     main.innerHTML = '';
