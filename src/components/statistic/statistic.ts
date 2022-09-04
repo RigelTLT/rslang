@@ -7,12 +7,21 @@ export class Statistic {
   async start() {
     const localStorage = new GetLocalStorageToken();
 
-    const { optional } = await getStatistic(localStorage.id, localStorage.token);
+    if (localStorage.id) {
+      const { optional } = await getStatistic(localStorage.id, localStorage.token);
+      const sprintElem = document.querySelector('.sprint') as HTMLElement;
+      const audioCallElem = document.querySelector('.audio-call') as HTMLElement;
+      this.fillHTML(sprintElem, audioCallElem, optional);
+    } else {
+      const gameStatistic = document.querySelector('.game-statistic') as HTMLElement;
 
-    const sprintElem = document.querySelector('.sprint') as HTMLElement;
-    const audioCallElem = document.querySelector('.audio-call') as HTMLElement;
+      const authorize = document.createElement('h3');
+      authorize.classList.add('authorize');
+      authorize.textContent = 'Чтобы увидеть раздел статистики необходимо войти в свой аккаунт';
+      gameStatistic.innerHTML = '';
 
-    this.fillHTML(sprintElem, audioCallElem, optional);
+      gameStatistic?.append(authorize);
+    }
   }
 
   fillHTML(sprintElem: HTMLElement, audioCallElem: HTMLElement, optional: IstatisticBody) {
