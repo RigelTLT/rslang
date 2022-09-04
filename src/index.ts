@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       putStatistic(localStorage.id, localStorage.token, emptyStatistics);
     }
   } catch (error) {
-    alert(error);
+    console.log(error);
   }
   ulListenner();
 });

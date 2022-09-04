@@ -23,11 +23,13 @@ export async function signinApi(body?: Isignin) {
     return response.status;
   }
 }
+
 export async function newTokenSigninApi(id: string) {
   const response = await fetch(`${baseUrl}${path.words}/${id}/${path.tokens}`);
   const data = await response.json();
   return data;
 }
+
 export async function registrationApi(body: Iregist) {
   const response = await fetch(`${baseUrl}${path.users}`, {
     method: 'POST',

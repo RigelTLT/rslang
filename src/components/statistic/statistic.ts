@@ -3,7 +3,7 @@ import { getStatistic } from '../../api/statisticApi';
 import { GetLocalStorageToken } from '../authorization/auth';
 import { IstatisticBody } from '../../types/interface';
 
-class Statistic {
+export class Statistic {
   async start() {
     const localStorage = new GetLocalStorageToken();
 
@@ -23,7 +23,7 @@ class Statistic {
     const sprintLongestCountRight = sprintElem?.querySelector('.longest-series span') as HTMLElement;
 
     sprintNewCount.textContent = sprint.learnedWord.length.toString();
-    sprintNewProcent.textContent = sprint.correctAnswersPercent;
+    sprintNewProcent.textContent = `${Number(sprint.correctAnswersPercent).toFixed(1)} %`;
     sprintLongestCountRight.textContent = sprint.longestSeriesCorrect;
 
     const audioCallNewCount = audioCallElem?.querySelector('.new-word span') as HTMLElement;
@@ -31,7 +31,7 @@ class Statistic {
     const audioCallLongestCountRight = audioCallElem?.querySelector('.longest-series span') as HTMLElement;
 
     audioCallNewCount.textContent = audioCall.learnedWord.length.toString();
-    audioCallNewProcent.textContent = audioCall.correctAnswersPercent;
+    audioCallNewProcent.textContent = `${Number(audioCall.correctAnswersPercent).toFixed(1)} %`;
     audioCallLongestCountRight.textContent = audioCall.longestSeriesCorrect;
   }
 }

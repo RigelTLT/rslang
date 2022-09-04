@@ -13,13 +13,6 @@ export function playAudio(pathToSrc: string): void {
 }
 
 export default class Game {
-  sendingResult(token: string, id: string, body: IstatisticResponse) {
-    delete body.id;
-    setTimeout(() => {
-      putStatistic(id, token, body);
-    }, 300);
-  }
-
   renderTemplate(templateId: string, selector: string): void {
     const template = document.querySelector(`#${templateId}`) as HTMLTemplateElement;
     const container = document.querySelector(`${selector}`) as HTMLElement;
@@ -110,11 +103,11 @@ export default class Game {
     const rightAnswersProcent = (arrOfRight.length / (arrOfRight.length + arrOfWrong.length)) * 100;
 
     if (this.checkGameName() === 'sprint') {
-      userStatistics.optional.sprint.correctAnswersPercent = `${rightAnswersProcent}%`;
+      userStatistics.optional.sprint.correctAnswersPercent = `${rightAnswersProcent}`;
       userStatistics.optional.sprint.learnedWord = [...arrOfRight];
       userStatistics.optional.sprint.longestSeriesCorrect = longestSeriesRightAnswers.toString();
     } else {
-      userStatistics.optional.audioCall.correctAnswersPercent = `${rightAnswersProcent}%`;
+      userStatistics.optional.audioCall.correctAnswersPercent = `${rightAnswersProcent}`;
       userStatistics.optional.audioCall.learnedWord = [...arrOfRight];
       userStatistics.optional.audioCall.longestSeriesCorrect = longestSeriesRightAnswers.toString();
     }
@@ -148,6 +141,11 @@ export default class Game {
         playAudio(audioPath);
       });
     });
+  }
+
+  async sendingResult(token: string, id: string, body: IstatisticResponse) {
+    delete body.id;
+    await putStatistic(id, token, body);
   }
 
   randomIndexGenerator(maxLength: number, exclude?: number): number {

@@ -1,6 +1,6 @@
 import './textbook.scss';
 import { baseUrl, getWordId } from '../../api/basicApi';
-import { deleteordsUserApi } from '../../api/wordsApi';
+import { deletewordsUserApi } from '../../api/wordsApi';
 import { IapiRequestUserWords } from '../../types/interface';
 import { GetLocalStorageToken } from './../authorization/auth';
 import { checkWordsUser } from './textbook';
@@ -43,7 +43,7 @@ function getPageGroupTextbook() {
 if (window.location.pathname === '/dictionary.html') getPageGroupTextbook();
 
 export async function removeCompoundWord(id: string, idWord: string, token: string) {
-  await deleteordsUserApi(id, idWord, token);
+  await deletewordsUserApi(id, idWord, token);
   const picture = document.querySelector(`div[data-id="${idWord}"]`) as HTMLElement;
   picture.remove();
 }
