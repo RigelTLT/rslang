@@ -1,8 +1,15 @@
 import { Login } from '../login/login';
 import { signToToken, registration, logOut, GetLocalStorageToken } from '../authorization/auth';
-import { sound, changePage, addCompoundWord, studiedCompoundWord, cheakPageToComplete } from './../textbook/textbook';
+import {
+  sound,
+  changePage,
+  addCompoundWord,
+  studiedCompoundWord,
+  cheakPageToComplete,
+  getPageGroupTextbook
+} from './../textbook/textbook';
 import { deletewordsUserApi } from '../../api/wordsApi';
-import { removeCompoundWord } from './../textbook/dictionary';
+import { removeCompoundWord, getPageGroupDictionary } from './../textbook/dictionary';
 
 const login = new Login();
 
@@ -120,3 +127,5 @@ export function ulListenner() {
     }
   });
 }
+if (window.location.pathname === '/ebook.html') getPageGroupTextbook();
+if (window.location.pathname === '/dictionary.html') getPageGroupDictionary();

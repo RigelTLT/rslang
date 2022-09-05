@@ -122,7 +122,7 @@ async function createList(data: IapiRequestUserWords) {
   }
 }
 
-function getPageGroupTextbook() {
+export function getPageGroupDictionary() {
   const params = new URLSearchParams(document.location.search);
   const group = params.get('group') as string;
   const status = params.get('status') as string;
@@ -133,8 +133,6 @@ function getPageGroupTextbook() {
   };
   createList(data);
 }
-
-if (window.location.pathname === '/dictionary.html') getPageGroupTextbook();
 
 export async function removeCompoundWord(id: string, idWord: string, token: string) {
   await deletewordsUserApi(id, idWord, token);

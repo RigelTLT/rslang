@@ -82,7 +82,7 @@ function paginationState(page: string, group: string) {
   }
 }
 
-function getPageGroupTextbook() {
+export function getPageGroupTextbook() {
   const params = new URLSearchParams(document.location.search);
   const page = params.get('page') as string;
   const group = params.get('group') as string;
@@ -103,8 +103,6 @@ function getPageGroupTextbook() {
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   createList(data);
 }
-
-if (window.location.pathname === '/ebook.html') getPageGroupTextbook();
 
 export async function checkWordsUser(id: string, token: string) {
   return id && token ? getUserAllWords(id, token) : null;
