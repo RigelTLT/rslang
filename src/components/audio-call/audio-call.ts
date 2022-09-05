@@ -48,12 +48,12 @@ class AudioCall {
           wrongWordIndex = game.randomIndexGenerator(this.library.length, wordId);
         }
 
-        elem.textContent = `${index + 1} ${this.library[wrongWordIndex].wordTranslate}`;
+        elem.textContent = `${index + 1}. ${this.library[wrongWordIndex].wordTranslate}`;
       } else {
         const svgButton = document.querySelector('.illustration__svg');
 
         svgButton?.setAttribute('data-id', `${this.library[this.selectedWordIndex].id}`);
-        elem.textContent = `${index + 1} ${this.library[wordId].wordTranslate}`;
+        elem.textContent = `${index + 1}. ${this.library[wordId].wordTranslate}`;
         (elem as HTMLElement).classList.add('right');
       }
     });
@@ -191,7 +191,7 @@ class AudioCall {
     });
     nextWordButton.textContent = 'дальше';
     nextWordButton.classList.add('words-changed');
-
+    const audio = new Audio();
     if (target.classList.contains('right')) {
       this.correctAnsersCount++;
       // добавляются слова в библиотеку верных ответов
@@ -200,11 +200,13 @@ class AudioCall {
       if (this.maxCorrectAnswersCount > this.correctAnsersCount) {
         this.maxCorrectAnswersCount = this.correctAnsersCount;
       }
+      audio.src = `./assets/audio/yes.mp3`;
     } else {
       // добавляются слова в библиотеку ложных ответов
       this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
+      audio.src = `./assets/audio/no.mp3`;
     }
-
+    audio.autoplay = true;
     this.newIllustration(illustration, svgElem);
   }
 

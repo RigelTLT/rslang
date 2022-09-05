@@ -113,7 +113,7 @@ class Sprint {
       if (nextIndex < this.library.length) {
         this.fillWord(nextIndex, isRightTranslate, game);
       }
-
+      const audio = new Audio();
       if (this.library[this.selectedWordIndex].wordTranslate === translateWord) {
         this.correctAnsersCount++;
         this.countRight += 1;
@@ -132,13 +132,16 @@ class Sprint {
         if (this.correctAnsersCount > this.maxCorrectAnswersCount) {
           this.maxCorrectAnswersCount = this.correctAnsersCount;
         }
+
+        audio.src = `./assets/audio/yes.mp3`;
       } else {
         this.correctAnsersCount = 0;
         this.countRight = 0;
         this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
         this.clearCircles();
+        audio.src = `./assets/audio/no.mp3`;
       }
-
+      audio.autoplay = true;
       this.selectedWordIndex += 1;
     };
 
@@ -165,7 +168,7 @@ class Sprint {
       if (nextIndex < this.library.length) {
         this.fillWord(nextIndex, isRightTranslate, game);
       }
-
+      const audio = new Audio();
       if (this.library[this.selectedWordIndex].wordTranslate !== translateWord) {
         this.correctAnsersCount++;
         this.countRight += 1;
@@ -184,13 +187,15 @@ class Sprint {
         if (this.correctAnsersCount > this.maxCorrectAnswersCount) {
           this.maxCorrectAnswersCount = this.correctAnsersCount;
         }
+        audio.src = `./assets/audio/yes.mp3`;
       } else {
         this.correctAnsersCount = 0;
         this.countRight = 0;
         this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
         this.clearCircles();
+        audio.src = `./assets/audio/no.mp3`;
       }
-
+      audio.autoplay = true;
       this.selectedWordIndex += 1;
     };
 
