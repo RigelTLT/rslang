@@ -31,6 +31,9 @@ async function createList(data: IapiRequestUserWords) {
   const localStorage = new GetLocalStorageToken();
   const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
   const list = document.querySelector('.list-textbook') as HTMLElement;
+  const container = document.createElement('div') as HTMLElement;
+  container.classList.add('container');
+  list.append(container);
 
   if (localStorage.token && checkWords) {
     for (let i = 0; i < checkWords.length; i++) {
@@ -39,7 +42,7 @@ async function createList(data: IapiRequestUserWords) {
         const elem = document.createElement('div');
         elem.classList.add('list-textbook__elem');
         elem.setAttribute('data-id', `${words.id}`);
-        list.append(elem);
+        container.append(elem);
 
         const img = document.createElement('img');
         img.classList.add('list-textbook__elem__img');
