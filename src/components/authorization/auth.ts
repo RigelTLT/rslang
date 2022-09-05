@@ -1,5 +1,5 @@
 import { Iauth, Isignin, Iregist, IidToken } from './../../types/interface';
-import { signinApi, getUser } from './../../api/authApi';
+import { signinApi, getUser, newTokenSigninApi } from './../../api/authApi';
 
 function setLocalStorageAuth(id: string, token: string, name: string, refreshToken: string) {
   localStorage.setItem('id', JSON.stringify(id));
@@ -10,19 +10,24 @@ function setLocalStorageAuth(id: string, token: string, name: string, refreshTok
 
 async function cheackToken(id: string, token: string, refreshToken: string) {
   const cheackToken = await getUser(id, token);
-  console.log(cheackToken);
+  if (!cheackToken) {
+    const newToken = await newTokenSigninApi(id, refreshToken);
+    if (newToken) {
+      localStorage.setItem('token', JSON.stringify(newToken.token));
+      localStorage.setItem('refreshToken', JSON.stringify(newToken.refreshToken));
+    }
+  }
 }
 
-export function authorization(params: IidToken) {
-  //TODO замена элементов при авторизации
+export async function authorization(params: IidToken) {
   const accountLink = document.querySelector('.account__text') as HTMLElement;
   const accountContainer = document.querySelector('.account') as HTMLElement;
   if (accountContainer.classList.contains('account')) {
     accountContainer.classList.remove('account');
     accountContainer.classList.add('account__out');
   }
+  await cheackToken(params.id, params.token, params.refreshToken);
   accountLink.innerHTML = `${params.name}/Log Out`;
-  cheackToken(params.id, params.token, params.refreshToken);
 }
 
 export function logOut() {
