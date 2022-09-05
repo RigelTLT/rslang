@@ -45,10 +45,6 @@
   }
 }
 
-// .game-wrap {
-//   background: var(--game-bg);
-// }
-
 .game {
   flex-grow: 1;
   display: flex;
@@ -255,11 +251,6 @@
       }
     }
 
-    // .game-container {
-    //   // display: flex;
-    //   // align-items: center;
-    //   // justify-content: space-between;
-    // }
     .series-response {
       margin-bottom: 30px;
       display: flex;
@@ -399,11 +390,5 @@
     button {
       margin: 0 10px;
     }
-  }
-
-  .learned-words {
-  }
-
-  .learning-words {
   }
 }
