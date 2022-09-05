@@ -98,6 +98,10 @@ ul {
     justify-content: space-between;
     align-items: center;
   }
+  .logo{
+    font-weight: 700;
+    font-size: 20px;
+  }
   .navigation {
     font-size: 16px;
     font-weight: 700;
@@ -153,6 +157,9 @@ ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .date{
+    font-size: 24px;
   }
   .developers {
     text-align: center;
