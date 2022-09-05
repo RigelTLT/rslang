@@ -7,7 +7,12 @@ document.addEventListener('DOMContentLoaded', async function () {
   const localStorage = new GetLocalStorageToken();
 
   if (localStorage.id) {
-    const params = { id: localStorage.id, token: localStorage.token, name: localStorage.name };
+    const params = {
+      id: localStorage.id,
+      token: localStorage.token,
+      name: localStorage.name,
+      refreshToken: localStorage.refreshToken
+    };
     authorization(params);
 
     const userStatistics = await getStatistic(localStorage.id, localStorage.token);

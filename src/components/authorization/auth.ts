@@ -1,10 +1,16 @@
-import { Iauth, Isignin, Iregist, IidToken } from '../../types/interface';
-import { signinApi } from '../../api/authApi';
+import { Iauth, Isignin, Iregist, IidToken } from './../../types/interface';
+import { signinApi, getUser } from './../../api/authApi';
 
-function setLocalStorageAuth(id: string, token: string, name: string) {
+function setLocalStorageAuth(id: string, token: string, name: string, refreshToken: string) {
   localStorage.setItem('id', JSON.stringify(id));
   localStorage.setItem('token', JSON.stringify(token));
   localStorage.setItem('name', JSON.stringify(name));
+  localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
+}
+
+async function cheackToken(id: string, token: string, refreshToken: string) {
+  const cheackToken = await getUser(id, token);
+  console.log(cheackToken);
 }
 
 export function authorization(params: IidToken) {
@@ -16,6 +22,7 @@ export function authorization(params: IidToken) {
     accountContainer.classList.add('account__out');
   }
   accountLink.innerHTML = `${params.name}/Log Out`;
+  cheackToken(params.id, params.token, params.refreshToken);
 }
 
 export function logOut() {
@@ -38,9 +45,14 @@ export async function signToToken(params: Isignin) {
     textMenu.style.color = 'red';
     textMenu.style.fontSize = 'x-large';
   } else {
-    setLocalStorageAuth(paramsAuth.userId, paramsAuth.token, paramsAuth.name);
+    setLocalStorageAuth(paramsAuth.userId, paramsAuth.token, paramsAuth.name, paramsAuth.refreshToken);
 
-    authorization({ id: paramsAuth.userId, token: paramsAuth.token, name: paramsAuth.name });
+    authorization({
+      id: paramsAuth.userId,
+      token: paramsAuth.token,
+      name: paramsAuth.name,
+      refreshToken: paramsAuth.refreshToken
+    });
   }
 }
 
@@ -71,5 +83,9 @@ export class GetLocalStorageToken {
   get name() {
     const name = JSON.parse(localStorage.getItem('name') as string) as string;
     return name;
+  }
+  get refreshToken() {
+    const refreshToken = JSON.parse(localStorage.getItem('refreshToken') as string) as string;
+    return refreshToken;
   }
 }
