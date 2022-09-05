@@ -23,11 +23,11 @@ module.exports = ({ development }) => ({
   devtool: development ? 'inline-source-map' : false,
   entry: {
     main: './src/index.ts',
-    textbook: './src/components/textbook/textbook.ts',
+    textbook: './src/components/uiListener/uiTextbook.ts',
     statistic: './src/components/statistic/statistic.ts',
     audioCall: './src/components/audio-call/audio-call.ts',
     sprint: './src/components/sprint/sprint.ts',
-    dictionary: './src/components/textbook/dictionary.ts'
+    dictionary: './src/components/uiListener/uiDictionary.ts'
   },
   output: {
     filename: '[name].[contenthash].js',
