@@ -207,7 +207,7 @@ export default class Game {
     const page = this.checkGameName();
     const returnToStartBtn = document.querySelector('#to-start') as HTMLButtonElement;
     returnToStartBtn.addEventListener('click', () => {
-      location.replace(`${location.origin}/${page}.html`);
+      location.replace(`${location.href}`);
     });
 
     const svgElem = document.querySelectorAll('.illustration__svg') as NodeList;
@@ -253,7 +253,7 @@ export default class Game {
       if (selectedDifficultLevel === '') return (startBtn.disabled = true);
 
       const randomPageNumber = this.randomIndexGenerator(30);
-      location.replace(`${location.origin}/${page}.html?group=${selectedDifficultLevel}&page=${randomPageNumber}`);
+      location.replace(`${location.href}?group=${selectedDifficultLevel}&page=${randomPageNumber}`);
     });
   }
 }
