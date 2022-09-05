@@ -9,8 +9,8 @@ function setLocalStorageAuth(id: string, token: string, name: string, refreshTok
 }
 
 async function cheackToken(id: string, token: string, refreshToken: string) {
-  const cheackToken = await getUser(id, token);
-  if (!cheackToken) {
+  const cheackTokens = await getUser(id, token);
+  if (!cheackTokens) {
     const newToken = await newTokenSigninApi(id, refreshToken);
     if (newToken) {
       localStorage.setItem('token', JSON.stringify(newToken.token));
@@ -62,7 +62,7 @@ export async function signToToken(params: Isignin) {
 
 export async function registration(params: Iregist) {
   try {
-    const code = await registrationApi(params);
+    await registrationApi(params);
     await signToToken({ email: params.email, password: params.password });
     location.reload();
   } catch {
@@ -88,6 +88,7 @@ export class GetLocalStorageToken {
     const name = JSON.parse(localStorage.getItem('name') as string) as string;
     return name;
   }
+
   get refreshToken() {
     const refreshToken = JSON.parse(localStorage.getItem('refreshToken') as string) as string;
     return refreshToken;

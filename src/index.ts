@@ -1,7 +1,6 @@
 import './style.scss';
 import { ulListenner } from './components/uiListener/uiListener';
 import { GetLocalStorageToken, authorization } from './components/authorization/auth';
-import { getStatistic, putStatistic } from './api/statisticApi';
 
 document.addEventListener('DOMContentLoaded', async function () {
   const localStorage = new GetLocalStorageToken();

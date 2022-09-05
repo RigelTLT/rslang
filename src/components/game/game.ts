@@ -47,7 +47,7 @@ export default class Game {
       const wordsSheet = await getWords(parameterPage);
       const localStorage = new GetLocalStorageToken();
       const wordsUser = await getUserAllWords(localStorage.id, localStorage.token);
-      let listWords = wordsSheet;
+      const listWords = wordsSheet;
       if (!wordsUser) {
         return listWords;
       }
@@ -143,7 +143,7 @@ export default class Game {
     const localStorage = new GetLocalStorageToken();
     const currDate = new Date();
     if (localStorage.id) {
-      let wordStatistics = {
+      const wordStatistics = {
         learnedWords: 0,
         optional: {
           date: `${currDate.getDate()}/${currDate.getMonth()}`,
@@ -166,10 +166,10 @@ export default class Game {
         }
       } else {
         if (this.checkGameName() === 'sprint') {
-          let correctAnswersPercent = prevStatistic.optional.sprint.correctAnswersPercent;
+          const correctAnswersPercent = prevStatistic.optional.sprint.correctAnswersPercent;
           correctAnswersPercent.push(rightAnswersProcent);
           wordStatistics.optional.sprint.correctAnswersPercent = correctAnswersPercent;
-          let correctLearnedWord = prevStatistic.optional.sprint.learnedWord;
+          const correctLearnedWord = prevStatistic.optional.sprint.learnedWord;
           correctLearnedWord.push(...arrOfRight);
           for (let i = 0; i < correctLearnedWord.length; i++) {
             correctLearnedWord.filter((el) => el !== correctLearnedWord[i]);
@@ -179,10 +179,10 @@ export default class Game {
           wordStatistics.optional.sprint.longestSeriesCorrect =
             longestSeriesRightAnswers > longestPrev ? longestSeriesRightAnswers : longestPrev;
         } else {
-          let correctAnswersPercent = prevStatistic.optional.audioCall.correctAnswersPercent;
+          const correctAnswersPercent = prevStatistic.optional.audioCall.correctAnswersPercent;
           correctAnswersPercent.push(rightAnswersProcent);
           wordStatistics.optional.audioCall.correctAnswersPercent = correctAnswersPercent;
-          let correctLearnedWord = prevStatistic.optional.audioCall.learnedWord;
+          const correctLearnedWord = prevStatistic.optional.audioCall.learnedWord;
           correctLearnedWord.push(...arrOfRight);
           for (let i = 0; i < correctLearnedWord.length; i++) {
             correctLearnedWord.filter((el) => el !== correctLearnedWord[i]);
