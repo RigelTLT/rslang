@@ -25,8 +25,6 @@ export async function signinApi(body?: Isignin) {
 }
 
 export async function newTokenSigninApi(id: string, token: string) {
-  console.log(id, token);
-  console.log(`${baseUrl}${path.users}/${id}/${path.tokens}`);
   const response = await fetch(`${baseUrl}${path.users}/${id}/${path.tokens}`, {
     method: 'GET',
     headers: headers(token)

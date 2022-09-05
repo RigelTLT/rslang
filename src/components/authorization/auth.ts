@@ -1,5 +1,5 @@
 import { Iauth, Isignin, Iregist, IidToken } from './../../types/interface';
-import { signinApi, getUser, newTokenSigninApi } from './../../api/authApi';
+import { signinApi, getUser, newTokenSigninApi, registrationApi } from './../../api/authApi';
 
 function setLocalStorageAuth(id: string, token: string, name: string, refreshToken: string) {
   localStorage.setItem('id', JSON.stringify(id));
@@ -62,7 +62,7 @@ export async function signToToken(params: Isignin) {
 
 export async function registration(params: Iregist) {
   try {
-    // const code = await registrationApi(params);
+    const code = await registrationApi(params);
     await signToToken({ email: params.email, password: params.password });
     location.reload();
   } catch {

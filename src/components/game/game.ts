@@ -48,6 +48,9 @@ export default class Game {
       const localStorage = new GetLocalStorageToken();
       const wordsUser = await getUserAllWords(localStorage.id, localStorage.token);
       let listWords = wordsSheet;
+      if (!wordsUser) {
+        return listWords;
+      }
       for (let i = 0; i < wordsSheet.length; i++) {
         for (let j = 0; j < wordsUser.length; j++) {
           if (wordsUser[j].difficulty === 'studied') {
@@ -190,7 +193,6 @@ export default class Game {
             longestSeriesRightAnswers > longestPrev ? longestSeriesRightAnswers : longestPrev;
         }
       }
-      console.log(wordStatistics);
       this.sendingResult(localStorage.token, localStorage.id, wordStatistics);
     }
     this.gameResultListeners();
