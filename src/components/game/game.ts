@@ -1,4 +1,5 @@
 import { baseUrl, getWordId, getWords } from '../../api/basicApi';
+import { getUserAllWords } from '../../api/wordsApi';
 import { IapiRequestWords, ILibraryResponse, IstatisticResponse } from '../../types/interface';
 import 'select-pure';
 import './game.scss';
@@ -43,8 +44,35 @@ export default class Game {
     if (pageNumber >= 1 && parameterPage !== undefined) {
       parameterPage.page = (Number(parameterPage.page) - 1).toString();
       parameterPage.group = (Number(parameterPage.group) - 1).toString();
-
-      return getWords(parameterPage);
+      const wordsSheet = await getWords(parameterPage);
+      const localStorage = new GetLocalStorageToken();
+      const wordsUser = await getUserAllWords(localStorage.id, localStorage.token);
+      let listWords = wordsSheet;
+      for (let i = 0; i < wordsSheet.length; i++) {
+        for (let j = 0; j < wordsUser.length; j++) {
+          if (wordsUser[j].difficulty === 'studied') {
+            if (wordsSheet[i].id.includes(wordsUser[j].wordId)) {
+              listWords.splice(i, 1);
+            }
+          }
+        }
+      }
+      if (listWords.length < 20 && pageNumber > 1) {
+        parameterPage.page = (Number(parameterPage.page) - 1).toString();
+        const wordsSheetPrev = await getWords(parameterPage);
+        for (let i = 0; i < wordsSheetPrev.length; i++) {
+          for (let j = 0; j < wordsUser.length; j++) {
+            if (wordsSheetPrev[i].id.includes(wordsUser[j].wordId) && wordsUser[j].difficulty === 'studied') {
+              i++;
+            }
+            if (listWords.length === 20) {
+              return listWords;
+            }
+          }
+          listWords.push(wordsSheetPrev[i]);
+        }
+      }
+      return listWords;
     }
   }
 
@@ -66,9 +94,7 @@ export default class Game {
     headingWrong.textContent = `Не изучено: ${arrOfWrong.length}`;
 
     const message = document.querySelector('.message') as HTMLElement;
-    if (arrOfRight.length < 5) {
-      message.textContent = 'А репетитора вы можете найти в сервисе <место для вашей рекламы> ';
-    } else if (arrOfRight.length < 15) {
+    if (arrOfRight.length / arrOfWrong.length < 1) {
       message.textContent = 'Неплохо, но есть еще чему поучиться!';
     } else {
       message.textContent = 'Отличный результат!';
@@ -136,7 +162,7 @@ export default class Game {
     const page = this.checkGameName();
     const returnToStartBtn = document.querySelector('#to-start') as HTMLButtonElement;
     returnToStartBtn.addEventListener('click', () => {
-      location.replace(`http://localhost:8080/${page}.html`);
+      location.replace(`${location.origin}/${page}.html`);
     });
 
     const svgElem = document.querySelectorAll('.illustration__svg') as NodeList;
@@ -180,11 +206,10 @@ export default class Game {
     });
 
     startBtn?.addEventListener('click', () => {
-      if (selectedDifficultLevel === '')
-        return (startBtn.disabled = true); /*alert('Сначала выбери уровень сложности')*/
+      if (selectedDifficultLevel === '') return (startBtn.disabled = true);
 
       const randomPageNumber = this.randomIndexGenerator(30);
-      location.replace(`http://localhost:8080/${page}.html?group=${selectedDifficultLevel}&page=${randomPageNumber}`);
+      location.replace(`${location.origin}/${page}.html?group=${selectedDifficultLevel}&page=${randomPageNumber}`);
     });
   }
 }

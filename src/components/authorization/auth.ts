@@ -18,7 +18,6 @@ async function cheackToken(id: string, token: string, refreshToken: string) {
     }
   }
 }
-
 export async function authorization(params: IidToken) {
   const accountLink = document.querySelector('.account__text') as HTMLElement;
   const accountContainer = document.querySelector('.account') as HTMLElement;
