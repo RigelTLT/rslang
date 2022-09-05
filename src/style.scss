@@ -47,7 +47,7 @@ body {
   & > section {
     padding: 60px 0;
   }
-  padding-top: 63px;
+  padding-top: 85px;
 }
 
 .container {
@@ -75,6 +75,9 @@ svg {
   object-fit: cover;
 }
 
+.logo {
+  max-width: 300px;
+}
 a {
   text-decoration: none;
   color: inherit;
@@ -94,6 +97,10 @@ ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .logo{
+    font-weight: 700;
+    font-size: 20px;
   }
   .navigation {
     font-size: 16px;
@@ -151,6 +158,9 @@ ul {
     justify-content: space-between;
     align-items: center;
   }
+  .date{
+    font-size: 24px;
+  }
   .developers {
     text-align: center;
     .developer:not(:last-child) {
@@ -160,4 +170,9 @@ ul {
   .logo__shool {
     width: 120px;
   }
+}
+
+.authorize {
+  font-size: 30px;
+  text-align: center;
 }

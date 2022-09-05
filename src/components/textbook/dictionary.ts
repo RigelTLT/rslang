@@ -1,6 +1,6 @@
 import './textbook.scss';
 import { baseUrl, getWordId } from '../../api/basicApi';
-import { deleteordsUserApi } from '../../api/wordsApi';
+import { deletewordsUserApi } from '../../api/wordsApi';
 import { IapiRequestUserWords } from '../../types/interface';
 import { GetLocalStorageToken } from './../authorization/auth';
 import { checkWordsUser } from './textbook';
@@ -25,27 +25,6 @@ function paginationState(group: string, status: string) {
   } else {
     textGroup[1].innerHTML = `Раздел 1`;
   }
-}
-
-function getPageGroupTextbook() {
-  const params = new URLSearchParams(document.location.search);
-  const group = params.get('group') as string;
-  const status = params.get('status') as string;
-  paginationState(group, status);
-  const data = {
-    group: `${group ? Number(group) - 1 : '0'}`,
-    status: `${status ? status : 'hard'}`
-  };
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  createList(data);
-}
-
-if (window.location.pathname === '/dictionary.html') getPageGroupTextbook();
-
-export async function removeCompoundWord(id: string, idWord: string, token: string) {
-  await deleteordsUserApi(id, idWord, token);
-  const picture = document.querySelector(`div[data-id="${idWord}"]`) as HTMLElement;
-  picture.remove();
 }
 
 async function createList(data: IapiRequestUserWords) {
@@ -138,4 +117,24 @@ async function createList(data: IapiRequestUserWords) {
   } else {
     list.innerText = `Авторизируйтесь для просмотра и редактирования`;
   }
+}
+
+function getPageGroupTextbook() {
+  const params = new URLSearchParams(document.location.search);
+  const group = params.get('group') as string;
+  const status = params.get('status') as string;
+  paginationState(group, status);
+  const data = {
+    group: `${group ? Number(group) - 1 : '0'}`,
+    status: `${status ? status : 'hard'}`
+  };
+  createList(data);
+}
+
+if (window.location.pathname === '/dictionary.html') getPageGroupTextbook();
+
+export async function removeCompoundWord(id: string, idWord: string, token: string) {
+  await deletewordsUserApi(id, idWord, token);
+  const picture = document.querySelector(`div[data-id="${idWord}"]`) as HTMLElement;
+  picture.remove();
 }

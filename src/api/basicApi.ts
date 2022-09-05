@@ -11,6 +11,14 @@ export const path = {
   tokens: 'tokens'
 };
 
+export const headers = (token: string) => {
+  return {
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+  };
+};
+
 export async function getWords(query: IapiRequestWords): Promise<ILibraryResponse[]> {
   const response = await fetch(`${baseUrl}${path.words}?group=${query.group}&page=${query.page}`);
   const data = await response.json();

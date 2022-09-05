@@ -19,6 +19,7 @@ export interface IidToken {
   id: string;
   token: string;
   name: string;
+  refreshToken: string;
 }
 export interface Iauth {
   message: string;
@@ -84,4 +85,8 @@ export interface IstatisticBody {
     numberOfWordsLearned: number;
     percentageOfCorrectAnswers: string;
   };
+}
+
+export interface IstatisticResponse extends Istatistic {
+  id?: string;
 }

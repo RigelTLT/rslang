@@ -1,9 +1,10 @@
 import { baseUrl, getWordId, getWords } from '../../api/basicApi';
-import { IapiRequestWords, ILibraryResponse, Istatistic } from '../../types/interface';
+import { getUserAllWords } from '../../api/wordsApi';
+import { IapiRequestWords, ILibraryResponse, IstatisticResponse } from '../../types/interface';
 import 'select-pure';
 import './game.scss';
 import { SelectPure } from 'select-pure/lib/components';
-import { putStatistic } from '../../api/statisticApi';
+import { getStatistic, putStatistic } from '../../api/statisticApi';
 import { GetLocalStorageToken } from '../authorization/auth';
 
 export function playAudio(pathToSrc: string): void {
@@ -13,10 +14,9 @@ export function playAudio(pathToSrc: string): void {
 }
 
 export default class Game {
-  sendingResult(body: Istatistic) {
-    const localStorage = new GetLocalStorageToken();
-    putStatistic(localStorage.id, localStorage.token, body);
-  }
+  static trueButtonFunc: (event: KeyboardEvent) => void;
+
+  static falseButtonFunc: (event: KeyboardEvent) => void;
 
   renderTemplate(templateId: string, selector: string): void {
     const template = document.querySelector(`#${templateId}`) as HTMLTemplateElement;
@@ -38,18 +38,50 @@ export default class Game {
   }
 
   async createLibrary(): Promise<ILibraryResponse[] | undefined> {
-    // const gameName = this.checkGameName();
     const parameterPage = this.checkParameter();
-    // const realPageNumber = String(Number(parameterPage?.page) - 1);
     const pageNumber = Number(parameterPage?.page);
 
     if (pageNumber >= 1 && parameterPage !== undefined) {
-      const getWordsLibrary = await getWords(parameterPage);
-      return getWordsLibrary;
+      parameterPage.page = (Number(parameterPage.page) - 1).toString();
+      parameterPage.group = (Number(parameterPage.group) - 1).toString();
+      const wordsSheet = await getWords(parameterPage);
+      const localStorage = new GetLocalStorageToken();
+      const wordsUser = await getUserAllWords(localStorage.id, localStorage.token);
+      let listWords = wordsSheet;
+      for (let i = 0; i < wordsSheet.length; i++) {
+        for (let j = 0; j < wordsUser.length; j++) {
+          if (wordsUser[j].difficulty === 'studied') {
+            if (wordsSheet[i].id.includes(wordsUser[j].wordId)) {
+              listWords.splice(i, 1);
+            }
+          }
+        }
+      }
+      if (listWords.length < 20 && pageNumber > 1) {
+        parameterPage.page = (Number(parameterPage.page) - 1).toString();
+        const wordsSheetPrev = await getWords(parameterPage);
+        for (let i = 0; i < wordsSheetPrev.length; i++) {
+          for (let j = 0; j < wordsUser.length; j++) {
+            if (wordsSheetPrev[i].id.includes(wordsUser[j].wordId) && wordsUser[j].difficulty === 'studied') {
+              i++;
+            }
+            if (listWords.length === 20) {
+              return listWords;
+            }
+          }
+          listWords.push(wordsSheetPrev[i]);
+        }
+      }
+      return listWords;
     }
   }
 
-  gameResult(arrOfRight: ILibraryResponse[], arrOfWrong: ILibraryResponse[]) {
+  async gameResult(arrOfRight: ILibraryResponse[], arrOfWrong: ILibraryResponse[], longestSeriesRightAnswers: number) {
+    if (this.checkGameName() === 'sprint') {
+      document.body.removeEventListener('keyup', Game.trueButtonFunc);
+      document.body.removeEventListener('keyup', Game.falseButtonFunc);
+    }
+
     const template = document.querySelector('#statistics') as HTMLTemplateElement;
     const main = document.querySelector('.main') as HTMLElement;
     main.innerHTML = '';
@@ -62,9 +94,7 @@ export default class Game {
     headingWrong.textContent = `Не изучено: ${arrOfWrong.length}`;
 
     const message = document.querySelector('.message') as HTMLElement;
-    if (arrOfRight.length < 5) {
-      message.textContent = 'А репетитора вы можете найти в сервисе <место для вашей рекламы> ';
-    } else if (arrOfRight.length < 15) {
+    if (arrOfRight.length / arrOfWrong.length < 1) {
       message.textContent = 'Неплохо, но есть еще чему поучиться!';
     } else {
       message.textContent = 'Отличный результат!';
@@ -102,35 +132,24 @@ export default class Game {
     wordsRightContainer.innerHTML = wordsTemplate(arrOfRight);
     wordsWrongContainer.innerHTML = wordsTemplate(arrOfWrong);
 
-    const date = new Date();
-    const output = `${String(date.getDate()).padStart(2, '0')}/${String(date.getDate()).padStart(
-      2,
-      '0'
-    )}/${date.getFullYear()}`;
+    const localStorage = new GetLocalStorageToken();
+    if (localStorage.id) {
+      const userStatistics = await getStatistic(localStorage.id, localStorage.token);
 
-    const bodyResult = {
-      learnedWords: 0,
-      optional: {
-        date: output,
-        sprint: {
-          learnedWord: [...arrOfRight],
-          correctAnswersPercent: 'string',
-          longestSeriesCorrect: 'string'
-        },
-        audioCall: {
-          learnedWord: [...arrOfRight],
-          correctAnswersPercent: 'string',
-          longestSeriesCorrect: 'string'
-        },
-        textBook: {
-          learnedWord: [...arrOfRight],
-          numberOfWordsLearned: 0,
-          percentageOfCorrectAnswers: ''
-        }
+      const rightAnswersProcent = (arrOfRight.length / (arrOfRight.length + arrOfWrong.length)) * 100;
+
+      if (this.checkGameName() === 'sprint') {
+        userStatistics.optional.sprint.correctAnswersPercent = `${rightAnswersProcent}`;
+        userStatistics.optional.sprint.learnedWord = [...arrOfRight];
+        userStatistics.optional.sprint.longestSeriesCorrect = longestSeriesRightAnswers.toString();
+      } else {
+        userStatistics.optional.audioCall.correctAnswersPercent = `${rightAnswersProcent}`;
+        userStatistics.optional.audioCall.learnedWord = [...arrOfRight];
+        userStatistics.optional.audioCall.longestSeriesCorrect = longestSeriesRightAnswers.toString();
       }
-    };
-    this.sendingResult(bodyResult);
 
+      this.sendingResult(localStorage.token, localStorage.id, userStatistics);
+    }
     this.gameResultListeners();
   }
 
@@ -143,7 +162,7 @@ export default class Game {
     const page = this.checkGameName();
     const returnToStartBtn = document.querySelector('#to-start') as HTMLButtonElement;
     returnToStartBtn.addEventListener('click', () => {
-      location.replace(`http://localhost:8080/${page}.html`);
+      location.replace(`${location.origin}/${page}.html`);
     });
 
     const svgElem = document.querySelectorAll('.illustration__svg') as NodeList;
@@ -160,10 +179,15 @@ export default class Game {
     });
   }
 
+  async sendingResult(token: string, id: string, body: IstatisticResponse) {
+    delete body.id;
+    await putStatistic(id, token, body);
+  }
+
   randomIndexGenerator(maxLength: number, exclude?: number): number {
     let randomNumber = Math.floor(Math.random() * maxLength);
 
-    while (randomNumber === exclude) {
+    while (randomNumber === exclude || randomNumber === 0) {
       randomNumber = Math.floor(Math.random() * maxLength);
     }
 
@@ -178,13 +202,14 @@ export default class Game {
     const selectPure = document.querySelector('select-pure') as SelectPure;
     selectPure.addEventListener('change', () => {
       selectedDifficultLevel = selectPure.value;
+      if (startBtn.disabled === true) startBtn.disabled = false;
     });
 
     startBtn?.addEventListener('click', () => {
-      if (selectedDifficultLevel === '') return alert('Сначала выбери уровень сложности');
+      if (selectedDifficultLevel === '') return (startBtn.disabled = true);
 
       const randomPageNumber = this.randomIndexGenerator(30);
-      location.replace(`http://localhost:8080/${page}.html?group=${selectedDifficultLevel}&page=${randomPageNumber}`);
+      location.replace(`${location.origin}/${page}.html?group=${selectedDifficultLevel}&page=${randomPageNumber}`);
     });
   }
 }
