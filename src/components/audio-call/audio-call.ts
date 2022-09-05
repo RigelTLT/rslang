@@ -13,6 +13,10 @@ class AudioCall {
 
   excludedIndexesArr: number[] = [];
 
+  maxCorrectAnswersCount = 0;
+
+  correctAnsersCount = 0;
+
   async start() {
     const game = new Game();
     const template = game.checkParameter() === undefined ? 'selection-menu' : game.checkGameName();
@@ -44,12 +48,12 @@ class AudioCall {
           wrongWordIndex = game.randomIndexGenerator(this.library.length, wordId);
         }
 
-        elem.textContent = `${index + 1} ${this.library[wrongWordIndex].wordTranslate}`;
+        elem.textContent = `${index + 1}. ${this.library[wrongWordIndex].wordTranslate}`;
       } else {
         const svgButton = document.querySelector('.illustration__svg');
 
         svgButton?.setAttribute('data-id', `${this.library[this.selectedWordIndex].id}`);
-        elem.textContent = `${index + 1} ${this.library[wordId].wordTranslate}`;
+        elem.textContent = `${index + 1}. ${this.library[wordId].wordTranslate}`;
         (elem as HTMLElement).classList.add('right');
       }
     });
@@ -66,7 +70,7 @@ class AudioCall {
       const isAllWordsCompleted = this.rightWordsArr.length + this.wrongWordsArr.length === this.library.length;
 
       if (isAllWordsCompleted) {
-        return game.gameResult(this.rightWordsArr, this.wrongWordsArr);
+        return game.gameResult(this.rightWordsArr, this.wrongWordsArr, this.maxCorrectAnswersCount);
       }
 
       this.gameClick(event, game);
@@ -82,7 +86,7 @@ class AudioCall {
       const isAllWordsCompleted = this.rightWordsArr.length + this.wrongWordsArr.length === this.library.length;
 
       if (isAllWordsCompleted) {
-        return game.gameResult(this.rightWordsArr, this.wrongWordsArr);
+        return game.gameResult(this.rightWordsArr, this.wrongWordsArr, this.maxCorrectAnswersCount);
       }
 
       const keyCode = event.code;
@@ -187,15 +191,21 @@ class AudioCall {
     });
     nextWordButton.textContent = 'дальше';
     nextWordButton.classList.add('words-changed');
-
+    const audio = new Audio();
     if (target.classList.contains('right')) {
+      this.correctAnsersCount++;
       // добавляются слова в библиотеку верных ответов
       this.rightWordsArr.push(this.library[this.selectedWordIndex]);
+      if (this.maxCorrectAnswersCount < this.correctAnsersCount) {
+        this.maxCorrectAnswersCount = this.correctAnsersCount;
+      }
+      audio.src = `./assets/audio/yes.mp3`;
     } else {
       // добавляются слова в библиотеку ложных ответов
       this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
+      audio.src = `./assets/audio/no.mp3`;
     }
-
+    audio.autoplay = true;
     this.newIllustration(illustration, svgElem);
   }
 

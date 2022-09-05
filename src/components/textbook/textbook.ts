@@ -29,9 +29,9 @@ export async function addCompoundWord(id: string, idWord: string, token: string)
   const cheak = await getUserIdWords(id, idWord, token);
   const body = { difficulty: 'hard', optional: {} };
   if (!cheak) {
-    await addWordsUserApi(id, idWord, token, body);
+    await addWordsUserApi({ id, idWord, token, body });
   } else {
-    await UpdateWordsUserApi(id, idWord, token, body);
+    await UpdateWordsUserApi({ id, idWord, token, body });
   }
   cheakPageToComplete();
 }
@@ -40,9 +40,9 @@ export async function studiedCompoundWord(id: string, idWord: string, token: str
   const cheak = await getUserIdWords(id, idWord, token);
   const body = { difficulty: 'studied', optional: {} };
   if (!cheak) {
-    await addWordsUserApi(id, idWord, token, body);
+    await addWordsUserApi({ id, idWord, token, body });
   } else {
-    await UpdateWordsUserApi(id, idWord, token, body);
+    await UpdateWordsUserApi({ id, idWord, token, body });
   }
   cheakPageToComplete();
   //TODO добавление в статистику
@@ -115,12 +115,15 @@ async function createList(data: IapiRequestWords) {
   const localStorage = new GetLocalStorageToken();
   const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
   const list = document.querySelector('.list-textbook') as HTMLElement;
+  const container = document.createElement('div') as HTMLElement;
+  container.classList.add('container');
+  list.append(container);
 
   for (let i = 0; i < words.length; i++) {
     const elem = document.createElement('div');
     elem.classList.add('list-textbook__elem');
     elem.setAttribute('data-id', `${words[i].id}`);
-    list.append(elem);
+    container.append(elem);
 
     const img = document.createElement('img');
     img.classList.add('list-textbook__elem__img');

@@ -1,7 +1,7 @@
 import { Login } from '../login/login';
 import { signToToken, registration, logOut, GetLocalStorageToken } from '../authorization/auth';
 import { sound, changePage, addCompoundWord, studiedCompoundWord, cheakPageToComplete } from './../textbook/textbook';
-import { deleteordsUserApi } from '../../api/wordsApi';
+import { deletewordsUserApi } from '../../api/wordsApi';
 import { removeCompoundWord } from './../textbook/dictionary';
 
 const login = new Login();
@@ -90,7 +90,7 @@ export function ulListenner() {
         card.classList.remove('hard');
         const localStorage = new GetLocalStorageToken();
         const wordId = card.dataset.id as string;
-        deleteordsUserApi(localStorage.id, wordId, localStorage.token);
+        deletewordsUserApi(localStorage.id, wordId, localStorage.token);
         cheakPageToComplete();
         const buttonDelete = (target.parentNode as HTMLElement).childNodes[1] as HTMLInputElement;
         const buttonAdd = (target.parentNode as HTMLElement).childNodes[0] as HTMLInputElement;

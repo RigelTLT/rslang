@@ -1,20 +1,31 @@
-import { Iauth, Isignin, Iregist, IidToken } from '../../types/interface';
-import { signinApi } from '../../api/authApi';
+import { Iauth, Isignin, Iregist, IidToken } from './../../types/interface';
+import { signinApi, getUser, newTokenSigninApi, registrationApi } from './../../api/authApi';
 
-function setLocalStorageAuth(id: string, token: string, name: string) {
+function setLocalStorageAuth(id: string, token: string, name: string, refreshToken: string) {
   localStorage.setItem('id', JSON.stringify(id));
   localStorage.setItem('token', JSON.stringify(token));
   localStorage.setItem('name', JSON.stringify(name));
+  localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
 }
 
-export function authorization(params: IidToken) {
-  //TODO замена элементов при авторизации
+async function cheackToken(id: string, token: string, refreshToken: string) {
+  const cheackToken = await getUser(id, token);
+  if (!cheackToken) {
+    const newToken = await newTokenSigninApi(id, refreshToken);
+    if (newToken) {
+      localStorage.setItem('token', JSON.stringify(newToken.token));
+      localStorage.setItem('refreshToken', JSON.stringify(newToken.refreshToken));
+    }
+  }
+}
+export async function authorization(params: IidToken) {
   const accountLink = document.querySelector('.account__text') as HTMLElement;
   const accountContainer = document.querySelector('.account') as HTMLElement;
   if (accountContainer.classList.contains('account')) {
     accountContainer.classList.remove('account');
     accountContainer.classList.add('account__out');
   }
+  await cheackToken(params.id, params.token, params.refreshToken);
   accountLink.innerHTML = `${params.name}/Log Out`;
 }
 
@@ -38,15 +49,20 @@ export async function signToToken(params: Isignin) {
     textMenu.style.color = 'red';
     textMenu.style.fontSize = 'x-large';
   } else {
-    setLocalStorageAuth(paramsAuth.userId, paramsAuth.token, paramsAuth.name);
+    setLocalStorageAuth(paramsAuth.userId, paramsAuth.token, paramsAuth.name, paramsAuth.refreshToken);
 
-    authorization({ id: paramsAuth.userId, token: paramsAuth.token, name: paramsAuth.name });
+    authorization({
+      id: paramsAuth.userId,
+      token: paramsAuth.token,
+      name: paramsAuth.name,
+      refreshToken: paramsAuth.refreshToken
+    });
   }
 }
 
 export async function registration(params: Iregist) {
   try {
-    // const code = await registrationApi(params);
+    const code = await registrationApi(params);
     await signToToken({ email: params.email, password: params.password });
     location.reload();
   } catch {
@@ -71,5 +87,9 @@ export class GetLocalStorageToken {
   get name() {
     const name = JSON.parse(localStorage.getItem('name') as string) as string;
     return name;
+  }
+  get refreshToken() {
+    const refreshToken = JSON.parse(localStorage.getItem('refreshToken') as string) as string;
+    return refreshToken;
   }
 }

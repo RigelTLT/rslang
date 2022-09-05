@@ -1,6 +1,6 @@
 import './textbook.scss';
 import { baseUrl, getWordId } from '../../api/basicApi';
-import { deleteordsUserApi } from '../../api/wordsApi';
+import { deletewordsUserApi } from '../../api/wordsApi';
 import { IapiRequestUserWords } from '../../types/interface';
 import { GetLocalStorageToken } from './../authorization/auth';
 import { checkWordsUser } from './textbook';
@@ -27,40 +27,22 @@ function paginationState(group: string, status: string) {
   }
 }
 
-function getPageGroupTextbook() {
-  const params = new URLSearchParams(document.location.search);
-  const group = params.get('group') as string;
-  const status = params.get('status') as string;
-  paginationState(group, status);
-  const data = {
-    group: `${group ? Number(group) - 1 : '0'}`,
-    status: `${status ? status : 'hard'}`
-  };
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  createList(data);
-}
-
-if (window.location.pathname === '/dictionary.html') getPageGroupTextbook();
-
-export async function removeCompoundWord(id: string, idWord: string, token: string) {
-  await deleteordsUserApi(id, idWord, token);
-  const picture = document.querySelector(`div[data-id="${idWord}"]`) as HTMLElement;
-  picture.remove();
-}
-
 async function createList(data: IapiRequestUserWords) {
   const localStorage = new GetLocalStorageToken();
   const checkWords = await checkWordsUser(localStorage.id, localStorage.token);
   const list = document.querySelector('.list-textbook') as HTMLElement;
+  const container = document.createElement('div') as HTMLElement;
+  container.classList.add('container');
+  list.append(container);
 
-  if (localStorage.token) {
+  if (localStorage.token && checkWords) {
     for (let i = 0; i < checkWords.length; i++) {
       const words = await getWordId(checkWords[i].wordId);
       if (data.status === checkWords[i].difficulty && Number(data.group) === words.group) {
         const elem = document.createElement('div');
         elem.classList.add('list-textbook__elem');
         elem.setAttribute('data-id', `${words.id}`);
-        list.append(elem);
+        container.append(elem);
 
         const img = document.createElement('img');
         img.classList.add('list-textbook__elem__img');
@@ -138,4 +120,24 @@ async function createList(data: IapiRequestUserWords) {
   } else {
     list.innerText = `Авторизируйтесь для просмотра и редактирования`;
   }
+}
+
+function getPageGroupTextbook() {
+  const params = new URLSearchParams(document.location.search);
+  const group = params.get('group') as string;
+  const status = params.get('status') as string;
+  paginationState(group, status);
+  const data = {
+    group: `${group ? Number(group) - 1 : '0'}`,
+    status: `${status ? status : 'hard'}`
+  };
+  createList(data);
+}
+
+if (window.location.pathname === '/dictionary.html') getPageGroupTextbook();
+
+export async function removeCompoundWord(id: string, idWord: string, token: string) {
+  await deletewordsUserApi(id, idWord, token);
+  const picture = document.querySelector(`div[data-id="${idWord}"]`) as HTMLElement;
+  picture.remove();
 }

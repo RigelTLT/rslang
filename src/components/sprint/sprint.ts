@@ -1,7 +1,7 @@
 import Game from '../game/game';
 import { ILibraryResponse } from '../../types/interface';
 
-export class Sprint {
+class Sprint {
   library: ILibraryResponse[] = [];
 
   selectedWordIndex = 0;
@@ -15,6 +15,10 @@ export class Sprint {
   rightWordsArr: ILibraryResponse[] = [];
 
   wrongWordsArr: ILibraryResponse[] = [];
+
+  maxCorrectAnswersCount = 0;
+
+  correctAnsersCount = 0;
 
   private _bool = () => (Math.random() > 0.5 ? true : false);
 
@@ -56,7 +60,7 @@ export class Sprint {
         clearInterval(intervalId);
         if (!this.rightWordsArr.length) this.wrongWordsArr = this.library;
 
-        game.gameResult(this.rightWordsArr, this.wrongWordsArr);
+        game.gameResult(this.rightWordsArr, this.wrongWordsArr, this.maxCorrectAnswersCount);
       }
     }, 1000);
 
@@ -98,7 +102,7 @@ export class Sprint {
   trueButtonHandler(game: Game) {
     const trueButton = document.querySelector('.control .true') as HTMLElement;
 
-    const btnListener = () => {
+    const buttonListener = () => {
       const points = document.querySelector('.points') as HTMLElement;
       const coefficientValue = document.querySelector('.coefficient span') as HTMLElement;
       const translateWord = (document.querySelector('.words .translate') as HTMLDivElement).textContent;
@@ -109,8 +113,9 @@ export class Sprint {
       if (nextIndex < this.library.length) {
         this.fillWord(nextIndex, isRightTranslate, game);
       }
-
+      const audio = new Audio();
       if (this.library[this.selectedWordIndex].wordTranslate === translateWord) {
+        this.correctAnsersCount++;
         this.countRight += 1;
         this.resultScores += this.coefficient;
         points.textContent = String(this.resultScores);
@@ -123,23 +128,37 @@ export class Sprint {
           coefficientValue.textContent = String(this.coefficient);
           this.clearCircles();
         }
+
+        if (this.correctAnsersCount > this.maxCorrectAnswersCount) {
+          this.maxCorrectAnswersCount = this.correctAnsersCount;
+        }
+
+        audio.src = `./assets/audio/yes.mp3`;
       } else {
+        this.correctAnsersCount = 0;
         this.countRight = 0;
         this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
         this.clearCircles();
+        audio.src = `./assets/audio/no.mp3`;
       }
-
+      audio.autoplay = true;
       this.selectedWordIndex += 1;
     };
 
-    trueButton?.addEventListener('click', btnListener);
-    document.body.addEventListener('keyup', (event) => event.key === 'ArrowLeft' && btnListener());
+    Game.trueButtonFunc = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        buttonListener();
+      }
+    };
+
+    trueButton?.addEventListener('click', buttonListener);
+    document.body.addEventListener('keyup', Game.trueButtonFunc);
   }
 
   falseButtonHandler(game: Game) {
     const falseButton = document.querySelector('.control .false') as HTMLElement;
 
-    const btnListener = () => {
+    const buttonListener = () => {
       const points = document.querySelector('.points') as HTMLElement;
       const coefficientValue = document.querySelector('.coefficient span') as HTMLElement;
       const translateWord = (document.querySelector('.words .translate') as HTMLDivElement).textContent;
@@ -149,8 +168,9 @@ export class Sprint {
       if (nextIndex < this.library.length) {
         this.fillWord(nextIndex, isRightTranslate, game);
       }
-
+      const audio = new Audio();
       if (this.library[this.selectedWordIndex].wordTranslate !== translateWord) {
+        this.correctAnsersCount++;
         this.countRight += 1;
         this.resultScores += this.coefficient;
         points.textContent = String(this.resultScores);
@@ -163,17 +183,30 @@ export class Sprint {
           coefficientValue.textContent = String(this.coefficient);
           this.clearCircles();
         }
+
+        if (this.correctAnsersCount > this.maxCorrectAnswersCount) {
+          this.maxCorrectAnswersCount = this.correctAnsersCount;
+        }
+        audio.src = `./assets/audio/yes.mp3`;
       } else {
+        this.correctAnsersCount = 0;
         this.countRight = 0;
         this.wrongWordsArr.push(this.library[this.selectedWordIndex]);
         this.clearCircles();
+        audio.src = `./assets/audio/no.mp3`;
       }
-
+      audio.autoplay = true;
       this.selectedWordIndex += 1;
     };
 
-    falseButton?.addEventListener('click', btnListener);
-    document.body.addEventListener('keyup', (event) => event.key === 'ArrowRight' && btnListener());
+    Game.falseButtonFunc = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowRight') {
+        buttonListener();
+      }
+    };
+
+    falseButton?.addEventListener('click', buttonListener);
+    document.body.addEventListener('keyup', Game.falseButtonFunc);
   }
 }
 

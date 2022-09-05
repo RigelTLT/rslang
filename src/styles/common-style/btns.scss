@@ -9,73 +9,73 @@
 
   &-white {
     border-color: #fff;
-    background-color: #fff;
+    background: #fff;
     color: var(--gray800);
     &:hover {
       border-color: #fff;
-      background-color: var(--gray800);
+      background: var(--gray800);
       color: #fff;
     }
     &:active {
       border-color: #fff;
-      background-color: #fff;
+      background: #fff;
       color: var(--gray900);
     }
   }
 
   &-dark {
     border-color: var(--gray800);
-    background-color: var(--gray800);
+    background: var(--gray800);
     color: #fff;
     &:hover {
       border-color: var(--gray800);
-      background-color: #fff;
+      background: #fff;
       color: var(--gray800);
     }
     &:active {
-      background-color: var(--gray900);
+      background: var(--gray900);
       color: #fff;
     }
   }
 
   &-gray {
     border-color: var(--gray300);
-    background-color: var(--gray300);
+    background: var(--gray300);
     color: var(--gray800);
     &:hover {
-      background-color: transparent;
+      background: transparent;
       color: var(--gray800);
     }
     &:active {
-      background-color: var(--gray400);
+      background: var(--gray400);
       color: var(--gray800);
     }
   }
 
   &-orange {
     border-color: var(--orange);
-    background-color: var(--orange);
+    background: linear-gradient(55.95deg, #ff3f3a 0%, #ff3f3a 100%);
     color: #fff;
     &:hover {
-      background-color: var(--paleOrange);
+      background: var(--activeGradient);
       color: #fff;
     }
     &:active {
-      background-color: var(--orangeDisabled);
+      background: var(--orangeDisabled);
       color: #fff;
     }
   }
 
   &-hollow-orange {
     border-color: var(--orange);
-    background-color: transparent;
+    background: transparent;
     color: var(--orange);
     &:hover {
-      background-color: var(--paleOrange);
+      background: var(--activeGradient);
       color: #fff;
     }
     &:active {
-      background-color: var(--orangeDisabled);
+      background: var(--orangeDisabled);
       color: #fff;
     }
   }

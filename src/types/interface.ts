@@ -19,6 +19,7 @@ export interface IidToken {
   id: string;
   token: string;
   name: string;
+  refreshToken: string;
 }
 export interface Iauth {
   message: string;
@@ -29,10 +30,8 @@ export interface Iauth {
 }
 export interface IuserWords {
   difficulty: string;
-  // todo указать тип для optional
   optional: unknown;
 }
-
 export interface ILibraryResponse {
   audio: string;
   audioExample: string;
@@ -48,4 +47,45 @@ export interface ILibraryResponse {
   transcription: string;
   word: string;
   wordTranslate: string;
+}
+
+export interface IgetUserAllWords {
+  id: string;
+  difficulty: string;
+  wordId: string;
+}
+
+export interface IapiWords {
+  id: string;
+  idWord: string;
+  token: string;
+  body: IuserWords;
+}
+
+export interface Istatistic {
+  learnedWords: number;
+  optional: IstatisticBody;
+}
+
+export interface IstatisticBody {
+  date: string;
+  sprint: {
+    learnedWord: string[];
+    correctAnswersPercent: number[];
+    longestSeriesCorrect: number;
+  };
+  audioCall: {
+    learnedWord: string[];
+    correctAnswersPercent: number[];
+    longestSeriesCorrect: number;
+  };
+  textBook: {
+    learnedWord: string[];
+    numberOfWordsLearned: number;
+    percentageOfCorrectAnswers: string;
+  };
+}
+
+export interface IstatisticResponse extends Istatistic {
+  id?: string;
 }
