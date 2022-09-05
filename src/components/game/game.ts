@@ -107,22 +107,23 @@ export default class Game {
     wordsWrongContainer.innerHTML = wordsTemplate(arrOfWrong);
 
     const localStorage = new GetLocalStorageToken();
-    const userStatistics = await getStatistic(localStorage.id, localStorage.token);
+    if (localStorage.id) {
+      const userStatistics = await getStatistic(localStorage.id, localStorage.token);
 
-    const rightAnswersProcent = (arrOfRight.length / (arrOfRight.length + arrOfWrong.length)) * 100;
+      const rightAnswersProcent = (arrOfRight.length / (arrOfRight.length + arrOfWrong.length)) * 100;
 
-    if (this.checkGameName() === 'sprint') {
-      userStatistics.optional.sprint.correctAnswersPercent = `${rightAnswersProcent}`;
-      userStatistics.optional.sprint.learnedWord = [...arrOfRight];
-      userStatistics.optional.sprint.longestSeriesCorrect = longestSeriesRightAnswers.toString();
-    } else {
-      userStatistics.optional.audioCall.correctAnswersPercent = `${rightAnswersProcent}`;
-      userStatistics.optional.audioCall.learnedWord = [...arrOfRight];
-      userStatistics.optional.audioCall.longestSeriesCorrect = longestSeriesRightAnswers.toString();
+      if (this.checkGameName() === 'sprint') {
+        userStatistics.optional.sprint.correctAnswersPercent = `${rightAnswersProcent}`;
+        userStatistics.optional.sprint.learnedWord = [...arrOfRight];
+        userStatistics.optional.sprint.longestSeriesCorrect = longestSeriesRightAnswers.toString();
+      } else {
+        userStatistics.optional.audioCall.correctAnswersPercent = `${rightAnswersProcent}`;
+        userStatistics.optional.audioCall.learnedWord = [...arrOfRight];
+        userStatistics.optional.audioCall.longestSeriesCorrect = longestSeriesRightAnswers.toString();
+      }
+
+      this.sendingResult(localStorage.token, localStorage.id, userStatistics);
     }
-
-    this.sendingResult(localStorage.token, localStorage.id, userStatistics);
-
     this.gameResultListeners();
   }
 
@@ -175,10 +176,12 @@ export default class Game {
     const selectPure = document.querySelector('select-pure') as SelectPure;
     selectPure.addEventListener('change', () => {
       selectedDifficultLevel = selectPure.value;
+      if (startBtn.disabled === true) startBtn.disabled = false;
     });
 
     startBtn?.addEventListener('click', () => {
-      if (selectedDifficultLevel === '') return alert('Сначала выбери уровень сложности');
+      if (selectedDifficultLevel === '')
+        return (startBtn.disabled = true); /*alert('Сначала выбери уровень сложности')*/
 
       const randomPageNumber = this.randomIndexGenerator(30);
       location.replace(`http://localhost:8080/${page}.html?group=${selectedDifficultLevel}&page=${randomPageNumber}`);

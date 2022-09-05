@@ -220,7 +220,6 @@
       align-items: center;
       gap: 100px;
 
-
       .btn {
         width: 94px;
         height: 94px;
@@ -290,7 +289,7 @@
         }
 
         &.active {
-          background: linear-gradient(135deg, #fed9d6 0%, #fdddcf 100%);
+          background: linear-gradient(135deg, #83ff8f 0%, #18954a 100%);
           &:not(:first-child)::after {
             opacity: 1;
           }
@@ -352,7 +351,7 @@
         border-radius: 26px;
         border: 5px solid #fff;
         .inner-bar {
-          transition: .3s;
+          transition: 0.3s;
           height: 10px;
           width: 0%;
           background: linear-gradient(270deg, #f8580f 0%, #ffb280 100%);
