@@ -32,16 +32,24 @@ export class Statistic {
     const sprintLongestCountRight = sprintElem?.querySelector('.longest-series span') as HTMLElement;
 
     sprintNewCount.textContent = sprint.learnedWord.length.toString();
-    sprintNewProcent.textContent = `${Number(sprint.correctAnswersPercent).toFixed(1)} %`;
-    sprintLongestCountRight.textContent = sprint.longestSeriesCorrect;
+    const resultSumSprint = sprint.correctAnswersPercent.reduce(function (sum, elem) {
+      return sum + elem;
+    }, 0);
+    const resultProcSprint = resultSumSprint / sprint.correctAnswersPercent.length;
+    sprintNewProcent.textContent = `${resultProcSprint ? resultProcSprint.toFixed(2) : 0} %`;
+    sprintLongestCountRight.textContent = sprint.longestSeriesCorrect.toString();
 
     const audioCallNewCount = audioCallElem?.querySelector('.new-word span') as HTMLElement;
     const audioCallNewProcent = audioCallElem?.querySelector('.percent-currect span') as HTMLElement;
     const audioCallLongestCountRight = audioCallElem?.querySelector('.longest-series span') as HTMLElement;
 
     audioCallNewCount.textContent = audioCall.learnedWord.length.toString();
-    audioCallNewProcent.textContent = `${Number(audioCall.correctAnswersPercent).toFixed(1)} %`;
-    audioCallLongestCountRight.textContent = audioCall.longestSeriesCorrect;
+    const resultAudioCall = audioCall.correctAnswersPercent.reduce(function (sum, elem) {
+      return sum + elem;
+    }, 0);
+    const resultProcAudioCall = resultAudioCall / audioCall.correctAnswersPercent.length;
+    audioCallNewProcent.textContent = `${resultProcAudioCall ? resultProcAudioCall.toFixed(2) : 0} %`;
+    audioCallLongestCountRight.textContent = audioCall.longestSeriesCorrect.toString();
   }
 }
 

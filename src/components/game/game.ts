@@ -1,6 +1,6 @@
 import { baseUrl, getWordId, getWords } from '../../api/basicApi';
 import { getUserAllWords } from '../../api/wordsApi';
-import { IapiRequestWords, ILibraryResponse, IstatisticResponse } from '../../types/interface';
+import { IapiRequestWords, ILibraryResponse, Istatistic } from '../../types/interface';
 import 'select-pure';
 import './game.scss';
 import { SelectPure } from 'select-pure/lib/components';
@@ -76,12 +76,17 @@ export default class Game {
     }
   }
 
-  async gameResult(arrOfRight: ILibraryResponse[], arrOfWrong: ILibraryResponse[], longestSeriesRightAnswers: number) {
+  async gameResult(
+    arrOfRightObj: ILibraryResponse[],
+    arrOfWrongObj: ILibraryResponse[],
+    longestSeriesRightAnswers: number
+  ) {
+    const arrOfRight = arrOfRightObj.map((el) => el.id);
+    const arrOfWrong = arrOfWrongObj.map((el) => el.id);
     if (this.checkGameName() === 'sprint') {
       document.body.removeEventListener('keyup', Game.trueButtonFunc);
       document.body.removeEventListener('keyup', Game.falseButtonFunc);
     }
-
     const template = document.querySelector('#statistics') as HTMLTemplateElement;
     const main = document.querySelector('.main') as HTMLElement;
     main.innerHTML = '';
@@ -129,26 +134,64 @@ export default class Game {
         )
         .join(' ');
 
-    wordsRightContainer.innerHTML = wordsTemplate(arrOfRight);
-    wordsWrongContainer.innerHTML = wordsTemplate(arrOfWrong);
+    wordsRightContainer.innerHTML = wordsTemplate(arrOfRightObj);
+    wordsWrongContainer.innerHTML = wordsTemplate(arrOfWrongObj);
 
     const localStorage = new GetLocalStorageToken();
+    const currDate = new Date();
     if (localStorage.id) {
-      const userStatistics = await getStatistic(localStorage.id, localStorage.token);
-
+      let wordStatistics = {
+        learnedWords: 0,
+        optional: {
+          date: `${currDate.getDate()}/${currDate.getMonth()}`,
+          sprint: { learnedWord: [], correctAnswersPercent: [], longestSeriesCorrect: 0 },
+          audioCall: { learnedWord: [], correctAnswersPercent: [], longestSeriesCorrect: 0 },
+          textBook: { learnedWord: [], numberOfWordsLearned: 0, percentageOfCorrectAnswers: '' }
+        }
+      } as Istatistic;
       const rightAnswersProcent = (arrOfRight.length / (arrOfRight.length + arrOfWrong.length)) * 100;
-
-      if (this.checkGameName() === 'sprint') {
-        userStatistics.optional.sprint.correctAnswersPercent = `${rightAnswersProcent}`;
-        userStatistics.optional.sprint.learnedWord = [...arrOfRight];
-        userStatistics.optional.sprint.longestSeriesCorrect = longestSeriesRightAnswers.toString();
+      const prevStatistic = await getStatistic(localStorage.id, localStorage.token);
+      if (!prevStatistic) {
+        if (this.checkGameName() === 'sprint') {
+          wordStatistics.optional.sprint.correctAnswersPercent = [rightAnswersProcent];
+          wordStatistics.optional.sprint.learnedWord = [...arrOfRight];
+          wordStatistics.optional.sprint.longestSeriesCorrect = longestSeriesRightAnswers;
+        } else {
+          wordStatistics.optional.audioCall.correctAnswersPercent = [rightAnswersProcent];
+          wordStatistics.optional.audioCall.learnedWord = [...arrOfRight];
+          wordStatistics.optional.audioCall.longestSeriesCorrect = longestSeriesRightAnswers;
+        }
       } else {
-        userStatistics.optional.audioCall.correctAnswersPercent = `${rightAnswersProcent}`;
-        userStatistics.optional.audioCall.learnedWord = [...arrOfRight];
-        userStatistics.optional.audioCall.longestSeriesCorrect = longestSeriesRightAnswers.toString();
+        if (this.checkGameName() === 'sprint') {
+          let correctAnswersPercent = prevStatistic.optional.sprint.correctAnswersPercent;
+          correctAnswersPercent.push(rightAnswersProcent);
+          wordStatistics.optional.sprint.correctAnswersPercent = correctAnswersPercent;
+          let correctLearnedWord = prevStatistic.optional.sprint.learnedWord;
+          correctLearnedWord.push(...arrOfRight);
+          for (let i = 0; i < correctLearnedWord.length; i++) {
+            correctLearnedWord.filter((el) => el !== correctLearnedWord[i]);
+          }
+          wordStatistics.optional.sprint.learnedWord = correctLearnedWord;
+          const longestPrev = Number(prevStatistic.optional.sprint.longestSeriesCorrect);
+          wordStatistics.optional.sprint.longestSeriesCorrect =
+            longestSeriesRightAnswers > longestPrev ? longestSeriesRightAnswers : longestPrev;
+        } else {
+          let correctAnswersPercent = prevStatistic.optional.audioCall.correctAnswersPercent;
+          correctAnswersPercent.push(rightAnswersProcent);
+          wordStatistics.optional.audioCall.correctAnswersPercent = correctAnswersPercent;
+          let correctLearnedWord = prevStatistic.optional.audioCall.learnedWord;
+          correctLearnedWord.push(...arrOfRight);
+          for (let i = 0; i < correctLearnedWord.length; i++) {
+            correctLearnedWord.filter((el) => el !== correctLearnedWord[i]);
+          }
+          wordStatistics.optional.audioCall.learnedWord = correctLearnedWord;
+          const longestPrev = Number(prevStatistic.optional.audioCall.longestSeriesCorrect);
+          wordStatistics.optional.audioCall.longestSeriesCorrect =
+            longestSeriesRightAnswers > longestPrev ? longestSeriesRightAnswers : longestPrev;
+        }
       }
-
-      this.sendingResult(localStorage.token, localStorage.id, userStatistics);
+      console.log(wordStatistics);
+      this.sendingResult(localStorage.token, localStorage.id, wordStatistics);
     }
     this.gameResultListeners();
   }
@@ -179,8 +222,7 @@ export default class Game {
     });
   }
 
-  async sendingResult(token: string, id: string, body: IstatisticResponse) {
-    delete body.id;
+  async sendingResult(token: string, id: string, body: Istatistic) {
     await putStatistic(id, token, body);
   }
 

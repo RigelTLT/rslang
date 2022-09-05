@@ -32,7 +32,6 @@ export interface IuserWords {
   difficulty: string;
   optional: unknown;
 }
-
 export interface ILibraryResponse {
   audio: string;
   audioExample: string;
@@ -71,17 +70,17 @@ export interface Istatistic {
 export interface IstatisticBody {
   date: string;
   sprint: {
-    learnedWord: ILibraryResponse[];
-    correctAnswersPercent: string;
-    longestSeriesCorrect: string;
+    learnedWord: string[];
+    correctAnswersPercent: number[];
+    longestSeriesCorrect: number;
   };
   audioCall: {
-    learnedWord: ILibraryResponse[];
-    correctAnswersPercent: string;
-    longestSeriesCorrect: string;
+    learnedWord: string[];
+    correctAnswersPercent: number[];
+    longestSeriesCorrect: number;
   };
   textBook: {
-    learnedWord: ILibraryResponse[];
+    learnedWord: string[];
     numberOfWordsLearned: number;
     percentageOfCorrectAnswers: string;
   };

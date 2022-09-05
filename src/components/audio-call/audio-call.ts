@@ -196,8 +196,7 @@ class AudioCall {
       this.correctAnsersCount++;
       // добавляются слова в библиотеку верных ответов
       this.rightWordsArr.push(this.library[this.selectedWordIndex]);
-
-      if (this.maxCorrectAnswersCount > this.correctAnsersCount) {
+      if (this.maxCorrectAnswersCount < this.correctAnsersCount) {
         this.maxCorrectAnswersCount = this.correctAnsersCount;
       }
       audio.src = `./assets/audio/yes.mp3`;

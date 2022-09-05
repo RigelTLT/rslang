@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     };
     authorization(params);
 
-    const userStatistics = await getStatistic(localStorage.id, localStorage.token);
+    /*const userStatistics = await getStatistic(localStorage.id, localStorage.token);
     try {
       if (!userStatistics.id) {
         const currDate = new Date();
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
     } catch (error) {
       console.log(error);
-    }
+    }*/
   }
 
   ulListenner();
