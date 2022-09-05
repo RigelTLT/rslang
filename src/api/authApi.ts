@@ -1,4 +1,4 @@
-import { baseUrl, path } from './basicApi';
+import { baseUrl, path, headers } from './basicApi';
 import { Isignin, Iregist } from '../types/interface';
 
 export async function signinApi(body?: Isignin) {
@@ -24,10 +24,26 @@ export async function signinApi(body?: Isignin) {
   }
 }
 
-export async function newTokenSigninApi(id: string) {
-  const response = await fetch(`${baseUrl}${path.words}/${id}/${path.tokens}`);
-  const data = await response.json();
-  return data;
+export async function newTokenSigninApi(id: string, token: string) {
+  console.log(id, token);
+  console.log(`${baseUrl}${path.users}/${id}/${path.tokens}`);
+  const response = await fetch(`${baseUrl}${path.users}/${id}/${path.tokens}`, {
+    method: 'GET',
+    headers: headers(token)
+  })
+    .then((data) => data.json())
+    .catch((err: Error) => console.log(err.message));
+  return response;
+}
+
+export async function getUser(id: string, token: string) {
+  const response = await fetch(`${baseUrl}${path.users}/${id}`, {
+    method: 'GET',
+    headers: headers(token)
+  })
+    .then((data) => data.json())
+    .catch((err: Error) => console.log(err.message));
+  return response;
 }
 
 export async function registrationApi(body: Iregist) {
